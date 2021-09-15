@@ -1,0 +1,38 @@
+# placeholder
+test: True
+
+# FROM DEMOPARSE
+
+death_cooldown: 5000   # time plus death to ignore new deaths
+phase_cooldown: 5000   # time after phase HIT to ignore heals
+spike_init_window: 1500   # time window to count attacks for initializing a spike
+spike_extend_window: 3500   # time window to count adding more attacks to a spike after it's been initialized, must be greater than init window
+spike_attack_count: 3   # number of attacks to count a spike
+spike_enemy_count: 2   # minimum enemies attacking to count a spike
+spike_weighted_count: 4   # weighted count to determine spikes
+reset_window: 12000   # time window since spike end to count a new spike on the same target as a reset
+hold_window: 1000   # time window +/- to look at 
+match_length: 600000   #  typical match time 10 min
+buff_period: 30000   #  typical match time 10 min
+end_buffer: 1000   # time buffer to look at past estimated end of match
+pos_delay: 1000   # time to look backwards to "real" current position
+
+
+earlyevadecount: 3
+earlyevadetime: 2
+targethealwindow: 1.7   # depends on the type of offense (blaze lead requires lower than beam)
+targethealwindowdmg: 0.7  # depends on the type of offense (blaze lead requires lower than beam)
+targethealatks: 3   # depends on the type of offense (blaze lead requires lower than beam)
+targetmaxtime: 4 # MIN spike time to look for attacks
+targetcooldown: 4 # end time of spike to check new attacks
+targetminattacks: 2   # minimum atks on target to count as attack
+targetminattackers: 2 # minimum ppl on target to count as attack
+predictspiketime: 12 # time before someone gets spiked where they can receive an absorb and have it count as a heal, e.g. spirit warding someone you expect to be the next target
+matchtime: 600 # time in seconds (10 min)
+t_bundle_step: 30
+phasedelay: 0.63 # delay after activation when unaffecting (max delay for phase, using same value hibe for this)
+phasemax: 4 # window after phase where heals on target don't count
+paintedtimer: 16 # ~how long after a (psn) debuff indicator it's still valid, not sure when the second pops up?
+extras_start: 4
+repeat_reset: 4 # how long to ignore duplicate of repeating power (i.e. enervating field)
+posdelay: 1 # how long in s to delay position coords for distance calcs (due to server lag)

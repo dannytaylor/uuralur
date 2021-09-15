@@ -1,0 +1,11 @@
+{
+	"tags":{
+		"Phase":["Hibernate","Phase Shift"],
+		"Primary":["Blaze","Bitter Ice Blast","Will Domination","Lancer Shot","Aimed/Ranged Shot","Envenom","Disintegrate","Executioner's Shot","Blazing Arrow"],
+		"Teleport":["Teleport (misc)","Jaunt"],
+		"Jaunt React":["Blaze","Bitter Ice Blast"],
+		"CM":["Clear Mind","Clarity","Enforced Morale","Thaw","Antidote","Faraday Cage","Injection","Increase Density"],
+		"Cooldown":["Envervating Field"]
+	}
+
+}
