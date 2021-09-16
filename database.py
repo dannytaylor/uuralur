@@ -35,7 +35,8 @@ cur = con.cursor()
 def insertsql(table,items):
 	sql = "REPLACE INTO " + table + " VALUES(" + (len(items)-1)*"?," + "?)"
 	cur.execute(sql, items)
-
+	if table == 'Series' or table == 'Matches':
+		con.commit()
 
 # db table structure, match level
 def createdatatables():
@@ -89,14 +90,15 @@ def createdatatables():
 				''')
 def creatematchestable():
 	cur.execute('''CREATE TABLE IF NOT EXISTS Matches (
-				matchid INT PRIMARY KEY,
+				matchid INT,
 				seriesid TEXT, 
 				map TEXT, 
 				matchtime REAL, 
 				score1 INT, 
 				score2 INT, 
 				targets1 INTEGER, 
-				targets2 INTEGER);
+				targets2 INTEGER,
+				PRIMARY KEY(matchid, seriesid));
 				''')
 def createseriestable():
 	cur.execute('''CREATE TABLE IF NOT EXISTS Series (

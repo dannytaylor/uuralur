@@ -5,6 +5,7 @@ namefilter  = {
 	'Phantasm',
 	'Decoy Phantasm',
 	'Decoy',
+	'Jack Frost',
 	'Singularity',
 	'Coralax Blue Hybrid',
 	'Dr',
