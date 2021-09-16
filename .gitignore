@@ -135,3 +135,5 @@ streamlit/assets/
 tools/data/fx/
 tools/data/cod_json/
 tools/test.py
+data/overridesdump.json
+data/herodump.json
