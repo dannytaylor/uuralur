@@ -131,6 +131,7 @@ dmypy.json
 # manual
 demos.db
 demos/
+testdemos/
 streamlit/assets/
 tools/data/fx/
 tools/data/cod_json/

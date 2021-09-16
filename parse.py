@@ -19,14 +19,12 @@ playernames = json.loads(open('data/player_names.json').read())
 
 # for parsing existing demos to find overrides I put in
 overrides     	= []
-try:
+overridesdump = {}
+if os.path.exists('data/overridesdump.json'):
 	overridesdump = json.loads(open('data/overridesdump.json').read())
-except:
-	overridesdump = {}
-try:
+herodump = {}
+if os.path.exists('data/herodump.json'):
 	herodump = json.loads(open('data/herodump.json').read())
-except:
-	herodump = {}
 
 # converts demo file to list
 def demo2lines(demo):
@@ -303,8 +301,6 @@ def demo2data(lines,h,starttime):
 
 					elif lines[i][5] in fx['hold']: # if FX has multiple possible actions (e.g. entangle/thaw)
 						ha = c.Action(0,hid,fx['hold'][lines[i][5]],time_ms)
-						if "Delay" in powers[a.action]['tags']:
-							ha.time_ms -= powers[ha.action]['frames_before_hit']
 						for j in range(4): # check for target
 							if lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][2] == 'POS':
 								tidtmp = lines[i+j][4]
@@ -313,7 +309,7 @@ def demo2data(lines,h,starttime):
 								break
 						holdactions.append(ha)
 
-	parseholdactions(actions,holdactions)
+	parseholdactions(actions,holdactions) # and updates power attribs
 	determinepowersets(h,actions)
 
 	return actions,hp # not used
@@ -500,8 +496,10 @@ def parsematch(path): # primary demo parse function
 	mid = path.split('/')[-1].split('.cohdemo')[0]
 	sid = path.split('/')[-2]
 	score = [0,0]
+	demomap = None
 
 	db.createdatatables()
+	db.creatematchestable()
 
 	# PARSE LOGIC
 	with open(path,'r') as demofile:
@@ -525,11 +523,13 @@ def parsematch(path): # primary demo parse function
 	print('demo read: ', sid, ' ', mid)
 	print('lines run: ', len(lines)) # parse runtime
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
+
+	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],0,0])
 	return score
 	
 
 def parseseries(path): # parse series (i.e. single date folder full of demos)
-	db.creatematchestable()
+	db.createseriestable()
 
 	matches = [m for m in os.listdir(path) if m.endswith(".cohdemo")]
 	matches.sort()
@@ -563,12 +563,10 @@ def parseseries(path): # parse series (i.e. single date folder full of demos)
 	# return seriesdate,serieskb
 	
 def parseall(path): # parse collection (i.e. folder full of series)
-	db.createseriestable()
 	series = [s for s in os.listdir(path) if not os.path.isfile(os.path.join(path, s))] # only iterate folders in path
 	series.sort()
 	for s in series:
 		parseseries(os.path.join(path, s))
-
 
 	with open('data/overridesdump.json','w') as f:
 		json.dump(overridesdump,f,indent=4)
