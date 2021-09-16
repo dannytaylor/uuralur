@@ -17,6 +17,17 @@ powers = json.loads(open('data/powers.json').read())
 fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
+# for parsing existing demos to find overrides I put in
+overrides     	= []
+try:
+	overridesdump = json.loads(open('data/overridesdump.json').read())
+except:
+	overridesdump = {}
+try:
+	herodump = json.loads(open('data/herodump.json').read())
+except:
+	herodump = {}
+
 # converts demo file to list
 def demo2lines(demo):
 	line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", demo.readline()) if p.strip()] # from https://stackoverflow.com/questions/79968/split-a-string-by-spaces-preserving-quoted-substrings-in-python
@@ -24,6 +35,8 @@ def demo2lines(demo):
 	demomap = None
 	while line:
 		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", demo.readline()) if p.strip()]
+		if 'OVERRIDE' in line: # parse existing overrides from demoparse formatting
+			overrides.append({line[3]:line[4:]})
 		if len(line) > 2:
 			if line[0] != '0' or line[2] not in d.ignore_line_ent:
 				newline = []
@@ -68,16 +81,34 @@ def demo2heroes(lines):
 					break
 	return heroes
 
+# checks if 3 players are all separate from each other
+def posseparation(points):
+	for pid,p in points.items():
+		for tid,t in points.items():
+			if pid != tid:
+				dist = np.linalg.norm(p - t)
+				if dist < config['pos_start_distance']:
+					return False
+	return True
+
 # returns match start time/end of buff timer
 def matchstart(lines,h):
 	time_ms = 0
 	starttime = 0
+	pos = {}
 	for i in range(len(lines)):
 		time_ms += int(lines[i][0])
+		hid = lines[i][1]
 		# determine start time by first jump anim
-		if lines[i][2] == 'MOV' and 'JUMP' in lines[i][3] and lines[i][1] in h: 
+		if lines[i][2] == 'MOV' and 'JUMP' in lines[i][3] and hid in h:
 			return time_ms
-	# may need to add start by team positioning also
+		# if (3) random heroes are separated from each other start match
+		elif lines[i][2] == 'POS' and lines[i][5] and hid in h:
+			if hid in pos or len(pos) < 3:
+				pos[hid] = np.array([float(lines[i][3]),float(lines[i][4]),float(lines[i][5])])
+			if len(pos) == 3:
+				if posseparation(pos):
+					return time_ms
 
 def countdeath(h,time_ms):
 	if time_ms > config['death_cooldown'] + h.lastdeath: # at least 5 sec from last death to prevent double counts
@@ -90,6 +121,13 @@ def countdeath(h,time_ms):
 def updateactionattribs(a):
 	a.tags = powers[a.action]['tags']
 	a.target_type = powers[a.action]['target_type']
+	if "Delay" in powers[a.action]['tags']:
+		a.time_ms -= powers[a.action]['frames_before_hit']
+	if a.tid and a.dist:
+		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
+	else:
+		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
+	a.roottime = a.time_ms + int(1000*powers[a.action]['frames_attack'])
 
 # handle hold actions waiting to be determined
 def parseholdactions(actions,holdactions):
@@ -116,33 +154,29 @@ def parseholdactions(actions,holdactions):
 
 def determinearchetypes(heroes,actions):
 	for hid,h in heroes.items():
-		possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
+		# possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
+		possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","defender/corruptor","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
 				possible_ats = possible_ats.intersection(set(powers[a.action]['archetypes']))
 			if len(possible_ats) == 1:
 				h.archetype = max(possible_ats)
 
-				# TODO
-				if 'heroes' in playernames:
-					if h.name not in playernames['heroes']:
-						writeplayernames = True # json.dumps when file/script closes
-						playernames['heroes'][h.name] = {
-							"archetype":h.archetype
-						}
-					elif not playernames['heroes'][h.name]['archetype']:
-						writeplayernames = True
-						playernames['heroes'][h.name]['archetype'] = h.archetype
+				# log a determined AT if found and not from a previous demo
+				if h.name in herodump:
+					if "archetype" not in herodump[h.name]:
+						herodump[h.name]['archetype'] = h.archetype
+				else:
+					herodump[h.name] = {'archetype':h.archetype}
 
 				break
 
 		h.possible_ats = possible_ats
 
-		# TODO
+		# if no AT determined look if it was found in another demo
 		if not h.archetype:
-			if 'heroes' in playernames and h.name in playernames['heroes'] and 'archetype' in playernames['heroes'][h.name]:
-				h.archetype =  playernames['heroes'][h.name]['archetype']
-
+			if h.name in herodump and 'archetype' in herodump[h.name]:
+				h.archetype = herodump[h.name]['archetype']
 		# print(h.name,' ',h.possible_ats)
 
 
@@ -159,11 +193,24 @@ def determinepowersets(heroes,actions):
 					if len(ps_ats.intersection(h.possible_ats)) > 0: # does the pset AT have anything incommon with the determined ATs?
 						possible_psets.add(ps) # if true then the pset is valid
 				psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
-				if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<15): # ignore epic/pool/temp/insps
+				if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<14): # ignore epic/pool/temp/insps
 					h.sets.add(psets[0])
 			if len(h.sets) == 2:
 				break
-		# print(h.name,' ',h.sets)
+
+	for hid,h in heroes.items():
+		# if sets are determined log it in 
+		if len(h.sets) == 2:
+			if h.name in herodump:
+				if 'sets' not in herodump[h.name]:
+					herodump[h.name]['sets'] = list(h.sets)
+			else:
+				herodump[h.name] = {'sets':list(h.sets)}
+		# otherwise look if sets have been found before
+		else:
+			if h.name in herodump and 'sets' in herodump[h.name]:
+				h.sets = set(herodump[h.name]['sets'])
+	# 	# print(h.name,' ',h.sets)
 
 # store all actions and hp
 def demo2data(lines,h,starttime):
@@ -232,6 +279,8 @@ def demo2data(lines,h,starttime):
 						## if action == 'OneShot'/'Maintained': # if check needed with fx system?
 						# check next ~4 lines for target id
 						a = c.Action(actionid,hid,act,time_ms)
+						if isinstance(act,str) and "Delay" in powers[a.action]['tags']:
+							a.time_ms -= powers[act]['frames_before_hit']
 						actionid += 1
 
 						
@@ -249,17 +298,13 @@ def demo2data(lines,h,starttime):
 										a.dist = None # if player has no distance entity yet in demo
 								break
 
-						if not isinstance(a.action,list):
-							if a.tid and a.dist:
-								a.hittime = time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
-							else:
-								a.hittime = time_ms + int(1000*powers[a.action]['frames_before_hit'])
-							a.roottime = time_ms + int(1000*powers[a.action]['frames_attack'])
 						# if Hold in a.tags wait until time_ms+a.recharge/3 
 						actions.append(a)
 
 					elif lines[i][5] in fx['hold']: # if FX has multiple possible actions (e.g. entangle/thaw)
 						ha = c.Action(0,hid,fx['hold'][lines[i][5]],time_ms)
+						if "Delay" in powers[a.action]['tags']:
+							ha.time_ms -= powers[ha.action]['frames_before_hit']
 						for j in range(4): # check for target
 							if lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][2] == 'POS':
 								tidtmp = lines[i+j][4]
@@ -473,6 +518,9 @@ def parsematch(path): # primary demo parse function
 		score.reverse()
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
 
+	for o in overrides:
+		overridesdump[sid+'/'+mid] = o
+
 	print('score:     ', score)
 	print('demo read: ', sid, ' ', mid)
 	print('lines run: ', len(lines)) # parse runtime
@@ -521,7 +569,12 @@ def parseall(path): # parse collection (i.e. folder full of series)
 	for s in series:
 		parseseries(os.path.join(path, s))
 
-	
+
+	with open('data/overridesdump.json','w') as f:
+		json.dump(overridesdump,f,indent=4)
+	with open('data/herodump.json','w') as f:
+		json.dump(herodump,f,indent=4)
+
 	return
 		
 def main():
