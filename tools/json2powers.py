@@ -32,6 +32,11 @@ def appendfx(name,fx,fxlist):
 		else:
 			fxlist[fx] = [name]
 
+	for psr in power_rename['powerset_rename']:
+		# if a patch resulted in a powerset name change (e.g. earthcontrol to stonefx)
+		if fx and psr in fx:
+			appendfx(name,fx.replace(psr,power_rename['powerset_rename'][psr]),fxlist)
+
 def removedoublesingles(fx,gx):
 	singleatknames = {v[0] for k,v in fx.items() if len(v) == 1}
 	singlehitnames = {v[0] for k,v in gx.items() if len(v) == 1}
@@ -165,6 +170,18 @@ def addpooltags(name,powers,data):
 			p['archetypes'] = p['archetypes'].union(all_ats)
 			break
 
+def updatepowerfx(name,powers,data):
+	p = powers[name]
+	if data['fx']['attack_fx']: 		p['attack_fx'].add(data['fx']['attack_fx'])
+	if data['fx']['hit_fx']: 			p['hit_fx'].add(data['fx']['hit_fx'])
+	if data['fx']['activation_fx']:		p['activation_fx'].add(data['fx']['activation_fx'])
+	# if a patch resulted in a powerset name change (e.g. earthcontrol to stonefx)
+	for psr in power_rename['powerset_rename']:
+		if data['fx']['attack_fx'] and psr in data['fx']['attack_fx']: 			p['attack_fx'].add(data['fx']['attack_fx'].replace(psr,power_rename['powerset_rename'][psr]))
+		if data['fx']['hit_fx'] and psr in data['fx']['hit_fx']: 				p['hit_fx'].add(data['fx']['hit_fx'].replace(psr,power_rename['powerset_rename'][psr]))
+		if data['fx']['activation_fx'] and psr in data['fx']['activation_fx']:	p['activation_fx'].add(data['fx']['activation_fx'].replace(psr,power_rename['powerset_rename'][psr]))
+
+
 def updatepower(name,powers,data):
 	p = powers[name]
 	powerset = data['display_fullname'].split('.')[1]
@@ -176,10 +193,7 @@ def updatepower(name,powers,data):
 		p['archetypes'].discard('corruptor')
 		p['archetypes'].add('defender/corruptor')
 	p['targets_affected'] = p['targets_affected'].union(set(data['targets_affected']))
-	if data['fx']['attack_fx']: 		p['attack_fx'].add(data['fx']['attack_fx'])
-	if data['fx']['hit_fx']: 			p['hit_fx'].add(data['fx']['hit_fx'])
-	if data['fx']['activation_fx']:		p['activation_fx'].add(data['fx']['activation_fx'])
-
+	updatepowerfx(name,powers,data)
 	# tags
 	if 'Enhance Heal' in data['boosts_allowed'] or name == "Respite" and data['target_type'] != 'Location':
 		p['tags'].add("Heal")
