@@ -17,6 +17,7 @@ buff_period: 30000   #  typical match time 10 min
 end_buffer: 1000   # time buffer to look at past estimated end of match
 pos_delay: 1000   # time to look backwards to "real" current position
 pos_start_distance: 30   # distance min between 3 players for determining start
+max_team_size: 8   # distance min between 3 players for determining start
 
 
 earlyevadecount: 3

@@ -192,6 +192,7 @@ def updatepower(name,powers,data):
 		p['archetypes'].discard('defender')
 		p['archetypes'].discard('corruptor')
 		p['archetypes'].add('defender/corruptor')
+	p['archetypes'].discard('boss_monster')
 	p['targets_affected'] = p['targets_affected'].union(set(data['targets_affected']))
 	updatepowerfx(name,powers,data)
 	# tags
