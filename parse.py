@@ -18,13 +18,15 @@ fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
 # for parsing existing demos to find overrides I put in
+TESTING = True
 overrides     	= []
 overridesdump = {}
-if os.path.exists('data/overridesdump.json'):
-	overridesdump = json.loads(open('data/overridesdump.json').read())
-herodump = {}
-if os.path.exists('data/herodump.json'):
-	herodump = json.loads(open('data/herodump.json').read())
+if TESTING:
+	if os.path.exists('data/overridesdump.json'):
+		overridesdump = json.loads(open('data/overridesdump.json').read())
+	herodump = {}
+	if os.path.exists('data/herodump.json'):
+		herodump = json.loads(open('data/herodump.json').read())
 
 # converts demo file to list
 def demo2lines(demo):
@@ -56,12 +58,12 @@ def demo2heroes(lines):
 		if lines[i][2] == "NPC" and lines[i][3] not in d.ignorecostumes:
 			npcs.append(lines[i][1])
 		if lines[i][2] == "NEW" and lines[i][1] not in npcs:
-			name = lines[i][3]
+			name = str(lines[i][3])
 			hid = lines[i][1]
 			if name not in d.namefilter and name not in heroes and i < len(lines) - 6:
 				isnpc = False
-				for j in range(5): # check next 5 lines for NPC tag
-					if lines[i+j][1] == hid and lines[i+j][2] == 'NPC':
+				for j in range(8): # check next 5 lines for NPC tag
+					if lines[i+j][1] == hid and (lines[i+j][2] == 'NPC' or lines[i+j][2] == 'EntTypeFile'):
 						isnpc = True
 				if not isnpc and hid not in heroes:
 					heroes[hid] = c.Hero(hid,name)
@@ -77,6 +79,7 @@ def demo2heroes(lines):
 				if h.name.lower() == hname.lower():
 					h.playername = pname
 					break
+		# print(h.name)
 	return heroes
 
 # checks if 3 players are all separate from each other
@@ -164,7 +167,7 @@ def determinearchetypes(heroes,actions):
 				if h.name in herodump:
 					if "archetype" not in herodump[h.name]:
 						herodump[h.name]['archetype'] = h.archetype
-				else:
+				elif TESTING:
 					herodump[h.name] = {'archetype':h.archetype}
 
 				break
@@ -176,7 +179,6 @@ def determinearchetypes(heroes,actions):
 			if h.name in herodump and 'archetype' in herodump[h.name]:
 				h.archetype = herodump[h.name]['archetype']
 		# print(h.name,' ',h.possible_ats)
-
 
 def determinepowersets(heroes,actions):
 	determinearchetypes(heroes,actions)
@@ -191,14 +193,14 @@ def determinepowersets(heroes,actions):
 					if len(ps_ats.intersection(h.possible_ats)) > 0: # does the pset AT have anything incommon with the determined ATs?
 						possible_psets.add(ps) # if true then the pset is valid
 				psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
-				if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<14): # ignore epic/pool/temp/insps
+				if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<12): # ignore epic/pool/temp/insps
 					h.sets.add(psets[0])
 			if len(h.sets) == 2:
 				break
 
 	for hid,h in heroes.items():
 		# if sets are determined log it in 
-		if len(h.sets) == 2:
+		if len(h.sets) == 2 and TESTING:
 			if h.name in herodump:
 				if 'sets' not in herodump[h.name]:
 					herodump[h.name]['sets'] = list(h.sets)
@@ -208,6 +210,8 @@ def determinepowersets(heroes,actions):
 		else:
 			if h.name in herodump and 'sets' in herodump[h.name]:
 				h.sets = set(herodump[h.name]['sets'])
+			elif h.name not in herodump and TESTING:
+				herodump[h.name] = {'sets':list(h.sets)}
 	# 	# print(h.name,' ',h.sets)
 
 # store all actions and hp
@@ -314,22 +318,63 @@ def demo2data(lines,h,starttime):
 
 	return actions,hp # not used
 
+# merge h1 into the largest team group that h2 isn't in
+def mergeintolargest(h1,h2,teams,remainders,maxteamsize):
+	if h1 in remainders and h2 not in remainders:
+		mergedteam = set()
+		for t in teams:
+			if len(t)>4 and h2 not in t and h1 not in t:
+				mergedteam = t.copy()
+				mergedteam.add(h1)
+				teams.remove(t)
+				teams = [t for t in teams if h1 not in t]
+				remainders.remove(h1)
+				teams.append(mergedteam)
+				break
+		if len(mergedteam) == maxteamsize: 
+			return True,teams,remainders
+	return False,teams,remainders
+
+# apply
+def applyteamnumbers(heroes,teams):
+	assignteam = 0
+	for h in teams[1]: # make sure first hero in demo is on team zero
+		if heroes[h].firstherofound:
+			assignteam = 1
+			break
+	for h in teams[assignteam]:
+		heroes[h].team = 0 
+	assignteam = abs(assignteam-1)
+	for h in teams[assignteam]:
+		heroes[h].team = 1
+	# for h in heroes:
+	# 	print(heroes[h].team,heroes[h].name)
+	# print(teams)
+	return
+
 # assigns teams
 def assignteams(lines,heroes,actions):
 	teams = []
+	maxteamsize = math.ceil(len(heroes)/2) # assumes max # difference of one player
+	oneteamfull = False
 	for hid in heroes:
 		teams.append({hid})
 
-	for a in actions: # sort teams by friendly powers first
-		if a.tid and a.tid != a.hid: # if action has a target that isn't self 
+	# sort teams by friendly powers first
+	for a in actions: 
+		if not oneteamfull and a.tid and a.tid != a.hid: # if action has a target that isn't self 
 			h1,h2 = a.hid,a.tid
 			if powers[a.action]['targets_affected'] == ['Ally (Alive)']: # if action is on a teammate then put them in the same team group (merged/union)
 				mergedteam = {item for t in teams for item in t if (h1 in t or h2 in t)}
 				teams = [t for t in teams if (h1 not in t and h2 not in t)]
 				teams.append(mergedteam)
-			# elif len(teams)<4 and powers[a.action]['targets_affected'] == ['Foe (Alive)']: # if action is solely an attack/offence, len < 5 only use when support powers not working well
-				# add h1/2 who isn't assigned a team to the largest team that h2/1 isn't on
-		if len(teams) == 3 and min(len(teams[0]),len(teams[1]),len(teams[2]))==1: # edge case for situations where 1 player didn't buffs
+				if len(mergedteam) == maxteamsize:
+					oneteamfull = True # if one full team has been created
+		if oneteamfull: # if one team's been created then merged all remaining into the same team
+			mergedteam = {item for t in teams for item in t if len(t)<maxteamsize}
+			teams = [t for t in teams if len(t)==maxteamsize]
+			teams.append(mergedteam)
+		elif len(teams) == 3 and len(heroes)%2 == 0 and min(len(teams[0]),len(teams[1]),len(teams[2]))==1: # edge case for situations where 1 player didn't buffs
 			remainder = [p for t in teams for p in t if len(t) == 1][0]
 			teams = [t for t in teams if remainder not in t]
 			if len(teams[0]) > len(teams[1]):
@@ -337,18 +382,27 @@ def assignteams(lines,heroes,actions):
 			elif len(teams[1]) > len(teams[0]):
 				teams[0].add(remainder)
 		if len(teams) == 2:
-			assignteam = 0
-			for h in teams[1]: # make sure first hero in demo is on team zero
-				if heroes[h].firstherofound:
-					assignteam = 1
-			for h in teams[assignteam]:
-				heroes[h].team = 0 
-				# print()
-			assignteam = abs(assignteam-1)
-			for h in teams[assignteam]:
-				heroes[h].team = 1
+			applyteamnumbers(heroes,teams)
 			return
-	return print('ERROR: team assignment error')
+
+	# if can't finish team assignment by friendly only then look at attacks
+	remainders = [p for t in teams for p in t if len(t) <= 2] # assume most heroes get assigned properly first
+	for a in actions:
+		if not oneteamfull and a.tid and a.tid != a.hid: # if action has a target that isn't self 
+			h1,h2 = a.hid,a.tid
+			oneteamfull,teams,remainders = mergeintolargest(h1,h2,teams,remainders,maxteamsize)
+			oneteamfull,teams,remainders = mergeintolargest(h2,h1,teams,remainders,maxteamsize)
+		if oneteamfull: # if one team has been fully found
+			mergedteam = {item for t in teams for item in t if len(t)<maxteamsize} # merge all remaining groups into the other team
+			teams = [t for t in teams if len(t)==maxteamsize]
+			teams.append(mergedteam)
+		if len(teams) == 2:
+			applyteamnumbers(heroes,teams)
+			# for hid,h in heroes.items():
+			# 	print(h.name,h.team)
+			return
+
+	return print('ERROR: team assignment error', teams)
 
 # did new action take place within the window since the old attack?
 def isrecentaction(currenttime,oldtime,window):
@@ -501,6 +555,7 @@ def parsematch(path): # primary demo parse function
 	db.createdatatables()
 	db.creatematchestable()
 
+	print('demo read: ', sid, ' ', mid)
 	# PARSE LOGIC
 	with open(path,'r') as demofile:
 		# override = yaml.safe_load(open(path.replace('.cohdemo','.override')))
@@ -512,15 +567,17 @@ def parsematch(path): # primary demo parse function
 		spikes = spikeparse(lines,heroes,actions,hp)
 
 		for hid in heroes:
+			if not isinstance(heroes[hid].team,int):
+				print(heroes[hid].name,heroes[hid].team)
 			score[heroes[hid].team] += heroes[hid].deaths
 		score.reverse()
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
+
 
 	for o in overrides:
 		overridesdump[sid+'/'+mid] = o
 
 	print('score:     ', score)
-	print('demo read: ', sid, ' ', mid)
 	print('lines run: ', len(lines)) # parse runtime
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
@@ -553,7 +610,7 @@ def parseseries(path): # parse series (i.e. single date folder full of demos)
 	if 'kb' in seriesid:
 		serieskb = 1
 	team1, team2 = None, None
-	if serieskb == 0:
+	if serieskb == 0 and len(seriesid.split('_'))>2:
 		team1,team2 = seriesid.split('_')[1], seriesid.split('_')[2]
 
 	
@@ -568,10 +625,11 @@ def parseall(path): # parse collection (i.e. folder full of series)
 	for s in series:
 		parseseries(os.path.join(path, s))
 
-	with open('data/overridesdump.json','w') as f:
-		json.dump(overridesdump,f,indent=4)
-	with open('data/herodump.json','w') as f:
-		json.dump(herodump,f,indent=4)
+	if TESTING:
+		with open('data/overridesdump.json','w') as f:
+			json.dump(overridesdump,f,indent=4)
+		with open('data/herodump.json','w') as f:
+			json.dump(herodump,f,indent=4)
 
 	return
 		
