@@ -2208,6 +2208,14 @@
         "V_COV/POWERS/BLOODWIDOW/CLAWS/BLOODWIDOW_SWIPE.FX": "Swipe",
         "CUSTOMIZEABLEPOWERS/ICEARMOR/HIBERNATE_CONTINUING.FX": "Hibernate",
         "POWERS/ICEARMOR/HIBERNATE.FX": "Hibernate",
+        "V_COV/POWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": [
+            "Antidote",
+            "Alkaloid"
+        ],
+        "CUSTOMIZEABLEPOWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": [
+            "Antidote",
+            "Alkaloid"
+        ],
         "V_COV/POWERS/THERMALRADIATION/FIRESHIELDHANDSBOTH.FX": [
             "Thaw",
             "Forge"
@@ -2271,14 +2279,6 @@
         "POWERS/RADIATIONCONTROL/ENERVATINGFIELDCONTINUING.FX": "Enervating Field",
         "CUSTOMIZEABLEPOWERS/RADIATIONEMISSION/ENERVATINGFIELDCONTINUING.FX": "Enervating Field",
         "CUSTOMIZEABLEPOWERS/RADIATIONEMISSION/SUBTRACTIVE/ENERVATINGFIELDCONTINUING.FX": "Enervating Field",
-        "V_COV/POWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": [
-            "Antidote",
-            "Alkaloid"
-        ],
-        "CUSTOMIZEABLEPOWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": [
-            "Antidote",
-            "Alkaloid"
-        ],
         "V_COV/POWERS/PLANTCONTROL/PLANTCONTROLHIT.FX": [
             "Strangler",
             "Entangle"
