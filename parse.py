@@ -130,11 +130,11 @@ def updateactionattribs(a):
 		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
 	a.roottime = a.time_ms + int(1000*powers[a.action]['frames_attack'])
 
-
+# determine at by process of elimination from powers
 def determinearchetypes(heroes,actions):
 	for hid,h in heroes.items():
 		# possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
-		possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","defender/corruptor","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
+		possible_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
 				possible_ats = possible_ats.intersection(set(powers[a.action]['archetypes']))
@@ -147,7 +147,6 @@ def determinearchetypes(heroes,actions):
 						herodump[h.name]['archetype'] = h.archetype
 				elif TESTING:
 					herodump[h.name] = {'archetype':h.archetype}
-
 				break
 
 		h.possible_ats = possible_ats
@@ -155,29 +154,36 @@ def determinearchetypes(heroes,actions):
 		if not h.archetype:
 			if h.name in herodump and 'archetype' in herodump[h.name]:
 				h.archetype = herodump[h.name]['archetype']
+				h.possible_ats.add(h.archetype)
 		# print(h.name,' ',h.possible_ats)
 
+# determine powersets from determined AT and by process of elimination from powers
 def determinepowersets(heroes,actions):
 	determinearchetypes(heroes,actions)
 	for hid,h in heroes.items():
 		for a in actions: # loop until end or 2 powersets determined
-			if (hid == a.hid and len(h.sets) < 2 and a.action in powers
-				and 'Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags']
-				and 'Epic' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags']
-				): # if valid action by hid
+			if (hid == a.hid and len(h.sets) < 2 and a.action in powers): # if valid action by hid
+				if (
+					'Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags']
+					# and 'Epic' not in powers[a.action]['tags'] # leaving epic pools in to allow for things like Fossilize
+					):
+					psets = powers[a.action]['powersets'] # possible power sets for action
+					# check valid powersets for calculated h.possible_ats
+					possible_psets = set()
+					for ps in psets: #
+						ps_ats = set(powers['powersets'][ps]) # ATs that can use pset
+						if len(ps_ats.intersection(h.possible_ats)) > 0: # does the pset AT have anything in common with the determined ATs?
+							possible_psets.add(ps) # if true then the pset is valid
 
-				psets = powers[a.action]['powersets'] # possible power sets for action
-				# check valid powersets for calculated h.possible_ats
-				possible_psets = set()
-				for ps in psets:
-					ps_ats = set(powers['powersets'][ps]) # ATs that can use pset
-					if len(ps_ats.intersection(h.possible_ats)) > 0: # does the pset AT have anything incommon with the determined ATs?
-						possible_psets.add(ps) # if true then the pset is valid
+					psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
+					
+					# filter out epic shields for ps determ
+					if powers[a.action]['type'] != 'Toggle' or'Epic' not in powers[a.action]['tags']:
+						if h.archetype:
+							psets = list(set(psets).intersection(powers['archetypes'][h.archetype]))
+						if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
+							h.sets.add(psets[0])
 
-				psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
-				# if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<12): # ignore epic/pool/temp/insps
-				if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
-					h.sets.add(psets[0])
 			if len(h.sets) == 2:
 				break
 
@@ -192,7 +198,8 @@ def determinepowersets(heroes,actions):
 		# otherwise look if sets have been found before
 		else:
 			if h.name in herodump and 'sets' in herodump[h.name] and len(herodump[h.name]['sets']) == 2:
-				if h.sets.copy().pop() in herodump[h.name]['sets']: # match set must be in saved old set
+				# if the one determined set matches known info then add the other set
+				if len(h.sets) == 1 and h.sets.copy().pop() in herodump[h.name]['sets']: # match set must be in saved old set
 					h.sets = set(herodump[h.name]['sets'])
 			elif h.name not in herodump and TESTING:
 				herodump[h.name] = {}
@@ -223,7 +230,8 @@ def parseholdactions(actions,holdactions):
 
 # checks for a target on the next 5 lines 
 def checktarget(hid,lines,h,i,a,reverse):
-	for j in range(5): # check for target
+	rangecheck = min(len(lines)-i-1,5) # catches errors for target finding at end of demo
+	for j in range(1,rangecheck): # check for target
 		if (
 			(lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4]) or
 			(lines[i+j][1] == hid and lines[i+j][2] == 'PREVTARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4])
@@ -239,6 +247,8 @@ def checktarget(hid,lines,h,i,a,reverse):
 				except:
 					a.dist = None # if player has no distance entity yet in demo
 				return a
+		elif lines[i+j][1] == hid and lines[i+j][2] == 'FX':
+			return a
 	return a
 
 # store all actions and hp
