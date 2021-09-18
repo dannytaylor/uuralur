@@ -20,6 +20,7 @@ fxfolder  = './data/fx/'
 infolder  = './data/cod_json/powers/'
 outfolder = '../data/'
 
+# added a POWER and FX to the FXLIST
 def appendfx(name,fx,fxlist):
 	if (fx 
 		and fx not in power_rename['add_attack'] and fx not in power_rename['add_hit']
@@ -38,6 +39,7 @@ def appendfx(name,fx,fxlist):
 		if fx and psr in fx:
 			appendfx(name,fx.replace(psr,power_rename['powerset_rename'][psr]),fxlist)
 
+# remove fx from HITs if it's 100% defined by ATK
 def removedoublesingles(fx,gx):
 	singleatknames = {v[0] for k,v in fx.items() if len(v) == 1}
 	singlehitnames = {v[0] for k,v in gx.items() if len(v) == 1}
@@ -46,7 +48,7 @@ def removedoublesingles(fx,gx):
 	for r in removehitfx:
 		del gx[r]
 
-def parsefx(name,fx):
+def parsefx(name,fx,data):
 	afx  = fx['attack_fx']
 	rfx  = fx['hit_fx']
 	actfx  = fx['activation_fx']
@@ -56,8 +58,8 @@ def parsefx(name,fx):
 	appendfx(name,afx,attack_fx)
 	appendfx(name,rfx,hit_fx)
 
-	# if fx['continuing_fx']:
-	# 	appendfx(name,fx['continuing_fx'][0],cont_fx)
+	if fx['continuing_fx'] and data['target_type'] == "Self":
+		appendfx(name,fx['continuing_fx'][0],cont_fx)
 	# if fx['conditional_fx']:
 	# 	appendfx(name,fx['conditional_fx'][0],cond_fx)
 
@@ -65,13 +67,13 @@ def parsefx(name,fx):
 		appendfx(name,actfx,act_fx)
 
 	attack_fx.update(act_fx)
-	# hit_fx.update(cont_fx)
+	hit_fx.update(cont_fx)
 
 	# no_fx powers with no attack/hit/activate/continuing effects (mostly autos)
-	# if not afx and not rfx and not cfx and not actfx:
-	# 	if name not in no_fx:
-	# 		no_fx.append(name)
-	# return
+	if not afx and not rfx and not cfx and not actfx:
+		if name not in no_fx:
+			no_fx.append(name)
+	return
 
 def removemultkeys(fx,n): # remove PFXs with multiple (n) power names
 	removekeys = {k for k in fx if len(fx[k])>n}
@@ -90,9 +92,9 @@ def json2fx():
 			if name in power_rename['name']:
 				name = power_rename['name'][name]
 			fx   = data['fx']
-			parsefx(name,fx)
+			parsefx(name,fx,data)
 			for customfx in data['custom_fx']:
-				parsefx(name,customfx['fx'])
+				parsefx(name,customfx['fx'],data)
 
 	# for viewing fx with multiple power names
 	dupl = {}
@@ -134,7 +136,7 @@ def json2fx():
 	# with open(fxfolder+'act_fx.json','w') as f: json.dump(act_fx,f,indent=4)
 	# with open(fxfolder+'cont_fx.json','w') as f: json.dump(cont_fx,f,indent=4)
 	# with open(fxfolder+'cond_fx.json','w') as f: json.dump(cond_fx,f,indent=4)
-	# with open(fxfolder+'no_fx.json','w') as f: json.dump(no_fx,f,indent=4)
+	with open(fxfolder+'no_fx.json','w') as f: json.dump(no_fx,f,indent=4)
 
 	return
 
