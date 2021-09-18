@@ -13,7 +13,7 @@ power_data = json.loads(open('data/power_data.json').read())
 
 count_cfx = {'Hibernate'} # 'Thaw','Forge'
 # all_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
-all_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","defender/corruptor","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
+all_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
 
 fxfolder  = './data/fx/'
 infolder  = './data/cod_json/powers/'
@@ -200,9 +200,10 @@ def mergearchetypes(ats):
 def updatepower(name,powers,data):
 	p = powers[name]
 	powerset = data['display_fullname'].split('.')[1]
+	archetypes = data['archetypes']
 
 	p['powersets'].add(powerset)
-	p['archetypes'] = p['archetypes'].union(set(data['archetypes']))
+	p['archetypes'] = p['archetypes'].union(set(archetypes))
 	p['archetypes'] = mergearchetypes(p['archetypes'])
 	p['targets_affected'] = p['targets_affected'].union(set(data['targets_affected']))
 	updatepowerfx(name,powers,data)
@@ -220,9 +221,15 @@ def updatepower(name,powers,data):
 
 	# for dict of Powerset Name:Allowable ATs
 	if powerset not in powers['powersets']: powers['powersets'][powerset] = set()
-	atadd = set(data['archetypes'])
+	atadd = set(archetypes)
 	atadd = mergearchetypes(atadd)
 	powers['powersets'][powerset] = powers['powersets'][powerset].union(atadd)
+
+	# for dict of ATs:Allowable Powersets
+	for at in atadd:
+		if at not in powers['archetypes']: powers['archetypes'][at] = set()
+		if "Epic" not in p["tags"] and "Pool" not in p["tags"] and "Small" not in p["tags"] and "Inspirations" not in p["tags"]:
+			powers['archetypes'][at].add(powerset)
 
 
 # use lists initially for union and add functions, convert back to lists to write to JSON
@@ -238,7 +245,8 @@ def sets2lists(powers):
 # convert json files to pase power dictionary structure with relevant information
 def json2powers():
 	powers = {}
-	powers['powersets'] = {}
+	powers['powersets'] = {}  # dict of Powersets:Allowable ATs
+	powers['archetypes'] = {} # dict of ATs:Allowable Powersets
 	unid   = []
 
 	jsonfiles = [f for f in os.listdir(infolder) if f.endswith(".json")]
