@@ -1,0 +1,1244 @@
+{
+ "200918_vori_mft": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [1,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "200919_kb_smol": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "200920_kb_community": {
+  "1": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]}
+ },
+ "200921_gb_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "200923_rare_pug": {
+  "1": {"SCORE": [0,1]}
+ },
+ "200924_rare_vori": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "200925_vori_mft": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]},
+  "6": {"SCORE": [0,1]}
+ },
+ "200926_kb": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "200927_pug_mft": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]},
+  "6": {"SCORE": [0,1]}
+ },
+ "200928_gb_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,2]},
+  "3": {"SCORE": [2,3]},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "200929_gb_vori": {
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "200930_rare_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "201001_mft_brew": {
+  "1": {"TEAMSWAP": 1},
+  "10": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1}
+ },
+ "201002_vori_mft": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1}
+ },
+ "201003_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "201004_pug_mft": {
+  "1": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"SCORE": [0,1]},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "201005_gb_rng": {
+  "1": {"SCORE": [1,1]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "201006_vori_gb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "201007_rare_gb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201008_rare_vori": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "201010_kb": {
+  "1": {"SCORE": [0,0]}
+ },
+ "201011_mft_pug": {
+  "1": {"SCORE": [0,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "201012_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "201013_gb_vori": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "201014_rare_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"SCORE": 1},
+  "3": {"SCORE": 1},
+  "4": {"SCORE": 1},
+  "5": {"SCORE": 1}
+ },
+ "201015_kb": {
+  "1": {"SCORE": 1},
+  "2": {"SCORE": 1},
+  "3": {"SCORE": 1},
+  "4": {"SCORE": 1},
+  "5": {"SCORE": 1},
+  "6": {"SCORE": 1}
+ },
+ "201016_pug_mft": {
+  "1": {"SCORE": 1},
+  "2": {"SCORE": 1},
+  "3": {"SCORE": 1},
+  "4": {"SCORE": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1}
+ },
+ "201017_kb_smol": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1}
+ },
+ "201018_pug_mft": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201019_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "201020_gb_vori": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"SCORE": [1,1]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "201021_mft_inc": {
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]}
+ },
+ "201021_rare_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "201022_mft_rng_me": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "201022_mft_rng_mix": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "201023_mft_vori": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "201024_kb": {
+  "1": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201025_pug_mft": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "201026_gb_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201027_gb_vori": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "201028_rare_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]},
+  "6": {"SCORE": [0,1]}
+ },
+ "201029_mft_rng": {
+  "1": {"SCORE": [0,1]}
+ },
+ "201030_vori_mft": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "201031_mft_wap": {
+  "1": {"SCORE": [0,1]}
+ },
+ "201101_pug_mft": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]},
+  "6": {"SCORE": [0,1]},
+  "7": {"SCORE": [0,1]},
+  "8": {"SCORE": [0,1]}
+ },
+ "201102_gb_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]},
+  "5": {"SCORE": [0,1]}
+ },
+ "201103_rare_gb": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201104_mft_wap": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201104_rare_rng": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201105_rare_vori": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1}
+ },
+ "201107_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "201108_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201110_rare_vori": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]}
+ },
+ "201112_rare_rng": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "201113_vori_mft": {
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "201114_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]},
+  "9": {"SCORE": [1,0]}
+ },
+ "201115_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]},
+  "9": {"SCORE": [1,0]}
+ },
+ "201116_gb_mft": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "201119_rare_rng": {
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]}
+ },
+ "201120_vori_wap": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "201121_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]}
+ },
+ "201122_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "201123_rng_mft": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]}
+ },
+ "201125_mft_wap": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]}
+ },
+ "201128_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]}
+ },
+ "201129_ggz_wap": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"TEAMSWAP": 1}
+ },
+ "201129_kb": {
+  "10": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1},
+  "9": {"TEAMSWAP": 1}
+ },
+ "201130_gb_mft": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "201202_mft_wap": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201203_rare_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201204_kb": {
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"SCORE": [0,1]}
+ },
+ "201207_rare_wap": {
+  "1": {"SCORE": [0,1]},
+  "2": {"SCORE": [0,1]},
+  "3": {"SCORE": [0,1]},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201211_cum_mft": {
+  "1": {"TEAMSWAP": 1},
+  "10": {"TEAMSWAP": 1},
+  "11": {"TEAMSWAP": 1},
+  "12": {"TEAMSWAP": 1},
+  "13": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1},
+  "9": {"TEAMSWAP": 1}
+ },
+ "201212_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1},
+  "9": {"TEAMSWAP": 1}
+ },
+ "201214_gb_wap": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201214_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "201214_rng_mft": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "201216_mft_wap": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "201217_cum_mft": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "201218_cum_mft": {
+  "1": {"TEAMSWAP": 1},
+  "10": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]},
+  "7": {"SCORE": [0,0]},
+  "8": {"SCORE": [0,0]},
+  "9": {"SCORE": [0,0]}
+ },
+ "201218_rng_wap": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]}
+ },
+ "201219_kb": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]},
+  "7": {"SCORE": [0,0]}
+ },
+ "201221_gb_wap": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]}
+ },
+ "201221_rng_mft": {
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]}
+ },
+ "201223_cum_miswap": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]}
+ },
+ "201228_cum_miswap": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]}
+ },
+ "210102_kb": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]}
+ },
+ "210104_gb_wap": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]}
+ },
+ "210106_cum_pug": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]}
+ },
+ "210108_vori_pug": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]}
+ },
+ "210109_kb": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]},
+  "5": {"SCORE": [0,0]},
+  "6": {"SCORE": [0,0]}
+ },
+ "210110_cum_20xx": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]}
+ },
+ "210112_vori_gb": {
+  "1": {"SCORE": [0,0]},
+  "2": {"SCORE": [0,0]},
+  "3": {"SCORE": [0,0]},
+  "4": {"SCORE": [0,0]}
+ },
+ "210113_cum_20xx": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "210114_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]}
+ },
+ "210116_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210118_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210119_rng_vori": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210120_cum_x20xx": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210121_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210122_vori_20xx": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "210123_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]}
+ },
+ "210124_kb": {
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "210125_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]}
+ },
+ "210126_vori_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210127_rare_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210128_vori_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210129_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1}
+ },
+ "210131_cum_elk": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1}
+ },
+ "210201_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210203_rare_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210204_rare_20xx": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210206_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210209_rng_elk": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210211_vori_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210213_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1}
+ },
+ "210215_gb_20xx": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210216_rare_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210217_rare_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "210218_rare_20xx": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210220_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "210222_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210225_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210227_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210301_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210308_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210310_rare_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "210311_pug_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210313_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210315_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210316_four_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210317_gb_four": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210320_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1}
+ },
+ "210322_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210324_four_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1}
+ },
+ "210329_gb_rng": {
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210412_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210414_gb_putos": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210419_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]}
+ },
+ "210421_gb_putos": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]}
+ },
+ "210426_gb_rng": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]},
+  "6": {"SCORE": [2,0]}
+ },
+ "210428_gb_putos": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210505_gb_lc": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210512_lc_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210519_gb_lc": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210520_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210523_kb": {
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210525_lc_gb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210527_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210530_kb": {
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210601_gb_lc": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210603_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1}
+ },
+ "210610_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210617_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]}
+ },
+ "210624_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210625_kb_seagate": {
+  "1": {"SCORE": [1,0]},
+  "10": {"SCORE": [1,0]},
+  "11": {"SCORE": [1,0]},
+  "12": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]}
+ },
+ "210701_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]}
+ },
+ "210708_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]}
+ },
+ "210715_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210720_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210722_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1},
+  "9": {"TEAMSWAP": 1}
+ },
+ "210727_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1},
+  "8": {"TEAMSWAP": 1}
+ },
+ "210729_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210803_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "210805_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1}
+ },
+ "210810_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1}
+ },
+ "210812_gb_rng": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"TEAMSWAP": 1},
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1},
+  "5": {"TEAMSWAP": 1},
+  "6": {"TEAMSWAP": 1},
+  "7": {"TEAMSWAP": 1}
+ },
+ "210817_kb": {
+  "1": {"TEAMSWAP": 1},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]},
+  "6": {"SCORE": [2,0]},
+  "7": {"SCORE": [2,0]},
+  "8": {"SCORE": [2,0]},
+  "9": {"SCORE": [2,0]}
+ },
+ "210824_kb": {
+  "1": {"SCORE": [2,0]},
+  "2": {"SCORE": [2,0]},
+  "3": {"SCORE": [2,0]},
+  "4": {"SCORE": [2,0]},
+  "5": {"SCORE": [2,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210826_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]},
+  "8": {"SCORE": [1,0]}
+ },
+ "210831_kb": {
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]}
+ },
+ "210902_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]},
+  "7": {"SCORE": [1,0]}
+ },
+ "210907_kb": {
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]}
+ },
+ "210909_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210912_kb_thunderdome": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ },
+ "210914_kb": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]}
+ },
+ "210916_gb_rng": {
+  "1": {"SCORE": [1,0]},
+  "2": {"SCORE": [1,0]},
+  "3": {"SCORE": [1,0]},
+  "4": {"SCORE": [1,0]},
+  "5": {"SCORE": [1,0]},
+  "6": {"SCORE": [1,0]}
+ }
+}
