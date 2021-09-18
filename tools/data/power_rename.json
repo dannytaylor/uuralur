@@ -84,9 +84,6 @@
         "Crowd Control":"Shatter (Armor)",
         "ESD":"EM Pulse",
         "Ground Zero":"EM Pulse",
-        "Smoke":"Smoke/Fire Immob",
-        "Ring of Fire":"Smoke/Fire Immob",
-        "Fire Cages":"Smoke/Fire Immob",
         "Tornado":"Tornado/Water Spout",
         "Water Spout":"Tornado/Water Spout",
         "Time Stop":"Temporal Selection/Time Stop",
@@ -197,6 +194,7 @@
     "fx":{
         "POWERS/BUILDUPAIM.FX":"Aim",
         "POWERS/ABILITY/AGILITY.FX":"Insight",
+        "V_COV/POWERS/NINJITSU/HIDE.FX":"Shinobi",
         "POWERS/POWERPUNCH/SINGLELARGEPOWERPUNCH.FX":"Bone Smasher",
         "POWERS/GADGETS/CLOAKSUIT.FX":"Field Operative",
         "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/LIVINGSHADOWS_ATTACK.FX":"Tenebrous Tentacles",
@@ -233,11 +231,12 @@
         "POWERS/ICEARMOR/HIBERNATE.FX":"Hibernate",
         "V_COV/POWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": ["Antidote","Alkaloid"],
         "CUSTOMIZEABLEPOWERS/POISON/ALCALOIDPOISONPROJECTILE.FX": ["Antidote","Alkaloid"],
+        "POWERS/ABILITY/ENDURANCEHANDS.FX":["Fortitude","Adrenalin Boost"],
+        "CUSTOMIZEABLEPOWERS/EMPATHY/ENDURANCEHANDS.FX":["Fortitude","Adrenalin Boost"],
         "V_COV/POWERS/THERMALRADIATION/FIRESHIELDHANDSBOTH.FX":["Thaw","Forge"],
         "CUSTOMIZEABLEPOWERS/THERMALRADIATION/FIRESHIELDHANDSBOTH.FX":["Thaw","Forge"],
         "CUSTOMIZEABLEPOWERS/THERMALRADIATION/SUBTRACTIVE/FIRESHIELDHANDSBOTH.FX":["Thaw","Forge"]
     },
-
     "add_hit":{
         "V_COV/ENEMYPOWERS/ARCHVILLAINS/MAKO/V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX":"Spirit Shark Jaws",
         "CUSTOMIZABLEPOWERS_POOLS/PATRON_LEVIATHANMASTERY/SCHOOLOFSHARKS_HIT.FX":"Spirit Shark Jaws",
@@ -250,6 +249,10 @@
     },
 
     "hold_fx":{
+        "POWERS/HEALING/ENDURANCE.FX": "Adrenalin Boost",
+        "CUSTOMIZEABLEPOWERS/EMPATHY/ENDURANCE.FX": "Adrenalin Boost",
+        "POWERS/EMPATHY/FORTITUDE.FX": "Fortitude",
+        "CUSTOMIZEABLEPOWERS/EMPATHY/FORTITUDE.FX": "Fortitude",
         "V_COV/POWERS/THERMALRADIATION/BUFFDAMAGE.FX": "Forge",
         "CUSTOMIZEABLEPOWERS/THERMALRADIATION/BUFFDAMAGE.FX": "Forge",
         "CUSTOMIZEABLEPOWERS/THERMALRADIATION/SUBTRACTIVE/BUFFDAMAGE.FX": "Forge",

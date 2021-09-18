@@ -7,7 +7,8 @@
 		"CM":["Clear Mind","Clarity","Enforced Morale","Thaw","Antidote","Faraday Cage","Injection","Increase Density"],
 		"Cooldown":["Envervating Field"],
 		"Delay":["Envervating Field","Dehydrate","Strangler","Spirit Shark Jaws"],
-		"NoMiss":["Blind"]
+		"NoMiss":["Blind","Adrenalin Boost"],
+		"AllowEpic":["Fossilize"]
 	}
 
 }

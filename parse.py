@@ -134,7 +134,7 @@ def updateactionattribs(a):
 def determinearchetypes(heroes,actions):
 	for hid,h in heroes.items():
 		# possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
-		possible_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
+		possible_ats = h.possible_ats.copy()
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
 				possible_ats = possible_ats.intersection(set(powers[a.action]['archetypes']))
@@ -164,8 +164,8 @@ def determinepowersets(heroes,actions):
 		for a in actions: # loop until end or 2 powersets determined
 			if (hid == a.hid and len(h.sets) < 2 and a.action in powers): # if valid action by hid
 				if (
-					'Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags']
-					# and 'Epic' not in powers[a.action]['tags'] # leaving epic pools in to allow for things like Fossilize
+					('Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags'])
+					and ('Epic' not in powers[a.action]['tags'] or 'AllowEpic' not in powers[a.action]['tags'])# only allow certain epic powers to be used for pset determination
 					):
 					psets = powers[a.action]['powersets'] # possible power sets for action
 					# check valid powersets for calculated h.possible_ats
@@ -178,7 +178,7 @@ def determinepowersets(heroes,actions):
 					psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
 					
 					# filter out epic shields for ps determ
-					if powers[a.action]['type'] != 'Toggle' or'Epic' not in powers[a.action]['tags']:
+					if 'Epic' not in powers[a.action]['tags']:
 						if h.archetype:
 							psets = list(set(psets).intersection(powers['archetypes'][h.archetype]))
 						if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
@@ -233,8 +233,8 @@ def checktarget(hid,lines,h,i,a,reverse):
 	rangecheck = min(len(lines)-i-1,5) # catches errors for target finding at end of demo
 	for j in range(1,rangecheck): # check for target
 		if (
-			(lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4]) or
-			(lines[i+j][1] == hid and lines[i+j][2] == 'PREVTARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4])
+			(lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4])
+			or (lines[i+j][1] == hid and lines[i+j][2] == 'PREVTARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4])
 			):
 			tidtmp = lines[i+j][4]
 			if tidtmp in h and tidtmp != hid:
@@ -308,8 +308,8 @@ def demo2data(lines,h,starttime):
 
 				elif entity == 'FX':
 					line_fx = lines[i][5]
+					reverse = False
 					if line_fx in fx['attack'] or line_fx in fx['hit']:
-						reverse = False
 						try:
 							act = fx['attack'][line_fx]
 						except:
@@ -328,7 +328,7 @@ def demo2data(lines,h,starttime):
 						# if Hold in a.tags wait until time_ms+a.recharge/3 
 				
 						if (
-							(isinstance(a.action,str) and "NoMiss" in powers[a.action]['tags'] and not a.tid) # NoMiss if power must have a target, but demo doesn't show one (e.g. blind)
+							(isinstance(a.action,str) and "NoMiss" in powers[a.action]['tags'] and a.tid) # NoMiss if power must have a target, but demo doesn't show one (e.g. blind)
 							or (isinstance(a.action,list))
 							or ("NoMiss" not in powers[a.action]['tags'])
 							):
@@ -339,11 +339,10 @@ def demo2data(lines,h,starttime):
 						ha = checktarget(hid,lines,h,i,ha,reverse)
 						holdactions.append(ha)
 
-					# elif line_fx in fx['ps_fx']: # if an FX not corresponding to powers.json, but matches a specific powerset 
-					# 	ps_a = c.Action(0,hid,"Test",time_ms)
-					# 	ps_a = checktarget(hid,lines,h,i,ha,reverse)
-					# 	if len(h[ps_a.hid].sets) == 0:
-					# 		h[ps_a.hid].sets.add(ps_a)
+					elif line_fx in d.at_fx: # if an FX not corresponding to powers.json, but matches a specific powerset 
+						ps_a = c.Action(0,hid,line_fx,time_ms)
+						ps_a = checktarget(hid,lines,h,i,ps_a,d.at_fx[line_fx][2])
+						h[ps_a.hid].possible_ats =  h[ps_a.hid].possible_ats.intersection(d.at_fx[line_fx][1])
 
 
 	parseholdactions(actions,holdactions) # and updates power attribs

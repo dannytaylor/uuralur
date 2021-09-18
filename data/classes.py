@@ -29,6 +29,7 @@ class Hero:
 		self.lastphase = None
 		self.lasthp = 0
 		self.firstherofound = False
+		self.possible_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
 
 
 	def setplayername(override=None):

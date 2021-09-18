@@ -14,6 +14,7 @@ power_data = json.loads(open('data/power_data.json').read())
 count_cfx = {'Hibernate'} # 'Thaw','Forge'
 # all_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
 all_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
+fix_pset_name = {"Sonic Attacks":"Sonic Attack"}
 
 fxfolder  = './data/fx/'
 infolder  = './data/cod_json/powers/'
@@ -200,6 +201,7 @@ def mergearchetypes(ats):
 def updatepower(name,powers,data):
 	p = powers[name]
 	powerset = data['display_fullname'].split('.')[1]
+	if powerset in fix_pset_name: powerset = fix_pset_name[powerset]
 	archetypes = data['archetypes']
 
 	p['powersets'].add(powerset)

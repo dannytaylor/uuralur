@@ -102,3 +102,9 @@ movs = { # npc costumes used by players throwing off player detection
 	'PLAYERKNOCKBACK_IMPACT':"Knockback (Land)",
 }
 
+
+at_fx = { # determine pset/AT for powers not picked up by actions
+	# FX:[pset,possible_ats,reverse]
+	"WEAPONS/BOW/TRICKARROW/NETARROWHITENERGY.FX": ["Trick Arrow",{"controller","defender/corruptor","mastermind"},True]
+}
+
