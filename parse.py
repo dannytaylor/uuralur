@@ -130,28 +130,6 @@ def updateactionattribs(a):
 		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
 	a.roottime = a.time_ms + int(1000*powers[a.action]['frames_attack'])
 
-# handle hold actions waiting to be determined
-def parseholdactions(actions,holdactions):
-	for a in actions:
-		if isinstance(a.action,list): # for every actions with undefined power
-			for ha in holdactions:
-				# if action matches a hold action within the time window
-				if {a.hid,a.tid} == {ha.hid,ha.tid}:
-					if (a.time_ms > ha.time_ms - config['hold_window'] and a.time_ms < ha.time_ms + config['hold_window']):
-						a.action = ha.action
-					break
-			# if no corresponding holdaction is found default to first in actionname list
-			if isinstance(a.action,list): 
-				a.action = a.action[0]
-			if a.tid and a.dist:
-				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
-			else:
-				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
-		if "MOV" not in a.tags:
-			updateactionattribs(a)
-
-	# remove all actions with undefined powers (.action is a list)
-	actions = [a for a in actions if not isinstance(a.action,list)]
 
 def determinearchetypes(heroes,actions):
 	for hid,h in heroes.items():
@@ -173,7 +151,6 @@ def determinearchetypes(heroes,actions):
 				break
 
 		h.possible_ats = possible_ats
-
 		# if no AT determined look if it was found in another demo
 		if not h.archetype:
 			if h.name in herodump and 'archetype' in herodump[h.name]:
@@ -184,7 +161,11 @@ def determinepowersets(heroes,actions):
 	determinearchetypes(heroes,actions)
 	for hid,h in heroes.items():
 		for a in actions: # loop until end or 2 powersets determined
-			if hid == a.hid and len(h.sets) < 2 and a.action in powers: # if valid action by hid
+			if (hid == a.hid and len(h.sets) < 2 and a.action in powers
+				and 'Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags']
+				and 'Epic' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags']
+				): # if valid action by hid
+
 				psets = powers[a.action]['powersets'] # possible power sets for action
 				# check valid powersets for calculated h.possible_ats
 				possible_psets = set()
@@ -192,8 +173,10 @@ def determinepowersets(heroes,actions):
 					ps_ats = set(powers['powersets'][ps]) # ATs that can use pset
 					if len(ps_ats.intersection(h.possible_ats)) > 0: # does the pset AT have anything incommon with the determined ATs?
 						possible_psets.add(ps) # if true then the pset is valid
+
 				psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
-				if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<12): # ignore epic/pool/temp/insps
+				# if (len(psets) == 1 and psets[0] not in h.sets and len(powers[a.action]['archetypes'])<12): # ignore epic/pool/temp/insps
+				if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
 					h.sets.add(psets[0])
 			if len(h.sets) == 2:
 				break
@@ -208,11 +191,55 @@ def determinepowersets(heroes,actions):
 				herodump[h.name] = {'sets':list(h.sets)}
 		# otherwise look if sets have been found before
 		else:
-			if h.name in herodump and 'sets' in herodump[h.name]:
-				h.sets = set(herodump[h.name]['sets'])
+			if h.name in herodump and 'sets' in herodump[h.name] and len(herodump[h.name]['sets']) == 2:
+				if h.sets.copy().pop() in herodump[h.name]['sets']: # match set must be in saved old set
+					h.sets = set(herodump[h.name]['sets'])
 			elif h.name not in herodump and TESTING:
-				herodump[h.name] = {'sets':list(h.sets)}
-	# 	# print(h.name,' ',h.sets)
+				herodump[h.name] = {}
+		# print(h.name,' ',h.sets)
+
+# handle hold actions waiting to be determined
+def parseholdactions(actions,holdactions):
+	for a in actions:
+		if isinstance(a.action,list): # for every actions with undefined power'
+			for ha in holdactions:
+				# if action matches a hold action within the time window
+				if {a.hid,a.tid} == {ha.hid,ha.tid}:
+					if (a.time_ms > ha.time_ms - config['hold_window'] and a.time_ms < ha.time_ms + config['hold_window']):
+						a.action = ha.action
+					break
+			# if no corresponding holdaction is found default to first in actionname list
+			if isinstance(a.action,list): 
+				a.action = a.action[0]
+			if a.tid and a.dist:
+				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
+			else:
+				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
+		if "MOV" not in a.tags:
+			updateactionattribs(a)
+
+	# remove all actions with undefined powers (.action is a list)
+	actions = [a for a in actions if not isinstance(a.action,list)]
+
+# checks for a target on the next 5 lines 
+def checktarget(hid,lines,h,i,a,reverse):
+	for j in range(5): # check for target
+		if (
+			(lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4]) or
+			(lines[i+j][1] == hid and lines[i+j][2] == 'PREVTARGET' and lines[i+j][3] == 'ENT' and lines[i+j][1] != lines[i+j][4])
+			):
+			tidtmp = lines[i+j][4]
+			if tidtmp in h and tidtmp != hid:
+				a.tid = tidtmp
+				if reverse:
+					a.tid = a.hid
+					a.hid = tidtmp
+				try:
+					a.dist = np.linalg.norm(h[a.hid].poscurrent - h[a.tid].posdelay)
+				except:
+					a.dist = None # if player has no distance entity yet in demo
+				return a
+	return a
 
 # store all actions and hp
 def demo2data(lines,h,starttime):
@@ -270,12 +297,13 @@ def demo2data(lines,h,starttime):
 						actionid += 1
 
 				elif entity == 'FX':
-					if lines[i][5] in fx['attack'] or lines[i][5] in fx['hit']:
+					line_fx = lines[i][5]
+					if line_fx in fx['attack'] or line_fx in fx['hit']:
 						reverse = False
 						try:
-							act = fx['attack'][lines[i][5]]
+							act = fx['attack'][line_fx]
 						except:
-							act = fx['hit'][lines[i][5]]
+							act = fx['hit'][line_fx]
 							reverse = True
 						tid = None
 						## if action == 'OneShot'/'Maintained': # if check needed with fx system?
@@ -285,33 +313,28 @@ def demo2data(lines,h,starttime):
 							a.time_ms -= powers[act]['frames_before_hit']
 						actionid += 1
 
-						
-						for j in range(4): # check for target
-							if lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][3] == 'ENT':
-								tidtmp = lines[i+j][4]
-								if tidtmp in h and tidtmp != hid:
-									a.tid = tidtmp
-									if reverse:
-										a.tid = a.hid
-										a.hid = tidtmp
-									try:
-										a.dist = np.linalg.norm(h[a.hid].poscurrent - h[a.tid].posdelay)
-									except:
-										a.dist = None # if player has no distance entity yet in demo
-								break
+						a = checktarget(hid,lines,h,i,a,reverse)
 
 						# if Hold in a.tags wait until time_ms+a.recharge/3 
-						actions.append(a)
+				
+						if (
+							(isinstance(a.action,str) and "NoMiss" in powers[a.action]['tags'] and not a.tid) # NoMiss if power must have a target, but demo doesn't show one (e.g. blind)
+							or (isinstance(a.action,list))
+							or ("NoMiss" not in powers[a.action]['tags'])
+							):
+							actions.append(a)
 
-					elif lines[i][5] in fx['hold']: # if FX has multiple possible actions (e.g. entangle/thaw)
-						ha = c.Action(0,hid,fx['hold'][lines[i][5]],time_ms)
-						for j in range(4): # check for target
-							if lines[i+j][1] == hid and lines[i+j][2] == 'TARGET' and lines[i+j][2] == 'POS':
-								tidtmp = lines[i+j][4]
-								if tidtmp in p and tidtmp != hid:
-									ha.tid = tidtmp
-								break
+					elif line_fx in fx['hold']: # if FX has multiple possible actions (e.g. entangle/thaw)
+						ha = c.Action(0,hid,fx['hold'][line_fx],time_ms)
+						ha = checktarget(hid,lines,h,i,ha,reverse)
 						holdactions.append(ha)
+
+					# elif line_fx in fx['ps_fx']: # if an FX not corresponding to powers.json, but matches a specific powerset 
+					# 	ps_a = c.Action(0,hid,"Test",time_ms)
+					# 	ps_a = checktarget(hid,lines,h,i,ha,reverse)
+					# 	if len(h[ps_a.hid].sets) == 0:
+					# 		h[ps_a.hid].sets.add(ps_a)
+
 
 	parseholdactions(actions,holdactions) # and updates power attribs
 	determinepowersets(h,actions)
