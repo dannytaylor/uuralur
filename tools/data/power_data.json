@@ -6,7 +6,8 @@
 		"Jaunt React":["Blaze","Bitter Ice Blast"],
 		"CM":["Clear Mind","Clarity","Enforced Morale","Thaw","Antidote","Faraday Cage","Injection","Increase Density"],
 		"Cooldown":["Envervating Field"],
-		"Delay":["Envervating Field","Dehydrate","Strangler","Spirit Shark Jaws"]
+		"Delay":["Envervating Field","Dehydrate","Strangler","Spirit Shark Jaws"],
+		"NoMiss":["Blind"]
 	}
 
 }

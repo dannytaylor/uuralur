@@ -1,8 +1,5 @@
-# placeholder
-test: True
-
-# FROM DEMOPARSE
-
+# constants for parsing
+# times in ms
 death_cooldown: 5000   # time plus death to ignore new deaths
 phase_cooldown: 5000   # time after phase HIT to ignore heals
 spike_init_window: 1500   # time window to count attacks for initializing a spike
@@ -20,6 +17,8 @@ pos_start_distance: 30   # distance min between 3 players for determining start
 max_team_size: 8   # distance min between 3 players for determining start
 
 
+# FROM DEMOPARSE
+# times in sec
 earlyevadecount: 3
 earlyevadetime: 2
 targethealwindow: 1.7   # depends on the type of offense (blaze lead requires lower than beam)

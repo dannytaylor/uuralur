@@ -130,6 +130,7 @@ dmypy.json
 
 # manual
 demos.db
+*.db
 demos/
 testdemos/
 streamlit/assets/

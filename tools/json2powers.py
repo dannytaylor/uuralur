@@ -181,6 +181,21 @@ def updatepowerfx(name,powers,data):
 		if data['fx']['hit_fx'] and psr in data['fx']['hit_fx']: 				p['hit_fx'].add(data['fx']['hit_fx'].replace(psr,power_rename['powerset_rename'][psr]))
 		if data['fx']['activation_fx'] and psr in data['fx']['activation_fx']:	p['activation_fx'].add(data['fx']['activation_fx'].replace(psr,power_rename['powerset_rename'][psr]))
 
+# merge archetypes into common type
+def mergearchetypes(ats):
+	if 'defender' in ats or 'corruptor' in ats:
+		ats.discard('defender')
+		ats.discard('corruptor')
+		ats.add('defender/corruptor')
+	if 'scrapper' in ats or 'tanker' in ats or 'brute' in ats or 'stalker' in ats:
+		ats.discard('scrapper')
+		ats.discard('tanker')
+		ats.discard('brute')
+		ats.discard('stalker')
+		ats.add('melee')		
+	ats.discard('boss_monster')
+	return ats
+
 
 def updatepower(name,powers,data):
 	p = powers[name]
@@ -188,11 +203,7 @@ def updatepower(name,powers,data):
 
 	p['powersets'].add(powerset)
 	p['archetypes'] = p['archetypes'].union(set(data['archetypes']))
-	if 'defender' in p['archetypes'] or 'corruptor' in p['archetypes']:
-		p['archetypes'].discard('defender')
-		p['archetypes'].discard('corruptor')
-		p['archetypes'].add('defender/corruptor')
-	p['archetypes'].discard('boss_monster')
+	p['archetypes'] = mergearchetypes(p['archetypes'])
 	p['targets_affected'] = p['targets_affected'].union(set(data['targets_affected']))
 	updatepowerfx(name,powers,data)
 	# tags
@@ -210,10 +221,7 @@ def updatepower(name,powers,data):
 	# for dict of Powerset Name:Allowable ATs
 	if powerset not in powers['powersets']: powers['powersets'][powerset] = set()
 	atadd = set(data['archetypes'])
-	if 'defender' in p['archetypes'] or 'corruptor' in atadd:
-		atadd.discard('defender')
-		atadd.discard('corruptor')
-		atadd.add('defender/corruptor')
+	atadd = mergearchetypes(atadd)
 	powers['powersets'][powerset] = powers['powersets'][powerset].union(atadd)
 
 

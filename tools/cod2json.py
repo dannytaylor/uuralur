@@ -4,8 +4,11 @@ import json,requests,os
 
 ats = ['blaster','controller','defender','scrapper','tanker','brute','corruptor','dominator','mastermind','stalker','peacebringer','warshade','sentinel','arachnos_soldier','arachnos_widow']
 ignore_powers = ['gadgetry','utility_belt','wind_control','inspirations.holiday','inspirations.large','inspirations.medium','inspirations.small_dual','inspirations.special','inspirations.super']
-manualurls = ['temporary_powers.temporary_powers.raptor_pack',]
-#
+manualurls = ['temporary_powers.temporary_powers.raptor_pack',
+				'temporary_powers.accolades.eye_of_the_magus','temporary_powers.accolades.vanguard_medal','temporary_powers.accolades.geas_of_the_kind_ones',
+				'temporary_powers.accolades.megalomaniac','temporary_powers.accolades.demonic_aura','temporary_powers.accolades.vanguard_medal',
+				'temporary_powers.accolades.crey_cbx-9_pistol','temporary_powers.accolades.stolen_immobilizer_ray'
+				]
 
 powercats = ['pool','epic','inspirations'] # non-AT specific power categories
 powersets = []
