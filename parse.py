@@ -644,6 +644,7 @@ def parseseries(path): # parse series (i.e. single date folder full of demos)
 	if serieskb == 0 and len(seriesid.split('_'))>2:
 		team1,team2 = seriesid.split('_')[1], seriesid.split('_')[2]
 
+	db.deletesql("Series",seriesid) # delete db data if already existing prior to rewriting
 	db.insertsql("Series",[seriesid,seriesdate,serieskb,team1,team2,record[0],record[1],record[2]])
 
 	# return seriesdate,serieskb
@@ -687,7 +688,8 @@ def main():
 		with open('data/herodump_undefined.json','w') as f:
 			json.dump(herodump_undefined,f,indent=4,sort_keys=True)
 	
-	# con.close()
+	db.con.commit()
+	db.con.close()
 
 
 
