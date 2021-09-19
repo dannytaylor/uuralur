@@ -17,16 +17,16 @@ powers = json.loads(open('data/powers.json').read())
 fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
-# for parsing existing demos to find overrides I put in
+
 TESTING = True
-overrides     	= []
-overridesdump = {}
-if TESTING:
-	if os.path.exists('data/overridesdump.json'):
-		overridesdump = json.loads(open('data/overridesdump.json').read())
-	herodump = {}
-	if os.path.exists('data/herodump.json'):
-		herodump = json.loads(open('data/herodump.json').read())
+
+hero_data = {}
+herodump = {}
+overrides = {}
+if os.path.exists('data/hero_data.json'):
+	hero_data = json.loads(open('data/hero_data.json').read())
+if os.path.exists('data/overrides.json'):
+	overrides = json.loads(open('data/overrides.json').read())
 
 # converts demo file to list
 def demo2lines(demo):
@@ -35,8 +35,6 @@ def demo2lines(demo):
 	demomap = None
 	while line:
 		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", demo.readline()) if p.strip()]
-		if 'OVERRIDE' in line: # parse existing overrides from demoparse formatting
-			overrides.append({line[3]:line[4:]})
 		if len(line) > 2:
 			if line[0] != '0' or line[2] not in d.ignore_line_ent:
 				newline = []
@@ -48,6 +46,7 @@ def demo2lines(demo):
 				lines.append(newline)
 			if line[2] == 'Map':
 				demomap = line[3]
+				if demomap in d.mapaliases: demomap = d.mapaliases[demomap]
 	return lines,demomap
 
 # returns player names and ids from demo
@@ -142,9 +141,9 @@ def determinearchetypes(heroes,actions):
 				h.archetype = max(possible_ats)
 
 				# log a determined AT if found and not from a previous demo
-				if h.name in herodump:
-					if "archetype" not in herodump[h.name]:
-						herodump[h.name]['archetype'] = h.archetype
+				if h.name in hero_data:
+					if "archetype" not in hero_data[h.name]:
+						hero_data[h.name]['archetype'] = h.archetype
 				elif TESTING:
 					herodump[h.name] = {'archetype':h.archetype}
 				break
@@ -152,8 +151,8 @@ def determinearchetypes(heroes,actions):
 		h.possible_ats = possible_ats
 		# if no AT determined look if it was found in another demo
 		if not h.archetype:
-			if h.name in herodump and 'archetype' in herodump[h.name]:
-				h.archetype = herodump[h.name]['archetype']
+			if h.name in hero_data and 'archetype' in hero_data[h.name]:
+				h.archetype = hero_data[h.name]['archetype']
 				h.possible_ats.add(h.archetype)
 		# print(h.name,' ',h.possible_ats)
 
@@ -165,7 +164,7 @@ def determinepowersets(heroes,actions):
 			if (hid == a.hid and len(h.sets) < 2 and a.action in powers): # if valid action by hid
 				if (
 					('Pool' not in powers[a.action]['tags'] and 'Temporary_Powers' not in powers[a.action]['tags'] and 'Inspirations' not in powers[a.action]['tags'])
-					and ('Epic' not in powers[a.action]['tags'] or 'AllowEpic' not in powers[a.action]['tags'])# only allow certain epic powers to be used for pset determination
+					and ('Epic' not in powers[a.action]['tags'] or 'AllowEpic' in powers[a.action]['tags'])# only allow certain epic powers to be used for pset determination
 					):
 					psets = powers[a.action]['powersets'] # possible power sets for action
 					# check valid powersets for calculated h.possible_ats
@@ -177,12 +176,10 @@ def determinepowersets(heroes,actions):
 
 					psets = [ps for ps in psets if ps in possible_psets] # remove non-valid powersets
 					
-					# filter out epic shields for ps determ
-					if 'Epic' not in powers[a.action]['tags']:
-						if h.archetype:
-							psets = list(set(psets).intersection(powers['archetypes'][h.archetype]))
-						if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
-							h.sets.add(psets[0])
+					if h.archetype:
+						psets = list(set(psets).intersection(powers['archetypes'][h.archetype]))
+					if (len(psets) == 1 and psets[0] not in h.sets): # ignore epic/pool/temp/insps
+						h.sets.add(psets[0])
 
 			if len(h.sets) == 2:
 				break
@@ -190,17 +187,18 @@ def determinepowersets(heroes,actions):
 	for hid,h in heroes.items():
 		# if sets are determined log it in 
 		if len(h.sets) == 2 and TESTING:
-			if h.name in herodump:
-				if 'sets' not in herodump[h.name]:
+			if h.name in hero_data:
+				if 'sets' not in hero_data[h.name]:
+					if h.name not in herodump: herodump[h.name] = {}
 					herodump[h.name]['sets'] = list(h.sets)
 			else:
 				herodump[h.name] = {'sets':list(h.sets)}
 		# otherwise look if sets have been found before
 		else:
-			if h.name in herodump and 'sets' in herodump[h.name] and len(herodump[h.name]['sets']) == 2:
+			if h.name in hero_data and 'sets' in hero_data[h.name] and len(hero_data[h.name]['sets']) == 2:
 				# if the one determined set matches known info then add the other set
-				if len(h.sets) == 1 and h.sets.copy().pop() in herodump[h.name]['sets']: # match set must be in saved old set
-					h.sets = set(herodump[h.name]['sets'])
+				if len(h.sets) == 1 and h.sets.copy().pop() in hero_data[h.name]['sets']: # match set must be in saved old set
+					h.sets = set(hero_data[h.name]['sets'])
 			elif h.name not in herodump and TESTING:
 				herodump[h.name] = {}
 		# print(h.name,' ',h.sets)
@@ -577,7 +575,7 @@ def spikeparse(lines,heroes,actions,hp):
 
 
 def parsematch(path): # primary demo parse function
-	parsestart = datetime.datetime.now()
+	# parsestart = datetime.datetime.now()
 
 	mid = path.split('/')[-1].split('.cohdemo')[0]
 	sid = path.split('/')[-2]
@@ -590,7 +588,6 @@ def parsematch(path): # primary demo parse function
 	print('demo read: ', sid, ' ', mid)
 	# PARSE LOGIC
 	with open(path,'r') as demofile:
-		# override = yaml.safe_load(open(path.replace('.cohdemo','.override')))
 		lines,demomap = demo2lines(demofile)		
 		heroes = demo2heroes(lines)
 		starttime = matchstart(lines,heroes)
@@ -603,15 +600,14 @@ def parsematch(path): # primary demo parse function
 				print(heroes[hid].name,heroes[hid].team)
 			score[heroes[hid].team] += heroes[hid].deaths
 		score.reverse()
+		if sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:
+			score[0]+= overrides[sid][mid]['SCORE'][0]
+			score[1]+= overrides[sid][mid]['SCORE'][1]
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
 
-
-	for o in overrides:
-		overridesdump[sid+'/'+mid] = o
-
 	print('score:     ', score)
-	print('lines run: ', len(lines)) # parse runtime
-	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
+	# print('lines run: ', len(lines)) # parse runtime
+	# print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
 	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],0,0])
 	return score
@@ -645,8 +641,6 @@ def parseseries(path): # parse series (i.e. single date folder full of demos)
 	if serieskb == 0 and len(seriesid.split('_'))>2:
 		team1,team2 = seriesid.split('_')[1], seriesid.split('_')[2]
 
-	
-
 	db.insertsql("Series",[seriesid,seriesdate,serieskb,team1,team2,record[0],record[1],record[2]])
 
 	# return seriesdate,serieskb
@@ -656,13 +650,6 @@ def parseall(path): # parse collection (i.e. folder full of series)
 	series.sort()
 	for s in series:
 		parseseries(os.path.join(path, s))
-
-	if TESTING:
-		with open('data/overridesdump.json','w') as f:
-			json.dump(overridesdump,f,indent=4)
-		with open('data/herodump.json','w') as f:
-			json.dump(herodump,f,indent=4)
-
 	return
 		
 def main():
@@ -684,6 +671,19 @@ def main():
 		argp.print_help()
 		return
 
+	if TESTING:
+		herodump_undefined = {}
+		herodump_defined = {}
+		for hero,val in herodump.items():
+			if 'archetype' not in herodump[hero]:
+				herodump_undefined[hero] = {}
+			else:
+				herodump_defined[hero] = val
+		with open('data/herodump_defined.json','w') as f:
+			json.dump(herodump_defined,f,indent=4,sort_keys=True)
+		with open('data/herodump_undefined.json','w') as f:
+			json.dump(herodump_undefined,f,indent=4,sort_keys=True)
+	
 	# con.close()
 
 
