@@ -136,7 +136,7 @@ def json2fx():
 	# with open(fxfolder+'act_fx.json','w') as f: json.dump(act_fx,f,indent=4)
 	# with open(fxfolder+'cont_fx.json','w') as f: json.dump(cont_fx,f,indent=4)
 	# with open(fxfolder+'cond_fx.json','w') as f: json.dump(cond_fx,f,indent=4)
-	with open(fxfolder+'no_fx.json','w') as f: json.dump(no_fx,f,indent=4)
+	with open(fxfolder+'no_fx.json','w') as f: json.dump(no_fx,f,indent=4,sort_keys=True)
 
 	return
 
@@ -170,7 +170,22 @@ def addpooltags(name,powers,data):
 	for pool in pools:
 		if data['powerset'].startswith(pool):
 			p['tags'].add(pool)
-			p['archetypes'] = p['archetypes'].union(all_ats)
+			add_ats = set()
+			if pool == "Epic" and not data['archetypes']:
+				add_ats = set()
+				for at in all_ats:
+					if at in data['requires'].lower():
+						add_ats.add(at)
+						# some vill epics proliferated to heroes don't list the hero AT as a requirement
+						if at == "dominator" and "patron" in data['requires'].lower():
+							add_ats.add("controller")
+						elif at == "mastermind" and "patron" in data['requires'].lower():
+							add_ats.add("blaster")
+					elif 'corruptor' in data['requires'].lower() or 'defender' in data['requires'].lower():
+						add_ats.add('defender/corruptor')
+			if not add_ats: add_ats = all_ats.copy()
+
+			p['archetypes'] = p['archetypes'].union(add_ats)
 			break
 
 def updatepowerfx(name,powers,data):
@@ -241,6 +256,7 @@ def sets2lists(powers):
 	for k,v in powers.items():
 		if isinstance(v,set):
 			powers[k] = list(v)
+			powers[k].sort()
 		elif isinstance(v,dict):
 			powers[k] = sets2lists(v)
 			
@@ -274,7 +290,7 @@ def json2powers():
 	sets2lists(powers)
 
 	with open(outfolder+'powers.json','w') as f:
-		json.dump(powers,f,indent=4)
+		json.dump(powers,f,indent=4,sort_keys=True)
 	
 if __name__ == '__main__':
 	json2fx()
