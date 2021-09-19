@@ -43,7 +43,7 @@ class Hero:
 
 class Action:
 	def __init__(self, aid, hid, action, time_ms):
-		self.aid = aid # actionid
+		self.aid = aid # actionid, primary key element
 		self.action = action
 		self.hid = hid
 		self.tid = None
@@ -54,18 +54,27 @@ class Action:
 		self.dist = None
 		self.hittime = None
 		self.roottime = None # time spend in cast
-		self.spikeid = None
 		self.reverse = False
 
+		# spike data
+		self.spikeid = None
+		self.spiketime = None # time relative to spike start
+		self.spikehittime = None # time relative to spike start
+		self.spikeherocount = None # action number on spike, by player
+
+		# action attributes, from powers json
 		self.tags = []
-		self.attribs = []
+		self.type = None
+		self.target_type = None
+
 
 
 class Spike:
 	def __init__(self, spikeid):
 		self.sid = spikeid
 		self.tid = None
-		self.tname = None
+		self.target = None
+		self.targetteam = None
 		self.start = None
 		self.end = None
 		self.duration = None

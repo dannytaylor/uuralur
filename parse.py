@@ -18,7 +18,7 @@ fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
 
-TESTING = True
+HERODUMP = False
 
 hero_data = {}
 herodump = {}
@@ -189,7 +189,7 @@ def determinepowersets(heroes,actions):
 
 	for hid,h in heroes.items():
 		# if sets are determined log it in 
-		if len(h.sets) == 2 and TESTING:
+		if len(h.sets) == 2 and HERODUMP:
 			if h.name in hero_data:
 				if 'sets' not in hero_data[h.name]:
 					if h.name not in herodump: herodump[h.name] = {}
@@ -200,9 +200,9 @@ def determinepowersets(heroes,actions):
 		else:
 			if h.name in hero_data and 'sets' in hero_data[h.name] and len(hero_data[h.name]['sets']) == 2:
 				# if the one determined set matches known info then add the other set
-				if len(h.sets) == 1 and h.sets.copy().pop() in hero_data[h.name]['sets']: # match set must be in saved old set
+				if len(h.sets) == 1 and max(h.sets) in hero_data[h.name]['sets']: # match set must be in saved old set
 					h.sets = set(hero_data[h.name]['sets'])
-			elif h.name not in herodump and TESTING:
+			elif h.name not in herodump and HERODUMP:
 				herodump[h.name] = {}
 		# print(h.name,' ',h.sets)
 
@@ -375,6 +375,7 @@ def applyteamnumbers(heroes,teams):
 		if heroes[h].firstherofound:
 			assignteam = 1
 			break
+	# if TEAMSWAP: assignteam = abs(assignteam-1)
 	for h in teams[assignteam]:
 		heroes[h].team = 0 
 	assignteam = abs(assignteam-1)
@@ -549,24 +550,41 @@ def spikeparse(lines,heroes,actions,hp):
 
 	numspikes = reorderspikes(heroes,actions) # reorder cronologically from spikeid=1
 	spikedict = {} # create a spike object from group of spike actions
+	# dict for each spikeid to access actions included
 	for i in range(1,numspikes+1): spikedict[i] = []
 	for a in actions:
 		if a.spikeid:
 			spikedict[a.spikeid].append(a)
+	# update start/end/duration for spikes and assign spike target
 	for si,sa in spikedict.items(): # spikeid, spikeactions
 		newspike = c.Spike(si)
-		spikestart = 9999999999 # arbitrarily large int
+		spikestart = 9999999999 # arbitrarily large number
 		spikeend   = 0
+		spikeactors = {}
 		for a in sa:
 			spikestart = min(spikestart,a.time_ms)
 			if a.hittime and "Attack" in a.tags: 
 				spikeend   = max(spikeend,a.hittime)
 			if not newspike.tid and a.tid:
 				newspike.tid = a.tid
-				newspike.tname = heroes[a.tid].name
+				newspike.target = heroes[a.tid].name
+				newspike.targetteam = heroes[a.tid].team
 			if a.action == "Death":
 				newspike.kill = 1
-			# TODO reset for loop backwards on spikes list
+			if a.hid not in spikeactors: 
+				spikeactors[a.hid] = 1
+		# once timing has been determined assign relative time for each action
+		# and determine action count per player
+		for a in sa:
+			a.spiketime = a.time_ms - spikestart
+			if a.hittime:
+				a.spikehittime = a.hittime - spikestart
+			a.spikeherocount = spikeactors[a.hid]
+			spikeactors[a.hid] += 1
+
+
+
+
 		newspike.start = spikestart
 		newspike.end = spikeend
 		newspike.duration = spikeend - spikestart
@@ -675,7 +693,7 @@ def main():
 		argp.print_help()
 		return
 
-	if TESTING:
+	if HERODUMP:
 		herodump_undefined = {}
 		herodump_defined = {}
 		for hero,val in herodump.items():
