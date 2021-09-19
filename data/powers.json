@@ -134,6 +134,33 @@
         ],
         "type": "Click"
     },
+    "Abyssal Gaze": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster",
+            "sentinel"
+        ],
+        "attack_fx": [
+            "POWERS/DARKNESSCONTROL/PETRIFYINGGAZE.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1.6666666666666667,
+        "frames_before_hit": 1.0,
+        "hit_fx": [],
+        "powersets": [
+            "Dark Blast"
+        ],
+        "projectile_speed": 45.0,
+        "recharge_time": 20.0,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Accelerate Metabolism": {
         "activation_fx": [],
         "archetypes": [
@@ -1031,45 +1058,6 @@
             "Foe (Alive)"
         ],
         "type": "Toggle"
-    },
-    "Arctic Breath": {
-        "activation_fx": [],
-        "archetypes": [
-            "arachnos_soldier",
-            "arachnos_widow",
-            "blaster",
-            "controller",
-            "defender/corruptor",
-            "dominator",
-            "mastermind",
-            "melee",
-            "peacebringer",
-            "sentinel",
-            "warshade"
-        ],
-        "attack_fx": [
-            "V_COV/ENEMYPOWERS/CORALAX/WATERSPRAY.FX"
-        ],
-        "effect_area": "Cone",
-        "frames_attack": 2.6666666666666665,
-        "frames_before_hit": 1.1666666666666667,
-        "hit_fx": [
-            "POWERS/COLDCONTROL/COLDMISTCONTINUINGWITHOUTCRYSTALS.FX"
-        ],
-        "powersets": [
-            "Leviathan Mastery"
-        ],
-        "projectile_speed": 3.4028234663852886e+38,
-        "recharge_time": 32.0,
-        "tags": [
-            "Attack",
-            "Epic"
-        ],
-        "target_type": "Foe (Alive)",
-        "targets_affected": [
-            "Foe (Alive)"
-        ],
-        "type": "Click"
     },
     "Arctic Fog": {
         "activation_fx": [
@@ -5786,6 +5774,35 @@
         "target_type": "Foe (Dead)",
         "targets_affected": [
             "Foe (Dead)"
+        ],
+        "type": "Click"
+    },
+    "Dark Grasp": {
+        "activation_fx": [
+            "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKNESSCONTROL_TWOHAND_ACTIVATION.FX"
+        ],
+        "archetypes": [
+            "controller",
+            "dominator"
+        ],
+        "attack_fx": [
+            "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKGRASP_ATTACK.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1.6666666666666667,
+        "frames_before_hit": 1.0,
+        "hit_fx": [],
+        "powersets": [
+            "Darkness Control"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 8.0,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
         ],
         "type": "Click"
     },
@@ -10604,7 +10621,8 @@
             "warshade"
         ],
         "attack_fx": [
-            "POWERS/COLDCONTROL/FROSTBREATH.FX"
+            "POWERS/COLDCONTROL/FROSTBREATH.FX",
+            "V_COV/ENEMYPOWERS/CORALAX/WATERSPRAY.FX"
         ],
         "effect_area": "Cone",
         "frames_attack": 2.6666666666666665,
@@ -10615,7 +10633,8 @@
         "powersets": [
             "Ice Blast",
             "Ice Mastery",
-            "Icy Assault"
+            "Icy Assault",
+            "Leviathan Mastery"
         ],
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 16.0,
@@ -17455,9 +17474,7 @@
         "type": "Toggle"
     },
     "Petrifying Gaze": {
-        "activation_fx": [
-            "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKNESSCONTROL_TWOHAND_ACTIVATION.FX"
-        ],
+        "activation_fx": [],
         "archetypes": [
             "arachnos_soldier",
             "arachnos_widow",
@@ -17472,7 +17489,6 @@
             "warshade"
         ],
         "attack_fx": [
-            "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKGRASP_ATTACK.FX",
             "POWERS/DARKNESSCONTROL/PETRIFYINGGAZE.FX"
         ],
         "effect_area": "SingleTarget",
@@ -17480,15 +17496,12 @@
         "frames_before_hit": 1.0,
         "hit_fx": [],
         "powersets": [
-            "Dark Blast",
             "Dark Miasma",
-            "Darkness Control",
             "Darkness Mastery"
         ],
         "projectile_speed": 45.0,
-        "recharge_time": 20.0,
+        "recharge_time": 16.0,
         "tags": [
-            "Attack",
             "Epic"
         ],
         "target_type": "Foe (Alive)",
@@ -27913,42 +27926,6 @@
         "target_type": "Own Pet (Alive)",
         "targets_affected": [
             "Own Pet (Alive)"
-        ],
-        "type": "Click"
-    },
-    "Vanguard Medal": {
-        "activation_fx": [],
-        "archetypes": [
-            "arachnos_soldier",
-            "arachnos_widow",
-            "blaster",
-            "controller",
-            "defender/corruptor",
-            "dominator",
-            "mastermind",
-            "melee",
-            "peacebringer",
-            "sentinel",
-            "warshade"
-        ],
-        "attack_fx": [
-            "POWERS/BUILDUPPOWERBOOST.FX"
-        ],
-        "effect_area": "SingleTarget",
-        "frames_attack": 1.1666666666666667,
-        "frames_before_hit": 0.5,
-        "hit_fx": [],
-        "powersets": [
-            "Accolades"
-        ],
-        "projectile_speed": 3.4028234663852886e+38,
-        "recharge_time": 600.0,
-        "tags": [
-            "Temporary_Powers"
-        ],
-        "target_type": "Self",
-        "targets_affected": [
-            "Self"
         ],
         "type": "Click"
     },
