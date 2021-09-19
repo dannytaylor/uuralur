@@ -137,14 +137,17 @@ def determinearchetypes(heroes,actions):
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
 				possible_ats = possible_ats.intersection(set(powers[a.action]['archetypes']))
+			for maxhp,ats in d.at_maxhp.items():
+				if h.hpmax > maxhp:
+					possible_ats.difference_update(ats)
+
 			if len(possible_ats) == 1:
 				h.archetype = max(possible_ats)
-
 				# log a determined AT if found and not from a previous demo
 				if h.name in hero_data:
 					if "archetype" not in hero_data[h.name]:
 						hero_data[h.name]['archetype'] = h.archetype
-				elif TESTING:
+				elif HERODUMP:
 					herodump[h.name] = {'archetype':h.archetype}
 				break
 

@@ -105,6 +105,11 @@ movs = { # npc costumes used by players throwing off player detection
 	'PLAYERKNOCKBACK_IMPACT':"Knockback (Land)",
 }
 
+at_maxhp = {
+	1607:{'dominator','defender/corruptor','controller','mastermind'},
+	1848:{'blaster'},
+	2089:{'sentinel'},
+}
 
 at_fx = { # determine pset/AT for powers not picked up by actions
 	# FX:[pset,possible_ats,reverse]
