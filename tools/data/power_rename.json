@@ -220,6 +220,8 @@
         "CUSTOMIZEABLEPOWERS/KINETICS/SUBTRACTIVE/KINREPELHIT.FX",
         "POWERS/DARKNESSCONTROL/SHADOWFALL.FX",
         "CUSTOMIZEABLEPOWERS/DARKMIASMA/SHADOWFALL.FX",
+        "POWERS/ICEARMOR/HOARFROST_CONTINUING.FX",
+        "CUSTOMIZEABLEPOWERS/CONTINUINGCONDITIONALFX/HOARFROST_CONTINUING.FX",
         "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKNESSCONTROL_TWOHAND_ACTIVATION.FX"
     ],
     "powerset_rename":{
@@ -268,5 +270,10 @@
     },
     "ps_fx":{
         "WEAPONS/BOW/TRICKARROW/NETARROWHITENERGY.FX": ["Trick Arrow","Reverse"]
+    },
+    "shared_fx":{
+        "Abyssal Gaze":["controller","dominator","defender","corrutor","blaster","sentinel"],
+        "Petrifying Gaze":["controller","dominator","defender","corrutor","blaster","sentinel"],
+        "Dark Grasp":["controller","dominator","defender","corrutor","blaster","sentinel"]
     }
 }

@@ -223,6 +223,8 @@ def updatepower(name,powers,data):
 
 	p['powersets'].add(powerset)
 	p['archetypes'] = p['archetypes'].union(set(archetypes))
+	if name in power_rename['shared_fx']: # handle shared fx for different names (like petrifying/abyssal gaze not having the same AT listed)
+		p['archetypes'] = p['archetypes'].union(set(power_rename['shared_fx'][name]))
 	p['archetypes'] = mergearchetypes(p['archetypes'])
 	p['targets_affected'] = p['targets_affected'].union(set(data['targets_affected']))
 	updatepowerfx(name,powers,data)

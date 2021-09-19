@@ -138,6 +138,10 @@
         "activation_fx": [],
         "archetypes": [
             "blaster",
+            "controller",
+            "corrutor",
+            "defender/corruptor",
+            "dominator",
             "sentinel"
         ],
         "attack_fx": [
@@ -5782,8 +5786,12 @@
             "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKNESSCONTROL_TWOHAND_ACTIVATION.FX"
         ],
         "archetypes": [
+            "blaster",
             "controller",
-            "dominator"
+            "corrutor",
+            "defender/corruptor",
+            "dominator",
+            "sentinel"
         ],
         "attack_fx": [
             "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKGRASP_ATTACK.FX"
@@ -17480,6 +17488,7 @@
             "arachnos_widow",
             "blaster",
             "controller",
+            "corrutor",
             "defender/corruptor",
             "dominator",
             "mastermind",
