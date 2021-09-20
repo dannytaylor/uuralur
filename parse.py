@@ -381,7 +381,7 @@ def applyteamnumbers(heroes,teams):
 	return
 
 # assigns teams
-def assignteams(lines,heroes,actions):
+def assignteams(heroes,actions):
 	teams = []
 	maxteamsize = math.ceil(len(heroes)/2) # assumes max # difference of one player
 	oneteamfull = False
@@ -444,6 +444,7 @@ def jauntoffonecheck(attacklist,window):
 			jaunttime = a.time_ms
 			break
 	if jaunttime:
+		print('hi')
 		for a in attacklist:
 			if "Teleport" not in a.tags and "Jaunt React" in a.tags:
 				if abs(a.time_ms-jaunttime) < window: return True
@@ -451,32 +452,36 @@ def jauntoffonecheck(attacklist,window):
 
 # return true if action is on the hid or by the hid (ignoring non-relevant toggles/etc.)
 # ignore certain actions if looking for spike-relevant info only
-def isactiononplayer(a,hid,onself=False):
-	if onself and a.hid == hid and not a.tid: # action by self on Null
-		if 'Phase' in a.tags or 'Teleport' in a.tags or ('Heal' in a.tags and a.target_type == "self") or 'MOV' in a.tags:
+def isactiononplayer(a,hid,tag=None):
+	if tag == 'Self' and a.hid == hid and not a.tid: # self special manual tag for self powers relevant to a spike log
+		if ('Phase' in a.tags or 'Teleport' in a.tags 
+			or ('Heal' in a.tags and a.target_type == "Self") 
+			or 'MOV' in a.tags):
 			return True
 	elif a.tid == hid: # action on player by other
-		if 'Attack' in a.tags: # filter out non-attack offensive powers
+		if tag in a.tags: # filter out non-attack offensive powers
+			return True
+	elif (tag == 'Teleport' or tag == 'Phase') and a.hid == hid:
+		if tag in a.tags: # filter out non-attack offensive powers
 			return True
 	return False
 
 # group action spikeids under the same ID if adjacent
 # and extend to adjacent action if within in window
-def groupactionsunderspike(hid,p_actions):
+def groupactionsunderspike(hid,actions):
 	lastspikeid,lastspiketime = None,None
-	for a in p_actions:
-		if lastspikeid: # if first spike found
-			if a.time_ms - lastspiketime < config['spike_extend_window']: # if action within cooldown on spike extend count
-				if isactiononplayer(a,hid,onself=True):
-					a.spikeid = lastspikeid
+	for a in actions:
+		if isactiononplayer(a,hid,'Self') or isactiononplayer(a,hid,'Heal') or isactiononplayer(a,hid,'Attack'):
+			if lastspikeid: # if first spike found
+				if a.time_ms - lastspiketime < config['spike_extend_window']: # if action within cooldown on spike extend count
+						a.spikeid = lastspikeid
+						lastspiketime = a.time_ms
+				elif a.spikeid: # found new spike outside of spike window
+					lastspikeid = a.spikeid # start counting from this spike
 					lastspiketime = a.time_ms
-			elif a.spikeid: # found new spike outside of spike window
-				lastspikeid = a.spikeid # start counting from this spike
-				lastspiketime = a.time_ms
 
-		elif a.spikeid: # initialize first spike
-			lastspikeid,lastspiketime = a.spikeid,a.time_ms
-	return p_actions
+			elif a.spikeid: # initialize first spike
+				lastspikeid,lastspiketime = a.spikeid,a.time_ms
 
 def reorderspikes(heroes,actions):
 	# reorder spikeids chronologically
@@ -506,43 +511,62 @@ def isspikereset(spikes,newspike,heroes):
 					return False
 	return False			
 
-# parse spikes via actions, main function
-def spikeparse(lines,heroes,actions,hp):
-	spikes = []
+# returns total HP loss by a target on a spike
+def spikehploss(hid,hp,start,end):
+	hploss = 0
+	for val in hp:
+		if val[1] == hid and val[0] >= start and val[0]<=end+config['spike_extend_window']:
+			hploss += val[3]
+		elif val[0]>end+config['spike_extend_window']:
+			return hploss
+	return hploss
+
+
+# determine spikes based on attacks on heroes and flag actions as part of spikes
+def flagspikeactions(heroes,actions):
 	spikeid = 1000 # start at a large number since we're reordering from 1 later on
 
 	# look at spikes for each player separately
-	for hid, p in heroes.items():
-
-		# split out actions by player
-		p_actions = []
-		for a in actions: 
-			if isactiononplayer(a,hid,onself=True):
-				p_actions.append(a) #
+	for hid in heroes:
 		recentattacks = []
 		recentprimaryattacks = []
-		recentheals = []
-
-		# go through actions by player, tags spike starts
-		for a in p_actions:
-			if not a.spikeid:
-				if isactiononplayer(a,hid):
+		recentphases = []
+		recentjaunts = []
+		for a in actions:
+			if not a.spikeid: #
+				if isactiononplayer(a,hid,'Attack'):
 					recentattacks.append(a)
 					if "Primary" in a.tags:
 						recentprimaryattacks.append(a)
+				elif isactiononplayer(a,hid,'Teleport'):
+					recentjaunts.append(a)
+				elif isactiononplayer(a,hid,'Phase'):
+					recentphases.append(a)
 
-				recentattacks = [x for x in recentattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window'])]
-				recentprimaryattacks = [x for x in recentprimaryattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
-				jauntoffone = jauntoffonecheck(recentattacks,config['spike_init_window']/2)
+				recentattacks = 		[x for x in recentattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window'])]
+				recentprimaryattacks = 	[x for x in recentprimaryattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
+				recentphases = 			[x for x in recentphases if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']*2)]
+				recentjaunts = 			[x for x in recentjaunts if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
+				recentjauntreact = 		[x for x in recentattacks if "Jaunt React" in a.tags] # for jauntoffone
 
-				if len(recentattacks) >= config['spike_attack_count'] or len(recentprimaryattacks) >= config['spike_attack_count']/2 or jauntoffone: # and len(recentenemies) > config['spike_enemy_count']) or recentweighted > config['spike_weighted_count']
-					for aa in recentattacks:
-						aa.spikeid = spikeid
+				if (
+					len(recentattacks) >= config['spike_attack_count'] # 4 any attacks in larger window
+					or len(recentprimaryattacks) >= config['spike_attack_count']/2 # 4 primary attacks in smaller window
+					or (len(recentjauntreact) >=1 and len(recentjaunts) >=1) # or jaunt off 1 in small window
+					):
+					for recent in recentattacks: recent.spikeid = spikeid
+					for recent in recentjaunts:  recent.spikeid = spikeid
+					for recent in recentphases:  recent.spikeid = spikeid
 					spikeid += 1
+		groupactionsunderspike(hid,actions) # combine like-spikeids and extend spikes to adjacent action if appropriate
 
-		groupactionsunderspike(hid,h_actions) # combine like-spikeids and extend spikes to adjacent action if appropriate
+# parse spikes via actions, main function
+def spikeparse(heroes,actions,hp):
 
-	numspikes = reorderspikes(heroes,actions) # reorder cronologically from spikeid=1 and get number of spikes
+	flagspikeactions(heroes,actions)
+	numspikes = reorderspikes(heroes,actions) # reorder cronologically (by start) from spikeid=1 and get number of spikes
+
+	spikes = []
 	spikedict = {} # create a spike object from group of spike actions
 	# dict for each spikeid to access actions included
 	for i in range(1,numspikes+1): 
@@ -550,6 +574,7 @@ def spikeparse(lines,heroes,actions,hp):
 	for a in actions:
 		if a.spikeid:
 			spikedict[a.spikeid].append(a)
+
 	# update start/end/duration for spikes and assign spike target
 	for si,sa in spikedict.items(): # spikeid, spikeactions
 		newspike = c.Spike(si)
@@ -557,8 +582,8 @@ def spikeparse(lines,heroes,actions,hp):
 		spikeend   = 0
 		spikeactors = {}
 		for a in sa:
-			spikestart = min(spikestart,a.time_ms)
 			if a.hittime and "Attack" in a.tags: 
+				spikestart = min(spikestart,a.time_ms)
 				spikeend   = max(spikeend,a.hittime)
 			if not newspike.tid and a.tid:
 				newspike.tid = a.tid
@@ -588,11 +613,12 @@ def spikeparse(lines,heroes,actions,hp):
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
 
+
 	return spikes
 
 
 def parsematch(path): # primary demo parse function
-	# parsestart = datetime.datetime.now()
+	parsestart = datetime.datetime.now()
 
 	mid = path.split('/')[-1].split('.cohdemo')[0]
 	sid = path.split('/')[-2]
@@ -609,8 +635,8 @@ def parsematch(path): # primary demo parse function
 		heroes = demo2heroes(lines)
 		starttime = matchstart(lines,heroes)
 		actions, hp = demo2data(lines,heroes,starttime)
-		assignteams(lines,heroes,actions)
-		spikes = spikeparse(lines,heroes,actions,hp)
+		assignteams(heroes,actions)
+		spikes = spikeparse(heroes,actions,hp)
 
 		for hid in heroes:
 			if not isinstance(heroes[hid].team,int):
@@ -624,7 +650,7 @@ def parsematch(path): # primary demo parse function
 
 	print('score:     ', score)
 	# print('lines run: ', len(lines)) # parse runtime
-	# print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
+	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
 	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],0,0])
 	return score

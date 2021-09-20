@@ -75,9 +75,11 @@ class Spike:
 		self.tid = None
 		self.target = None
 		self.targetteam = None
+
+		# calculated
 		self.start = None
 		self.end = None
 		self.duration = None
-		self.time = None
-		self.kill = 0
+		self.kill = None
 		self.reset = False
+		self.hploss = 0
