@@ -134,7 +134,7 @@ def json2fx():
 		json.dump(all_fx,f,indent=4)
 
 	# with open(fxfolder+'act_fx.json','w') as f: json.dump(act_fx,f,indent=4)
-	# with open(fxfolder+'cont_fx.json','w') as f: json.dump(cont_fx,f,indent=4)
+	with open(fxfolder+'cont_fx.json','w') as f: json.dump(cont_fx,f,indent=4)
 	# with open(fxfolder+'cond_fx.json','w') as f: json.dump(cond_fx,f,indent=4)
 	with open(fxfolder+'no_fx.json','w') as f: json.dump(no_fx,f,indent=4,sort_keys=True)
 

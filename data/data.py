@@ -110,8 +110,3 @@ at_maxhp = {
 	1848:{'blaster'},
 	2089:{'sentinel'},
 }
-
-at_fx = { # determine pset/AT for powers not picked up by actions
-	# FX:[pset,possible_ats,reverse]
-}
-

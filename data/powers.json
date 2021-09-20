@@ -7967,6 +7967,30 @@
         ],
         "type": "Toggle"
     },
+    "Energy Flight (misc)": {
+        "activation_fx": [
+            "POWERS/COSMICPOWERS/PEACEBRINGER/PEACEFLIGHT/NONCOMBATFLIGHT.FX"
+        ],
+        "archetypes": [
+            "peacebringer"
+        ],
+        "attack_fx": [],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1.1666666666666667,
+        "frames_before_hit": 0.5,
+        "hit_fx": [],
+        "powersets": [
+            "Luminous Aura"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 0.0,
+        "tags": [],
+        "target_type": "Self",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Toggle"
+    },
     "Energy Protection": {
         "activation_fx": [],
         "archetypes": [
@@ -9773,11 +9797,9 @@
         ],
         "type": "Click"
     },
-    "Fly (misc)": {
+    "Fly": {
         "activation_fx": [
             "CUSTOMIZABLEPOWERS_POOLS/SORCERY/MYSTICFLIGHT.FX",
-            "POWERS/COSMICPOWERS/PEACEBRINGER/PEACEFLIGHT/NONCOMBATFLIGHT.FX",
-            "POWERS/FLIGHT/FLIGHT.FX",
             "POWERS/FLIGHT/NONCOMBATFLIGHT.FX"
         ],
         "archetypes": [
@@ -9800,15 +9822,12 @@
         "hit_fx": [],
         "powersets": [
             "Flight",
-            "Luminous Aura",
-            "Sorcery",
-            "Temporary Powers"
+            "Sorcery"
         ],
         "projectile_speed": 3.4028234663852886e+38,
-        "recharge_time": 0.0,
+        "recharge_time": 10.0,
         "tags": [
-            "Pool",
-            "Temporary_Powers"
+            "Pool"
         ],
         "target_type": "Self",
         "targets_affected": [
@@ -19821,6 +19840,44 @@
             "Self"
         ],
         "type": "Click"
+    },
+    "Raptor Pack": {
+        "activation_fx": [
+            "POWERS/FLIGHT/FLIGHT.FX"
+        ],
+        "archetypes": [
+            "arachnos_soldier",
+            "arachnos_widow",
+            "blaster",
+            "controller",
+            "defender/corruptor",
+            "dominator",
+            "mastermind",
+            "melee",
+            "peacebringer",
+            "sentinel",
+            "warshade"
+        ],
+        "attack_fx": [],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1.1666666666666667,
+        "frames_before_hit": 0.5,
+        "hit_fx": [],
+        "powersets": [
+            "Flight",
+            "Temporary Powers"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 0.0,
+        "tags": [
+            "Pool",
+            "Temporary_Powers"
+        ],
+        "target_type": "Self",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Toggle"
     },
     "Reaction Time": {
         "activation_fx": [
