@@ -34,8 +34,9 @@ def createdatatables():
 				dist REAL, 
 				root_time REAL, 
 				spike_id INT, 
-				spiketime REAL, 
-				player_spike_count INT, 
+				spike_time REAL, 
+				spike_hit_time REAL, 
+				spike_action_number INT, 
 				PRIMARY KEY (action_id,series_id, match_id));
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS Spikes (
@@ -46,6 +47,7 @@ def createdatatables():
 				spike_duration REAL, 
 				target TEXT, 
 				target_team TEXT, 
+				spike_hp_loss REAL, 
 				kill INT, 
 				reset TEXT, 
 				PRIMARY KEY (spike_id, series_id, match_id));
@@ -106,9 +108,9 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 	for a in actions:
 		target = None
 		if a.tid: target = heroes[a.tid].name
-		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikeherocount])
+		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount])
 	for s in spikes:
-		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.kill,s.reset])
+		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset])
 	for hid,h in heroes.items():
 		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,str(h.sets),h.set2,h.archetype,h.hpmax,h.support,h.damagetaken,h.targets,h.deaths])
 	# con.commit()
