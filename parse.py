@@ -432,23 +432,30 @@ def assignteams(heroes,actions):
 
 	return print('ERROR: team assignment error', teams)
 
+# assign support tag based on criteria
+def assignsupport(heroes,actions):
+	for hid,h in heroes.items():
+		numheals,numhealsspike  	  = 0,0
+		numattacks,numattacksspike	  = 0,0
+		for a in actions:
+			if a.hid == hid:
+				if "Heal" in a.tags and a.tid and h.team == heroes[a.tid].team:
+					numheals += 1
+					if a.spikeid:
+						numhealsspike += 1
+				elif "Attack" in a.tags:
+					numattacks += 1
+					if a.spikeid:
+						 numattacksspike += 1
+		# support criteria
+		if 	(2*numheals > numattacks and 2*numhealsspike > numattacksspike
+			and numheals > 10 and numhealsspike > 5): # low numbers to handle outliers I've encountered
+			heroes[hid].support = 1
+
 # did new action take place within the window since the old attack?
 def isrecentaction(currenttime,oldtime,window):
 	if currenttime-oldtime > window: return False
 	else: return True
-
-def jauntoffonecheck(attacklist,window):
-	jaunttime = None
-	for a in attacklist:
-		if "Teleport" in a.tags:
-			jaunttime = a.time_ms
-			break
-	if jaunttime:
-		print('hi')
-		for a in attacklist:
-			if "Teleport" not in a.tags and "Jaunt React" in a.tags:
-				if abs(a.time_ms-jaunttime) < window: return True
-	return False
 
 # return true if action is on the hid or by the hid (ignoring non-relevant toggles/etc.)
 # ignore certain actions if looking for spike-relevant info only
@@ -483,6 +490,7 @@ def groupactionsunderspike(hid,actions):
 			elif a.spikeid: # initialize first spike
 				lastspikeid,lastspiketime = a.spikeid,a.time_ms
 
+# update spikeids chronologically (by start) from 1
 def reorderspikes(heroes,actions):
 	# reorder spikeids chronologically
 	spikeidmap = {}
@@ -501,6 +509,7 @@ def reorderspikes(heroes,actions):
 				a.spikeid = spikeidmap[a.spikeid]
 	return spikeid-1
 
+# look backwards by spike to see if same person was target last (within window)
 def isspikereset(spikes,newspike,heroes):
 	for i in range(newspike.sid-2,0,-1):
 		if spikes[i] and i>=0:
@@ -637,7 +646,9 @@ def parsematch(path): # primary demo parse function
 		actions, hp = demo2data(lines,heroes,starttime)
 		assignteams(heroes,actions)
 		spikes = spikeparse(heroes,actions,hp)
+		assignsupport(heroes,actions)
 
+		# score tally
 		for hid in heroes:
 			if not isinstance(heroes[hid].team,int):
 				print(heroes[hid].name,heroes[hid].team)

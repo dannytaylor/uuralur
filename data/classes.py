@@ -13,7 +13,7 @@ class Hero:
 		# calculated
 		self.deaths = 0
 		self.targets = 0
-		self.support = 0
+		self.support = None
 		self.damagetaken = 0
 
 		self.sets = set()
