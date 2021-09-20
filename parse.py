@@ -123,10 +123,9 @@ def updateactionattribs(a):
 	a.target_type = powers[a.action]['target_type']
 	if "Delay" in powers[a.action]['tags']:
 		a.time_ms -= powers[a.action]['frames_before_hit']
+	a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
 	if a.tid and a.dist:
-		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
-	else:
-		a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
+		a.hittime += int(1000*a.dist/powers[a.action]['projectile_speed'])
 	a.roottime = a.time_ms + int(1000*powers[a.action]['frames_attack'])
 
 # determine at by process of elimination from powers
@@ -340,11 +339,6 @@ def demo2data(lines,h,starttime):
 						ha = checktarget(hid,lines,h,i,ha,reverse)
 						holdactions.append(ha)
 
-					elif line_fx in d.at_fx: # if an FX not corresponding to powers.json, but matches a specific powerset 
-						ps_a = c.Action(0,hid,line_fx,time_ms)
-						ps_a = checktarget(hid,lines,h,i,ps_a,d.at_fx[line_fx][2])
-						h[ps_a.hid].possible_ats =  h[ps_a.hid].possible_ats.intersection(d.at_fx[line_fx][1])
-
 
 	parseholdactions(actions,holdactions) # and updates power attribs
 	determinepowersets(h,actions)
@@ -546,12 +540,13 @@ def spikeparse(lines,heroes,actions,hp):
 						aa.spikeid = spikeid
 					spikeid += 1
 
-		groupactionsunderspike(hid,p_actions) # combine like-spikeids and extend spikes to adjacent action if appropriate
+		groupactionsunderspike(hid,h_actions) # combine like-spikeids and extend spikes to adjacent action if appropriate
 
-	numspikes = reorderspikes(heroes,actions) # reorder cronologically from spikeid=1
+	numspikes = reorderspikes(heroes,actions) # reorder cronologically from spikeid=1 and get number of spikes
 	spikedict = {} # create a spike object from group of spike actions
 	# dict for each spikeid to access actions included
-	for i in range(1,numspikes+1): spikedict[i] = []
+	for i in range(1,numspikes+1): 
+		spikedict[i] = []
 	for a in actions:
 		if a.spikeid:
 			spikedict[a.spikeid].append(a)
@@ -579,18 +574,19 @@ def spikeparse(lines,heroes,actions,hp):
 			a.spiketime = a.time_ms - spikestart
 			if a.hittime:
 				a.spikehittime = a.hittime - spikestart
-			a.spikeherocount = spikeactors[a.hid]
+			a.spikeactioncount = spikeactors[a.hid]
 			spikeactors[a.hid] += 1
 
-
-
-
-		newspike.start = spikestart
-		newspike.end = spikeend
+		newspike.hploss = spikehploss(newspike.tid,hp,spikestart,spikeend)
+		# duration and hploss use absolute time to calculation
+		# spikestart is recalculated based on certain params
 		newspike.duration = spikeend - spikestart
+		newspike.end = spikeend
+		newspike.start = spikestart 
+		# todo, new spike start calc
+
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
-			
 
 	return spikes
 
