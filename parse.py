@@ -530,6 +530,22 @@ def spikehploss(hid,hp,start,end):
 			return hploss
 	return hploss
 
+# weighted spike determ
+def weightedspikestart(recentattacks):
+	attackers = set()
+	weightedscore = 0
+	for atk in recentattacks:
+		attackers.add(atk.hid)
+		weightadd = 1
+		if "Primary" in atk.tags:
+			weightadd += 1
+		if "Half Weighted" in atk.tags:
+			weightadd /= 2
+		weightedscore += weightadd
+	if len(attackers) >= 3 or weightedscore >= config['spike_attack_count']:
+		print(weightedscore)
+		return True
+	return False
 
 # determine spikes based on attacks on heroes and flag actions as part of spikes
 def flagspikeactions(heroes,actions):
@@ -562,6 +578,7 @@ def flagspikeactions(heroes,actions):
 					len(recentattacks) >= config['spike_attack_count'] # 4 any attacks in larger window
 					or len(recentprimaryattacks) >= config['spike_attack_count']/2 # 4 primary attacks in smaller window
 					or (len(recentjauntreact) >=1 and len(recentjaunts) >=1) # or jaunt off 1 in small window
+					or weightedspikestart(recentattacks)
 					):
 					for recent in recentattacks: recent.spikeid = spikeid
 					for recent in recentjaunts:  recent.spikeid = spikeid
