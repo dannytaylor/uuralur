@@ -16,11 +16,6 @@ pos_delay: 1000   # time to look backwards to "real" current position
 pos_start_distance: 30   # distance min between 3 players for determining start
 max_team_size: 8   # distance min between 3 players for determining start
 
-heal_sets: 
-- "Empathy"
-- "Thermal Radiation"
-- "Electric Affinity"
-- "Pain Domination"
 
 
 # FROM DEMOPARSE

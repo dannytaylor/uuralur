@@ -110,3 +110,10 @@ at_maxhp = {
 	1848:{'blaster'},
 	2089:{'sentinel'},
 }
+
+heal_sets= {
+	"Empathy",
+	"Thermal Radiation",
+	"Electric Affinity",
+	"Pain Domination"
+}

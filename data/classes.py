@@ -15,6 +15,7 @@ class Hero:
 		self.targets = 0
 		self.support = None
 		self.damagetaken = 0
+		self.respites = 20 # assume re-buy and only greens
 
 		self.sets = set()
 		self.set1 = None
