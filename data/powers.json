@@ -6591,6 +6591,7 @@
         "recharge_time": 10.0,
         "tags": [
             "Attack",
+            "Half Weighted",
             "Primary"
         ],
         "target_type": "Foe (Alive)",
@@ -8442,6 +8443,7 @@
         "tags": [
             "Attack",
             "Debuff",
+            "Half Weighted",
             "Primary"
         ],
         "target_type": "Foe (Alive)",
@@ -16417,7 +16419,9 @@
         ],
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 60.0,
-        "tags": [],
+        "tags": [
+            "Phase"
+        ],
         "target_type": "Self",
         "targets_affected": [
             "Self"
@@ -19479,7 +19483,9 @@
         ],
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 60.0,
-        "tags": [],
+        "tags": [
+            "Phase"
+        ],
         "target_type": "Self",
         "targets_affected": [
             "Self"

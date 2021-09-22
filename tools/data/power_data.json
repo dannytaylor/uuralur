@@ -8,7 +8,8 @@
 		"Cooldown":["Envervating Field"],
 		"Delay":["Envervating Field","Dehydrate","Strangler","Spirit Shark Jaws"],
 		"NoMiss":["Blind","Adrenalin Boost"],
-		"AllowEpic":["Fossilize","Moonbeam","Total Focus"]
+		"AllowEpic":["Fossilize","Moonbeam","Total Focus"],
+		"Half Weighted":["Envenom","Disintegrate"]
 	}
 
 }

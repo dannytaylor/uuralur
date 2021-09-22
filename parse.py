@@ -272,11 +272,7 @@ def hponhit(hitpoints,actions):
 					elif hp.hid == a.hid and hp.time > a.hittime:
 						break
 			a.hithp = hithp
-
-
 	return
-
-
 
 # store all actions and hp
 def demo2data(lines,h,starttime):
@@ -559,19 +555,23 @@ def spikehploss(hid,hitpoints,start,end):
 	return hploss
 
 # weighted spike determ
-def weightedspikestart(recentattacks):
-	attackers = set()
+def weightedspikestart(recentattacks,recentjaunts,recentphases):
+	attackers = set() 
 	weightedscore = 0
+	if recentjaunts or recentphases: # count maximum 1 jaunt or phase action towards weight
+		weightedscore += 1 
+
 	for atk in recentattacks:
 		attackers.add(atk.hid)
 		weightadd = 1
 		if "Primary" in atk.tags:
-			weightadd += 1
+			weightadd += 0.5
 		if "Half Weighted" in atk.tags:
 			weightadd /= 2
 		weightedscore += weightadd
-	if len(attackers) >= 3 or weightedscore >= config['spike_attack_count']:
-		return True
+	if len(attackers) >= 2: # minimum 2 attackers to be a spike
+		if len(attackers) >= 3 or weightedscore >= config['spike_weighted_score']:
+			return True
 	return False
 
 # determine spikes based on attacks on heroes and flag actions as part of spikes
@@ -597,7 +597,7 @@ def flagspikeactions(heroes,actions):
 
 				recentattacks = 		[x for x in recentattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window'])]
 				recentprimaryattacks = 	[x for x in recentprimaryattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
-				recentphases = 			[x for x in recentphases if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']*2)]
+				recentphases = 			[x for x in recentphases if isrecentaction(a.time_ms,x.time_ms,config['spike_extend_window'])]
 				recentjaunts = 			[x for x in recentjaunts if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
 				recentjauntreact = 		[x for x in recentattacks if "Jaunt React" in a.tags] # for jauntoffone
 
@@ -605,7 +605,7 @@ def flagspikeactions(heroes,actions):
 					len(recentattacks) >= config['spike_attack_count'] # 4 any attacks in larger window
 					or len(recentprimaryattacks) >= config['spike_attack_count']/2 # 4 primary attacks in smaller window
 					or (len(recentjauntreact) >=1 and len(recentjaunts) >=1) # or jaunt off 1 in small window
-					or weightedspikestart(recentattacks)
+					or weightedspikestart(recentattacks,recentjaunts,recentphases)
 					):
 					for recent in recentattacks: recent.spikeid = spikeid
 					for recent in recentjaunts:  recent.spikeid = spikeid
