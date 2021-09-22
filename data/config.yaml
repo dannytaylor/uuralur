@@ -16,6 +16,12 @@ pos_delay: 1000   # time to look backwards to "real" current position
 pos_start_distance: 30   # distance min between 3 players for determining start
 max_team_size: 8   # distance min between 3 players for determining start
 
+heal_sets: 
+- "Empathy"
+- "Thermal Radiation"
+- "Electric Affinity"
+- "Pain Domination"
+
 
 # FROM DEMOPARSE
 # times in sec
@@ -34,6 +40,6 @@ t_bundle_step: 30
 phasedelay: 0.63 # delay after activation when unaffecting (max delay for phase, using same value hibe for this)
 phasemax: 4 # window after phase where heals on target don't count
 paintedtimer: 16 # ~how long after a (psn) debuff indicator it's still valid, not sure when the second pops up?
-extras_start: 4
+extras_start: 4 # time past match start to count support 'extras'
 repeat_reset: 4 # how long to ignore duplicate of repeating power (i.e. enervating field)
 posdelay: 1 # how long in s to delay position coords for distance calcs (due to server lag)
