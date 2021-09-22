@@ -661,8 +661,7 @@
         "projectile_speed": 300.0,
         "recharge_time": 6.0,
         "tags": [
-            "Attack",
-            "Primary"
+            "Attack"
         ],
         "target_type": "Foe (Alive)",
         "targets_affected": [
@@ -2420,8 +2419,7 @@
         "projectile_speed": 300.0,
         "recharge_time": 10.0,
         "tags": [
-            "Attack",
-            "Primary"
+            "Attack"
         ],
         "target_type": "Foe (Alive)",
         "targets_affected": [
@@ -6590,9 +6588,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10.0,
         "tags": [
-            "Attack",
-            "Half Weighted",
-            "Primary"
+            "Attack"
         ],
         "target_type": "Foe (Alive)",
         "targets_affected": [
@@ -8442,9 +8438,7 @@
         "recharge_time": 12.0,
         "tags": [
             "Attack",
-            "Debuff",
-            "Half Weighted",
-            "Primary"
+            "Debuff"
         ],
         "target_type": "Foe (Alive)",
         "targets_affected": [

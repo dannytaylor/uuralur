@@ -198,7 +198,7 @@ def determinepowersets(heroes,actions):
 		# otherwise look if sets have been found before
 		else:
 			# if no archetype and only 1 healing set, assume it's a defender
-			if not h.archetype and len(h.sets) == 1 and max(h.sets) in config['heal_sets']:
+			if not h.archetype and len(h.sets) == 1 and max(h.sets) in d.heal_sets:
 				h.archetype = "defender/corruptor"
 			# if the one determined set matches known info then add the other set
 			if h.name in hero_data and 'sets' in hero_data[h.name] and len(hero_data[h.name]['sets']) == 2:
@@ -566,8 +566,6 @@ def weightedspikestart(recentattacks,recentjaunts,recentphases):
 		weightadd = 1
 		if "Primary" in atk.tags:
 			weightadd += 0.5
-		if "Half Weighted" in atk.tags:
-			weightadd /= 2
 		weightedscore += weightadd
 	if len(attackers) >= 2: # minimum 2 attackers to be a spike
 		if len(attackers) >= 3 or weightedscore >= config['spike_weighted_score']:

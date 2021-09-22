@@ -1,15 +1,14 @@
 {
 	"tags":{
 		"Phase":["Hibernate","Phase Shift","Nebulous Form","Quantum Flight"],
-		"Primary":["Blaze","Bitter Ice Blast","Will Domination","Lancer Shot","Aimed/Ranged Shot","Envenom","Disintegrate","Executioner's Shot","Blazing Arrow"],
+		"Primary":["Blaze","Bitter Ice Blast","Will Domination","Lancer Shot","Executioner's Shot"],
 		"Teleport":["Teleport (misc)","Jaunt"],
 		"Jaunt React":["Blaze","Bitter Ice Blast"],
 		"CM":["Clear Mind","Clarity","Enforced Morale","Thaw","Antidote","Faraday Cage","Injection","Increase Density"],
 		"Cooldown":["Envervating Field"],
 		"Delay":["Envervating Field","Dehydrate","Strangler","Spirit Shark Jaws"],
 		"NoMiss":["Blind","Adrenalin Boost"],
-		"AllowEpic":["Fossilize","Moonbeam","Total Focus"],
-		"Half Weighted":["Envenom","Disintegrate"]
+		"AllowEpic":["Fossilize","Moonbeam","Total Focus"]
 	}
 
 }
