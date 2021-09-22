@@ -197,8 +197,11 @@ def determinepowersets(heroes,actions):
 				herodump[h.name] = {'sets':list(h.sets)}
 		# otherwise look if sets have been found before
 		else:
+			# if no archetype and only 1 healing set, assume it's a defender
+			if not h.archetype and len(h.sets) == 1 and max(h.sets) in config['heal_sets']:
+				h.archetype = "defender/corruptor"
+			# if the one determined set matches known info then add the other set
 			if h.name in hero_data and 'sets' in hero_data[h.name] and len(hero_data[h.name]['sets']) == 2:
-				# if the one determined set matches known info then add the other set
 				if len(h.sets) == 1 and max(h.sets) in hero_data[h.name]['sets']: # match set must be in saved old set
 					h.sets = set(hero_data[h.name]['sets'])
 			elif h.name not in herodump and HERODUMP:
@@ -251,6 +254,30 @@ def checktarget(hid,lines,h,i,a,reverse):
 			return a
 	return a
 
+# assigns most recent HP value when a power is calculated to hit
+def hponhit(hitpoints,actions):
+	for a in actions:
+		if a.hittime:
+			hithp = None
+			if a.tid:
+				for hp in hitpoints:
+					if hp.hid == a.tid and hp.time <= a.hittime:
+						hithp = hp.hp
+					elif hp.hid == a.tid and hp.time > a.hittime:
+						break
+			elif not a.tid and a.target_type == 'Self':
+				for hp in hitpoints:
+					if hp.hid == a.hid and hp.time <= a.hittime:
+						hithp = hp.hp
+					elif hp.hid == a.hid and hp.time > a.hittime:
+						break
+			a.hithp = hithp
+
+
+	return
+
+
+
 # store all actions and hp
 def demo2data(lines,h,starttime):
 	time_ms = -starttime
@@ -279,7 +306,7 @@ def demo2data(lines,h,starttime):
 					hploss = max(h[hid].lasthp - currenthp, 0)
 					h[hid].damagetaken += hploss
 					h[hid].lasthp = currenthp
-					hp.append([time_ms,hid,currenthp,hploss])
+					hp.append(c.Hitpoints(hid,time_ms,currenthp,hploss))
 
 					if currenthp == 0:
 						if countdeath(h[hid],time_ms):
@@ -288,7 +315,7 @@ def demo2data(lines,h,starttime):
 							actions.append(a)
 							actionid += 1
 				elif entity == 'HPMAX':
-					h[hid].hpmax == max(h[hid].hpmax,float(command))
+					h[hid].hpmax = max(h[hid].hpmax,float(command))
 				elif entity == 'POS' and lines[i][5]:
 					h[hid].posrecent.append([time_ms,np.array([float(lines[i][3]),float(lines[i][4]),float(lines[i][5])])])
 					h[hid].posrecent = [pos for pos in h[hid].posrecent if pos[0] > time_ms - config['pos_delay']]
@@ -341,7 +368,8 @@ def demo2data(lines,h,starttime):
 
 
 	parseholdactions(actions,holdactions) # and updates power attribs
-	determinepowersets(h,actions)
+	determinepowersets(h,actions) # trys to guess AT and powersets based on actions done
+	hponhit(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
 
 	return actions,hp # not used
 
@@ -521,12 +549,12 @@ def isspikereset(spikes,newspike,heroes):
 	return False			
 
 # returns total HP loss by a target on a spike
-def spikehploss(hid,hp,start,end):
+def spikehploss(hid,hitpoints,start,end):
 	hploss = 0
-	for val in hp:
-		if val[1] == hid and val[0] >= start and val[0]<=end+config['spike_extend_window']:
-			hploss += val[3]
-		elif val[0]>end+config['spike_extend_window']:
+	for hp in hitpoints:
+		if hp.hid == hid and hp.time >= start and hp.time<=end+config['spike_extend_window']:
+			hploss += hp.hploss
+		elif hp.time>end+config['spike_extend_window']:
 			return hploss
 	return hploss
 
@@ -543,7 +571,6 @@ def weightedspikestart(recentattacks):
 			weightadd /= 2
 		weightedscore += weightadd
 	if len(attackers) >= 3 or weightedscore >= config['spike_attack_count']:
-		print(weightedscore)
 		return True
 	return False
 
@@ -667,8 +694,6 @@ def parsematch(path): # primary demo parse function
 
 		# score tally
 		for hid in heroes:
-			if not isinstance(heroes[hid].team,int):
-				print(heroes[hid].name,heroes[hid].team)
 			score[heroes[hid].team] += heroes[hid].deaths
 		score.reverse()
 		if sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:

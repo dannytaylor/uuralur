@@ -21,7 +21,7 @@ class Hero:
 		self.set2 = None
 		self.archetype = None
 
-		# parse variables (varying, but not added to database)
+		# parse variables, updated for calculating other attribs
 		self.poscurrent = None
 		self.posdelay = None
 		self.posrecent = []
@@ -56,6 +56,9 @@ class Action:
 		self.roottime = None # time spend in cast
 		self.reverse = False
 
+		# addl action parsing
+		self.hithp = None
+
 		# spike data
 		self.spikeid = None
 		self.spiketime = None # time relative to spike start
@@ -83,3 +86,10 @@ class Spike:
 		self.kill = None
 		self.reset = False
 		self.hploss = 0
+
+class Hitpoints:
+	def __init__(self, hid, time, hp, hploss):
+		self.hid = hid
+		self.time = time
+		self.hp = hp
+		self.hploss = hploss
