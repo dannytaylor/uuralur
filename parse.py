@@ -643,6 +643,26 @@ def flagspikeactions(heroes,actions):
 					spikeid += 1
 		groupactionsunderspike(hid,actions) # combine like-spikeids and extend spikes to adjacent action if appropriate
 
+# build spike attack chain dicts for each player
+def countattackchains(heroes,actions,spikes):
+	for hid,h in heroes.items():
+		for s in spikes:
+			attacks = [a for a in actions if (
+				a.spikeid == s.sid # action in spike
+				and hid == a.hid # action by current hero
+				and a.tid and heroes[a.tid].team != h.team # target is an enemy
+				)]
+			if attacks:
+				attackchain = []
+				for atk in attacks:
+					attackchain.append(atk.action)
+				attackchain = str(attackchain)
+				if attackchain not in h.attackchains: h.attackchains[attackchain] = 0
+				h.attackchains[attackchain] += 1
+		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
+
+
+
 # parse spikes via actions, main function
 def spikeparse(heroes,actions,hp):
 
@@ -695,7 +715,8 @@ def spikeparse(heroes,actions,hp):
 
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
-
+	
+	countattackchains(heroes,actions,spikes)
 
 	return spikes
 
