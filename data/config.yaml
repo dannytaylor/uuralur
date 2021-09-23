@@ -13,9 +13,10 @@ match_length: 600000   #  typical match time 10 min
 buff_period: 30000   #  typical match time 10 min
 end_buffer: 1000   # time buffer to look at past estimated end of match
 pos_delay: 1000   # time to look backwards to "real" current position
-pos_start_distance: 30   # distance min between 3 players for determining start
+pos_start_distance: 30   # distance min between 3 players for determining match start
 max_team_size: 8   # distance min between 3 players for determining start
-
+phase_hit_delay: 250 # delay from hit to count unaffecting, 2 ticks @ 1/8 rough estimate
+phase_hit_reset: 4500 # time after phasehit to start counting hits again
 
 
 # FROM DEMOPARSE
@@ -25,16 +26,8 @@ earlyevadetime: 2
 targethealwindow: 1.7   # depends on the type of offense (blaze lead requires lower than beam)
 targethealwindowdmg: 0.7  # depends on the type of offense (blaze lead requires lower than beam)
 targethealatks: 3   # depends on the type of offense (blaze lead requires lower than beam)
-targetmaxtime: 4 # MIN spike time to look for attacks
-targetcooldown: 4 # end time of spike to check new attacks
 targetminattacks: 2   # minimum atks on target to count as attack
 targetminattackers: 2 # minimum ppl on target to count as attack
-predictspiketime: 12 # time before someone gets spiked where they can receive an absorb and have it count as a heal, e.g. spirit warding someone you expect to be the next target
-matchtime: 600 # time in seconds (10 min)
-t_bundle_step: 30
-phasedelay: 0.63 # delay after activation when unaffecting (max delay for phase, using same value hibe for this)
-phasemax: 4 # window after phase where heals on target don't count
-paintedtimer: 16 # ~how long after a (psn) debuff indicator it's still valid, not sure when the second pops up?
+repeat_cd_factor: 4 # fraction of power's recharge time to use as a repeated power time window
 extras_start: 4 # time past match start to count support 'extras'
-repeat_reset: 4 # how long to ignore duplicate of repeating power (i.e. enervating field)
-posdelay: 1 # how long in s to delay position coords for distance calcs (due to server lag)
+

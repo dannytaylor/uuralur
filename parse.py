@@ -119,7 +119,7 @@ def countdeath(h,time_ms):
 		return False
 
 def updateactionattribs(a):
-	a.tags = powers[a.action]['tags']
+	a.tags = powers[a.action]['tags'][:]
 	a.target_type = powers[a.action]['target_type']
 	if "Delay" in powers[a.action]['tags']:
 		a.time_ms -= powers[a.action]['frames_before_hit']
@@ -274,6 +274,17 @@ def hponhit(hitpoints,actions):
 			a.hithp = hithp
 	return
 
+# tag actions with "Phase Hit" if target phases
+def phasehits(actions):
+	phases = [] # [hid,hittime]
+	for a in actions:
+		if "Phase" in a.tags:
+			phases.append([a.hid,a.time_ms])
+	for a in actions:
+		phasecheck = [p for p in phases if (a.tid == p[0] and a.time_ms > p[1]+ config['phase_hit_delay'] and a.time_ms < p[1] + config['phase_hit_reset'])]
+		if phasecheck: a.tags.append("Phase Hit")
+	
+
 # store all actions and hp
 def demo2data(lines,h,starttime):
 	time_ms = -starttime
@@ -296,6 +307,7 @@ def demo2data(lines,h,starttime):
 			entity = lines[i][2]
 			command  = lines[i][3]
 
+			# only look at actions involving heroes. also ignores reverse powers on NPCs
 			if hid in h:
 				if entity == 'HP':
 					currenthp = float(command)
@@ -366,6 +378,7 @@ def demo2data(lines,h,starttime):
 	parseholdactions(actions,holdactions) # and updates power attribs
 	determinepowersets(h,actions) # trys to guess AT and powersets based on actions done
 	hponhit(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
+	phasehits(actions)
 
 	return actions,hp # not used
 
