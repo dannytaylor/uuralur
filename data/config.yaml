@@ -17,6 +17,7 @@ pos_start_distance: 30   # distance min between 3 players for determining match 
 max_team_size: 8   # distance min between 3 players for determining start
 phase_hit_delay: 250 # delay from hit to count unaffecting, 2 ticks @ 1/8 rough estimate
 phase_hit_reset: 4500 # time after phasehit to start counting hits again
+repeat_cd_factor: 3 # fraction of power's recharge time to use as a repeated power time window
 
 
 # FROM DEMOPARSE
@@ -28,6 +29,5 @@ targethealwindowdmg: 0.7  # depends on the type of offense (blaze lead requires 
 targethealatks: 3   # depends on the type of offense (blaze lead requires lower than beam)
 targetminattacks: 2   # minimum atks on target to count as attack
 targetminattackers: 2 # minimum ppl on target to count as attack
-repeat_cd_factor: 4 # fraction of power's recharge time to use as a repeated power time window
 extras_start: 4 # time past match start to count support 'extras'
 

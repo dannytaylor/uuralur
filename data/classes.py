@@ -67,7 +67,7 @@ class Action:
 		self.spikeherocount = None # action number on spike, by player
 
 		# action attributes, from powers json
-		self.tags = []
+		self.tags = set()
 		self.type = None
 		self.target_type = None
 

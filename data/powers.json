@@ -8166,7 +8166,9 @@
         "recharge_time": 8.0,
         "tags": [
             "Attack",
-            "Debuff"
+            "Debuff",
+            "Delay",
+            "Repeat"
         ],
         "target_type": "Foe",
         "targets_affected": [
@@ -23907,7 +23909,8 @@
         "recharge_time": 15.0,
         "tags": [
             "Heal",
-            "Pool"
+            "Pool",
+            "Repeat"
         ],
         "target_type": "Ally (Alive)",
         "targets_affected": [

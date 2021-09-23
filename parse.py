@@ -119,7 +119,7 @@ def countdeath(h,time_ms):
 		return False
 
 def updateactionattribs(a):
-	a.tags = powers[a.action]['tags'][:]
+	a.tags = set(powers[a.action]['tags'])
 	a.target_type = powers[a.action]['target_type']
 	if "Delay" in powers[a.action]['tags']:
 		a.time_ms -= powers[a.action]['frames_before_hit']
@@ -282,8 +282,27 @@ def phasehits(actions):
 			phases.append([a.hid,a.time_ms])
 	for a in actions:
 		phasecheck = [p for p in phases if (a.tid == p[0] and a.time_ms > p[1]+ config['phase_hit_delay'] and a.time_ms < p[1] + config['phase_hit_reset'])]
-		if phasecheck: a.tags.append("Phase Hit")
-	
+		if phasecheck: a.tags.add("Phase Hit")
+
+# remove repeat actions before it's possible to recast them
+def parserepeatactions(heroes,actions):
+	removerepeats = set()
+	repeats = []
+	for a in actions:
+		if "Repeat" in a.tags:
+			repeats.append(a)
+	for hid in heroes:
+		# go by each hero
+		rh = [r for r in repeats if r.hid == hid]
+		if len(rh)>1:
+			for i in range(1,len(rh)):
+				if (rh[i].action == rh[i-1].action and rh[i].tid == rh[i-1].tid # if same action and target
+					and rh[i].time_ms < rh[i-1].time_ms + 1000*powers[rh[i].action]['recharge_time']/config['repeat_cd_factor']): # if impossible to recast based on recharge time
+					removerepeats.add(rh[i].aid)
+	actions = [a for a in actions if a.aid not in removerepeats]
+	return actions
+
+
 
 # store all actions and hp
 def demo2data(lines,h,starttime):
@@ -319,7 +338,7 @@ def demo2data(lines,h,starttime):
 					if currenthp == 0:
 						if countdeath(h[hid],time_ms):
 							a = c.Action(actionid,hid,"Death",time_ms)
-							a.tags.append("MOV")
+							a.tags.add("MOV")
 							actions.append(a)
 							actionid += 1
 				elif entity == 'HPMAX':
@@ -332,7 +351,7 @@ def demo2data(lines,h,starttime):
 
 				elif entity == 'MOV' and command in d.movs:
 					a = c.Action(actionid,hid,d.movs[command],time_ms)
-					a.tags.append("MOV")
+					a.tags.add("MOV")
 					if "Death" in command or "DEATH" in command:
 						if countdeath(h[hid],time_ms):
 							actions.append(a)
@@ -374,8 +393,8 @@ def demo2data(lines,h,starttime):
 						ha = checktarget(hid,lines,h,i,ha,reverse)
 						holdactions.append(ha)
 
-
 	parseholdactions(actions,holdactions) # and updates power attribs
+	actions = parserepeatactions(h,actions)
 	determinepowersets(h,actions) # trys to guess AT and powersets based on actions done
 	hponhit(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
 	phasehits(actions)
