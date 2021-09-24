@@ -150,12 +150,14 @@ def initpower(name,powers,data):
 
 	# attribs determined by first instance found
 	p['type'] = data['type']
-	p['recharge_time'] = data['recharge_time']
+	p['recharge_time'] = int(1000*data['recharge_time']) # power recharge time in ms
 	p['effect_area'] = data['effect_area'] # singletaget (includes self), aoe (target and pb), self, location, cone
 	p['target_type'] = data['target_type']
-	p['frames_attack'] = data['fx']['frames_attack']/30 # how long in animation
-	p['frames_before_hit'] = data['fx']['frames_before_hit']/30 # frames from cast to projectile launch
-	p['projectile_speed'] = data['fx']['projectile_speed']
+	p['frames_attack'] = int(1000*data['fx']['frames_attack']/30) # how long in animation in ms
+	p['frames_before_hit'] = int(1000*data['fx']['frames_before_hit']/30) # frames2ms from cast to projectile launch
+	if name in power_data["frames_before_hit"]:
+		p['frames_before_hit'] = power_data["frames_before_hit"][name]
+	p['projectile_speed'] = data['fx']['projectile_speed'] # speed in units per *SECOND* not ms
 
 	# fx (non-custom)
 	p['attack_fx'] = set()

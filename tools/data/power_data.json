@@ -6,9 +6,12 @@
 		"Jaunt React":["Blaze","Bitter Ice Blast"],
 		"CM":["Clear Mind","Clarity","Enforced Morale","Thaw","Antidote","Faraday Cage","Injection","Increase Density"],
 		"Delay":["Enervating Field","Dehydrate","Strangler","Spirit Shark Jaws"],
-		"NoMiss":["Blind","Adrenalin Boost"],
+		"NoMiss":["Blind","Adrenalin Boost","Spirit Ward"],
 		"Repeat":["Spirit Ward","Enervating Field"],
 		"AllowEpic":["Fossilize","Moonbeam","Total Focus"]
+	},
+	"frames_before_hit":{
+		"Enervating Field":1500
 	}
 
 }

@@ -122,11 +122,11 @@ def updateactionattribs(a):
 	a.tags = set(powers[a.action]['tags'])
 	a.target_type = powers[a.action]['target_type']
 	if "Delay" in powers[a.action]['tags']:
-		a.time_ms -= powers[a.action]['frames_before_hit']
-	a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
+		a.time_ms -= (powers[a.action]['frames_before_hit'])
+	a.hittime = a.time_ms + powers[a.action]['frames_before_hit']
 	if a.tid and a.dist:
 		a.hittime += int(1000*a.dist/powers[a.action]['projectile_speed'])
-	a.roottime = a.time_ms + int(1000*powers[a.action]['frames_attack'])
+	a.roottime = a.time_ms + powers[a.action]['frames_attack']
 
 # determine at by process of elimination from powers
 def determinearchetypes(heroes,actions):
@@ -222,9 +222,9 @@ def parseholdactions(actions,holdactions):
 			if isinstance(a.action,list): 
 				a.action = a.action[0]
 			if a.tid and a.dist:
-				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit']+a.dist/powers[a.action]['projectile_speed'])
+				a.hittime = a.time_ms + powers[a.action]['frames_before_hit'] + int(1000*(a.dist/powers[a.action]['projectile_speed']))
 			else:
-				a.hittime = a.time_ms + int(1000*powers[a.action]['frames_before_hit'])
+				a.hittime = a.time_ms + powers[a.action]['frames_before_hit']
 		if "MOV" not in a.tags:
 			updateactionattribs(a)
 
@@ -373,8 +373,6 @@ def demo2data(lines,h,starttime):
 						## if action == 'OneShot'/'Maintained': # if check needed with fx system?
 						# check next ~4 lines for target id
 						a = c.Action(actionid,hid,act,time_ms)
-						if isinstance(act,str) and "Delay" in powers[a.action]['tags']:
-							a.time_ms -= powers[act]['frames_before_hit']
 						actionid += 1
 
 						a = checktarget(hid,lines,h,i,a,reverse)
@@ -662,7 +660,6 @@ def countattackchains(heroes,actions,spikes):
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
 
-
 # parse spikes via actions, main function
 def spikeparse(heroes,actions,hp):
 
@@ -684,10 +681,12 @@ def spikeparse(heroes,actions,hp):
 		spikestart = 9999999999 # arbitrarily large number
 		spikeend   = 0
 		spikeactors = {}
+		firsthit = spikestart
 		for a in sa:
 			if a.hittime and "Attack" in a.tags: 
 				spikestart = min(spikestart,a.time_ms)
 				spikeend   = max(spikeend,a.hittime)
+				firsthit   = min(firsthit,a.hittime)
 			if not newspike.tid and a.tid:
 				newspike.tid = a.tid
 				newspike.target = heroes[a.tid].name
@@ -711,6 +710,7 @@ def spikeparse(heroes,actions,hp):
 		newspike.duration = spikeend - spikestart
 		newspike.end = spikeend
 		newspike.start = spikestart 
+		newspike.hitwindow	  = spikeend - firsthit
 		# todo, new spike start calc
 
 		spikes.append(newspike)

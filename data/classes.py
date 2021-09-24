@@ -88,6 +88,7 @@ class Spike:
 		self.kill = None
 		self.reset = False
 		self.hploss = 0
+		self.hitwindow = None
 
 class Hitpoints:
 	def __init__(self, hid, time, hp, hploss):
