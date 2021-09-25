@@ -164,6 +164,8 @@ def initpower(name,powers,data):
 	p['hit_fx'] = set()
 	p['activation_fx'] = set()
 
+	p['icon'] = data['icon']
+
 	updatepower(name,powers,data)
 
 def addpooltags(name,powers,data):
@@ -192,6 +194,7 @@ def addpooltags(name,powers,data):
 
 def updatepowerfx(name,powers,data):
 	p = powers[name]
+	# currently skipping customFX - not being used
 	if data['fx']['attack_fx']: 		p['attack_fx'].add(data['fx']['attack_fx'])
 	if data['fx']['hit_fx']: 			p['hit_fx'].add(data['fx']['hit_fx'])
 	if data['fx']['activation_fx']:		p['activation_fx'].add(data['fx']['activation_fx'])
