@@ -78,7 +78,6 @@ def demo2heroes(lines):
 				if h.name.lower() == hname.lower():
 					h.playername = pname
 					break
-		# print(h.name)
 	return heroes
 
 # checks if 3 players are all separate from each other
@@ -131,7 +130,6 @@ def updateactionattribs(a):
 # determine at by process of elimination from powers
 def determinearchetypes(heroes,actions):
 	for hid,h in heroes.items():
-		# possible_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
 		possible_ats = h.possible_ats.copy()
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
@@ -156,7 +154,6 @@ def determinearchetypes(heroes,actions):
 			if h.name in hero_data and 'archetype' in hero_data[h.name]:
 				h.archetype = hero_data[h.name]['archetype']
 				h.possible_ats.add(h.archetype)
-		# print(h.name,' ',h.possible_ats)
 
 # determine powersets from determined AT and by process of elimination from powers
 def determinepowersets(heroes,actions):
@@ -206,7 +203,6 @@ def determinepowersets(heroes,actions):
 					h.sets = set(hero_data[h.name]['sets'])
 			elif h.name not in herodump and HERODUMP:
 				herodump[h.name] = {}
-		# print(h.name,' ',h.sets)
 
 # handle hold actions waiting to be determined
 def parseholdactions(actions,holdactions):
@@ -370,7 +366,6 @@ def demo2data(lines,h,starttime):
 							act = fx['hit'][line_fx]
 							reverse = True
 						tid = None
-						## if action == 'OneShot'/'Maintained': # if check needed with fx system?
 						# check next ~4 lines for target id
 						a = c.Action(actionid,hid,act,time_ms)
 						actionid += 1
@@ -423,15 +418,12 @@ def applyteamnumbers(heroes,teams):
 		if heroes[h].firstherofound:
 			assignteam = 1
 			break
-	# if TEAMSWAP: assignteam = abs(assignteam-1)
+	# if TEAMSWAP: assignteam = abs(assignteam-1) # may not be required/manual tuning from demoparse data
 	for h in teams[assignteam]:
 		heroes[h].team = 0 
 	assignteam = abs(assignteam-1)
 	for h in teams[assignteam]:
 		heroes[h].team = 1
-	# for h in heroes:
-	# 	print(heroes[h].team,heroes[h].name)
-	# print(teams)
 	return
 
 # assigns teams
@@ -727,6 +719,7 @@ def parsematch(path): # primary demo parse function
 	mid = path.split('/')[-1].split('.cohdemo')[0]
 	sid = path.split('/')[-2]
 	score = [0,0]
+	score = [0,0]
 	demomap = None
 
 	db.createdatatables()
@@ -746,17 +739,18 @@ def parsematch(path): # primary demo parse function
 		# score tally
 		for hid in heroes:
 			score[heroes[hid].team] += heroes[hid].deaths
+			targets[heroes[hid].team] += heroes[hid].targets
 		score.reverse()
+		targets.reverse()
 		if sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:
 			score[0]+= overrides[sid][mid]['SCORE'][0]
 			score[1]+= overrides[sid][mid]['SCORE'][1]
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
 
 	print('score:     ', score)
-	# print('lines run: ', len(lines)) # parse runtime
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
-	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],0,0])
+	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],target[0],targets[1]])
 	return score
 	
 
@@ -834,7 +828,6 @@ def main():
 	
 	db.con.commit()
 	db.con.close()
-
 
 
 if __name__ == '__main__':
