@@ -18,7 +18,8 @@ fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
 
-HERODUMP = False
+HERODUMP = True
+OVERRIDE = False
 
 hero_data = {}
 herodump = {}
@@ -119,7 +120,11 @@ def countdeath(h,time_ms):
 
 def updateactionattribs(a):
 	a.tags = set(powers[a.action]['tags'])
+	a.type = powers[a.action]['type']
 	a.target_type = powers[a.action]['target_type']
+	a.effect_area = powers[a.action]['effect_area']
+	if a.type == "Toggle" and a.target_type == "Self" and "Phase" in a.tags: # manual override phases for sql filtering
+		a.type = "Phase"
 	if "Delay" in powers[a.action]['tags']:
 		a.time_ms -= (powers[a.action]['frames_before_hit'])
 	a.hittime = a.time_ms + powers[a.action]['frames_before_hit']
@@ -719,7 +724,7 @@ def parsematch(path): # primary demo parse function
 	mid = path.split('/')[-1].split('.cohdemo')[0]
 	sid = path.split('/')[-2]
 	score = [0,0]
-	score = [0,0]
+	targets = [0,0]
 	demomap = None
 
 	db.createdatatables()
@@ -738,11 +743,11 @@ def parsematch(path): # primary demo parse function
 
 		# score tally
 		for hid in heroes:
-			score[heroes[hid].team] += heroes[hid].deaths
+			score[heroes[hid].team]   += heroes[hid].deaths
 			targets[heroes[hid].team] += heroes[hid].targets
 		score.reverse()
 		targets.reverse()
-		if sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:
+		if OVERRIDE and sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:
 			score[0]+= overrides[sid][mid]['SCORE'][0]
 			score[1]+= overrides[sid][mid]['SCORE'][1]
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
@@ -750,7 +755,7 @@ def parsematch(path): # primary demo parse function
 	print('score:     ', score)
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
-	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],target[0],targets[1]])
+	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],targets[0],targets[1]])
 	return score
 	
 

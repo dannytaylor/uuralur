@@ -71,6 +71,7 @@ class Action:
 		self.tags = set()
 		self.type = None
 		self.target_type = None
+		self.effect_area = None
 
 
 
