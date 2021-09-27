@@ -19,6 +19,9 @@ phase_hit_delay: 250 # delay from hit to count unaffecting, 2 ticks @ 1/8 rough 
 phase_hit_reset: 4500 # time after phasehit to start counting hits again
 repeat_cd_factor: 3 # fraction of power's recharge time to use as a repeated power time window
 
+# for streamlit
+spike_display_extend: 2000
+
 
 # FROM DEMOPARSE
 # times in sec

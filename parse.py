@@ -17,7 +17,6 @@ powers = json.loads(open('data/powers.json').read())
 fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
-
 HERODUMP = True
 OVERRIDE = False
 
@@ -123,6 +122,7 @@ def updateactionattribs(a):
 	a.type = powers[a.action]['type']
 	a.target_type = powers[a.action]['target_type']
 	a.effect_area = powers[a.action]['effect_area']
+	a.icon = powers[a.action]['icon']
 	if a.type == "Toggle" and a.target_type == "Self" and "Phase" in a.tags: # manual override phases for sql filtering
 		a.type = "Phase"
 	if "Delay" in powers[a.action]['tags']:
@@ -228,6 +228,8 @@ def parseholdactions(actions,holdactions):
 				a.hittime = a.time_ms + powers[a.action]['frames_before_hit']
 		if "MOV" not in a.tags:
 			updateactionattribs(a)
+		elif "MOV" in a.tags:
+			a.icon = d.movicons[a.action]
 
 	# remove all actions with undefined powers (.action is a list)
 	actions = [a for a in actions if not isinstance(a.action,list)]
@@ -303,7 +305,12 @@ def parserepeatactions(heroes,actions):
 	actions = [a for a in actions if a.aid not in removerepeats]
 	return actions
 
-
+def reorderactions(actions):
+	actions.sort(key=lambda x: x.time_ms)
+	newaid = 1
+	for a in actions:
+		a.aid = newaid
+		newaid += 1
 
 # store all actions and hp
 def demo2data(lines,h,starttime):

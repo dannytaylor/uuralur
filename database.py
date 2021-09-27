@@ -26,7 +26,7 @@ def createdatatables():
 				action_id INT,
 				match_id INT,
 				series_id TEXT, 
-				action_time REAL, 
+				time_ms REAL, 
 				actor TEXT, 
 				action TEXT, 
 				target TEXT, 
@@ -34,7 +34,7 @@ def createdatatables():
 				hit_hp REAL, 
 				cast_dist REAL, 
 				root_time REAL, 
-				spike_id INT, d
+				spike_id INT,
 				spike_time REAL, 
 				spike_hit_time REAL, 
 				spike_action_number INT, 
@@ -42,13 +42,14 @@ def createdatatables():
 				action_type TEXT, 
 				action_target_type TEXT, 
 				action_effect_area TEXT, 
+				icon TEXT, 
 				PRIMARY KEY (action_id,series_id, match_id));
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS Spikes (
 				spike_id INT, 
 				match_id INT,
 				series_id TEXT, 
-				spike_start REAL, 
+				time_ms REAL, 
 				spike_duration REAL, 
 				target TEXT, 
 				target_team TEXT, 
@@ -59,7 +60,7 @@ def createdatatables():
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS Heroes (
 				hero TEXT, 
-				h_id TEXT, 
+				hid TEXT, 
 				match_id INT,
 				series_id TEXT, 
 				team INT, 
@@ -75,13 +76,13 @@ def createdatatables():
 				PRIMARY KEY (hero, series_id, match_id));
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS HP (
-				match_time REAL, 
+				time_ms REAL, 
 				hero TEXT, 
 				match_id INT,
 				series_id TEXT, 
 				hp REAL, 
 				hp_loss REAL, 
-				PRIMARY KEY (match_time, hero, series_id, match_id));
+				PRIMARY KEY (time_ms, hero, series_id, match_id));
 				''')
 def creatematchestable():
 	cur.execute('''CREATE TABLE IF NOT EXISTS Matches (
@@ -113,7 +114,7 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 	for a in actions:
 		target = None
 		if a.tid: target = heroes[a.tid].name
-		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.hithp,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount,str(a.tags),a.type,a.target_type,a.effect_area])
+		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.hithp,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount,str(a.tags),a.type,a.target_type,a.effect_area,a.icon])
 	for s in spikes:
 		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset])
 	for hid,h in heroes.items():
