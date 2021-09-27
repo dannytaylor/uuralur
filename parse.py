@@ -403,6 +403,7 @@ def demo2data(lines,h,starttime):
 	determinepowersets(h,actions) # trys to guess AT and powersets based on actions done
 	hponhit(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
 	phasehits(actions)
+	reorderactions(actions)
 
 	return actions,hp # not used
 
