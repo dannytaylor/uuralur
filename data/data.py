@@ -105,6 +105,13 @@ movs = { # npc costumes used by players throwing off player detection
 	'PLAYERKNOCKBACK_IMPACT':"Knockback (Land)",
 }
 
+movicons = { # npc costumes used by players throwing off player detection
+	'Death':"death.png",
+	"Knockback (Hit)":'knockup.png',
+	"Knockback (Land)":'knockdown.png'
+}
+
+
 at_maxhp = {
 	1607:{'dominator','defender/corruptor','controller','mastermind'},
 	1848:{'blaster'},

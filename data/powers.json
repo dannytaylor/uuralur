@@ -10144,7 +10144,7 @@
         "frames_attack": 1166,
         "frames_before_hit": 500,
         "hit_fx": [],
-        "icon": "flight_evasivemaneuvers.png",
+        "icon": "flight_travelflight.png",
         "powersets": [
             "Flight",
             "Sorcery"
@@ -20530,7 +20530,7 @@
         "frames_attack": 1166,
         "frames_before_hit": 500,
         "hit_fx": [],
-        "icon": "flight_combatflight.png",
+        "icon": "temporary_antigravitymatrix.png",
         "powersets": [
             "Flight",
             "Temporary Powers"

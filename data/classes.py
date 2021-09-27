@@ -72,6 +72,7 @@ class Action:
 		self.type = None
 		self.target_type = None
 		self.effect_area = None
+		self.icon = None
 
 
 
