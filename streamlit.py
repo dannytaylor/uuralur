@@ -39,12 +39,7 @@ def getdbdata(table,columns=None,conditions=None):
 			sql += " WHERE " + conditions
 		cur.execute(sql)
 	data = cur.fetchall()
-
-
 	return data
-
-def path_to_image_html(path):
-	return '<img src=http://localhost:8000/assets/icons/powers/'+ path + ' width="32" >'
 
 # https://www.kaggle.com/stassl/displaying-inline-images-in-pandas-dataframe
 # format images as base64 to get around streamlit static content limitations
@@ -82,6 +77,7 @@ def sidebar():
 	matchids = []
 	if len(seriesids) == 1:
 		matchliststr = [str(m[0]) + " (" + m[2] + ")" for m in matchdata if m[1]==seriesids[0]]
+		matchliststr.sort()
 		matchids = matchescontainer.multiselect('matches', matchliststr)
 		matchids = [int(m.split(' ')[0]) for m in matchids]
 
@@ -121,13 +117,28 @@ def main():
 			mid = mid[0]
 			matchdata = [m for m in matchdata if m[0] == mid][0]
 			if matchdata:
+				col1.header('match')
+				col2.header('.')
 				col1.metric("blue score",matchdata[4],matchdata[4]-matchdata[5])
 				col2.metric("red score",matchdata[5],matchdata[5]-matchdata[4])
 				col1.metric("blue spikes",matchdata[6],matchdata[6]-matchdata[7])
 				col2.metric("red spikes",matchdata[7],matchdata[7]-matchdata[6])
 
+			with col3:
+				# hero sql query
+				st.header('heroes')
+				columns = "hero,team,archetype,set1,deaths,targets"
+				table = "heroes"
+				conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
+				sqlq = "SELECT " + columns + " FROM " + table + " WHERE " + conditions
+				hdf = pd.read_sql_query(sqlq, con)
+				if pname_toggle:
+					hdf['hero'] = hdf['hero'].map(h2p)
+				hdf = hdf.assign(hack='').set_index('hack')
+				col3.dataframe(hdf, height=600)
 
 			with col4:
+				st.header('spikes')
 				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
 				
 				spikefilters = col4.expander('spike filters')
@@ -151,16 +162,17 @@ def main():
 					spikeend   = spikedata[spikeid-1][4]+spikestart
 
 					# spike sql query
-					columns = "icon,time_ms,actor,action,target,hit_time,hit_hp"
+					# columns = "icon,time_ms,actor,action,target,hit_time,hit_hp"
+					columns = "time_ms,actor,action,target,hit_time,hit_hp"
 					table = "actions"
-					conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
+					conditions = "(series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
 					conditions += " AND time_ms>= " + str(spikestart - config['spike_display_extend'])
-					conditions += " AND time_ms<= " + str(spikeend + config['spike_display_extend'])
-					if toggle_filter:
-						conditions +=  " AND (action_type <> 'Toggle' OR action_target_type <> 'Self')"
-						# conditions +=  " OR (action_target_type IS NULL))" # add to include KB/deaths in filter
+					conditions += " AND time_ms<= " + str(spikeend + config['spike_display_extend']) + ")"
 					if toggle_only_spike:
 						conditions +=  " AND spike_id=" + str(spikeid)
+					if toggle_filter:
+						conditions +=  " AND (action_type != \'Toggle\' & action_target_type != \'Self\')"
+					# 	conditions +=  " AND NOT (action_type = 'Toggle' AND action_target_type = 'Self')"
 					sqlq = "SELECT " + columns + " FROM " + table + " WHERE " + conditions
 					df = pd.read_sql_query(sqlq, con)
 
@@ -208,16 +220,16 @@ def main():
 						df['actor'] = df['actor'].map(h2p)
 						df['target'] = df['target'].map(h2p)
 					df['target'] = df['target'].replace(pd.NA,'')
-					for i in range(len(df['icon'])):
-						df.at[i,'icon'] = image_formatter(df['icon'][i])
-					df.sort_values(by='time_ms')
+					# for i in range(len(df['icon'])):
+					# 	df.at[i,'icon'] = image_formatter(df['icon'][i])
 					df = df.assign(hack='').set_index('hack')
 					df = df.style.format({"time_ms": "{:.2f}"})
-					df = df.to_html()
 					
-					col4.write(df,unsafe_allow_html=True)
+					# df = df.to_html()
+					# col4.write(df,unsafe_allow_html=True)
+
+					col4.dataframe(df,height=640)
 					col4.plotly_chart(hpfig, use_container_width=True)
-					# col4.write(df,height=640)
 
 
 
