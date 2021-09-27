@@ -11,7 +11,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1033,
-        "frames_before_hit": 400,
+        "frames_before_hit": 525,
         "hit_fx": [
             "POWERS/MEDIEVALWEAPONS/DUALBLADES/DUALBLADES_MODERATEBRIDGE_HIT.FX"
         ],
@@ -70,7 +70,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 833,
+        "frames_before_hit": 1333,
         "hit_fx": [
             "POWERS/HEALING/HEALINGDRAINBALL.FX"
         ],
@@ -1616,7 +1616,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "robotics_assembleassaultmech.png",
         "powersets": [
@@ -1939,7 +1939,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "robotics_buildrobotarmy.png",
         "powersets": [
@@ -2642,7 +2642,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1066,
-        "frames_before_hit": 633,
+        "frames_before_hit": 883,
         "hit_fx": [],
         "icon": "ninjatools_blindingpowder.png",
         "powersets": [
@@ -3104,7 +3104,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 2666,
-        "frames_before_hit": 1166,
+        "frames_before_hit": 2166,
         "hit_fx": [
             "POWERS/FIRECONTROL/FIREBALLTARGET.FX"
         ],
@@ -3601,7 +3601,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2566,
-        "frames_before_hit": 866,
+        "frames_before_hit": 566,
         "hit_fx": [],
         "icon": "martialmanipulation_burstofspeed.png",
         "powersets": [
@@ -3624,7 +3624,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 1700,
-        "frames_before_hit": 666,
+        "frames_before_hit": 1666,
         "hit_fx": [],
         "icon": "ninjas_callgenin.png",
         "powersets": [
@@ -3650,7 +3650,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1666,
-        "frames_before_hit": 666,
+        "frames_before_hit": 916,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/BEASTMASTERY/CALLHAWK_HIT.FX"
         ],
@@ -3678,7 +3678,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 1700,
-        "frames_before_hit": 666,
+        "frames_before_hit": 1666,
         "hit_fx": [],
         "icon": "ninjas_calljounin.png",
         "powersets": [
@@ -3703,7 +3703,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 2166,
-        "frames_before_hit": 966,
+        "frames_before_hit": 1466,
         "hit_fx": [],
         "icon": "beastmastery_calllocusts.png",
         "powersets": [
@@ -3756,7 +3756,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1000,
-        "frames_before_hit": 733,
+        "frames_before_hit": 1233,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/BEASTMASTERY/CALLSWARM_HIT.FX"
         ],
@@ -3786,7 +3786,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1666,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 3000,
         "hit_fx": [],
         "icon": "thugs_enlistboss.png",
         "powersets": [
@@ -4770,7 +4770,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 666,
-        "frames_before_hit": 500,
+        "frames_before_hit": 800,
         "hit_fx": [],
         "icon": "combat_teleport.png",
         "powersets": [
@@ -4878,7 +4878,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "paramilitary_supersoldier.png",
         "powersets": [
@@ -5265,7 +5265,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1533,
-        "frames_before_hit": 1133,
+        "frames_before_hit": 1633,
         "hit_fx": [],
         "icon": "experimentation_corrosivevial.png",
         "powersets": [
@@ -5701,7 +5701,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1900,
-        "frames_before_hit": 1333,
+        "frames_before_hit": 1833,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/BEAMRIFLE/BEAMRIFLE_CUTTINGBEAM_HIT.FX"
         ],
@@ -5957,7 +5957,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 3200,
-        "frames_before_hit": 500,
+        "frames_before_hit": 4500,
         "hit_fx": [],
         "icon": "umbralblast_darkextraction.png",
         "powersets": [
@@ -6676,7 +6676,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1166,
-        "frames_before_hit": 766,
+        "frames_before_hit": 1266,
         "hit_fx": [],
         "icon": "gravitycontrol_dimensionshift2.png",
         "powersets": [
@@ -6936,7 +6936,7 @@
         ],
         "effect_area": "AoE",
         "frames_attack": 1966,
-        "frames_before_hit": 500,
+        "frames_before_hit": 1000,
         "hit_fx": [],
         "icon": "sonicmanipulation_disruptionaura.png",
         "powersets": [
@@ -7248,7 +7248,7 @@
         ],
         "effect_area": "AoE",
         "frames_attack": 1966,
-        "frames_before_hit": 566,
+        "frames_before_hit": 1066,
         "hit_fx": [
             "POWERS/SONICCONTROL/BLASTS/STANDARDBLASTHIT.FX"
         ],
@@ -10144,7 +10144,7 @@
         "frames_attack": 1166,
         "frames_before_hit": 500,
         "hit_fx": [],
-        "icon": "flight_travelflight.png",
+        "icon": "flight_evasivemaneuvers.png",
         "powersets": [
             "Flight",
             "Sorcery"
@@ -11167,7 +11167,7 @@
         ],
         "effect_area": "AoE",
         "frames_attack": 2100,
-        "frames_before_hit": 733,
+        "frames_before_hit": 1233,
         "hit_fx": [],
         "icon": "icemanipulation_frozenaura.png",
         "powersets": [
@@ -11994,7 +11994,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1066,
-        "frames_before_hit": 633,
+        "frames_before_hit": 1633,
         "hit_fx": [],
         "icon": "necromancy_summonskeletonwarrior.png",
         "powersets": [
@@ -13902,7 +13902,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 400,
+        "frames_before_hit": 900,
         "hit_fx": [],
         "icon": "assaultweapons_arflamethrowerignite.png",
         "powersets": [
@@ -14504,7 +14504,7 @@
         ],
         "effect_area": "Chain",
         "frames_attack": 1000,
-        "frames_before_hit": 733,
+        "frames_before_hit": 833,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/SHOCKTHERAPY/INSULATINGCIRCUITHIT.FX"
         ],
@@ -14891,7 +14891,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2066,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 1250,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/ELECTRICCONTROL/JOLTINGCHAIN_HIT.FX"
         ],
@@ -15356,7 +15356,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 3166,
-        "frames_before_hit": 500,
+        "frames_before_hit": 1000,
         "hit_fx": [],
         "icon": "necromancy_summonlitch.png",
         "powersets": [
@@ -15429,7 +15429,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 2333,
-        "frames_before_hit": 1200,
+        "frames_before_hit": 2700,
         "hit_fx": [],
         "icon": "natureaffinity_lifegivingspores.png",
         "powersets": [
@@ -15639,7 +15639,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2566,
-        "frames_before_hit": 866,
+        "frames_before_hit": 1366,
         "hit_fx": [],
         "icon": "electricmelee_pbaoeteleport.png",
         "powersets": [
@@ -16504,7 +16504,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1666,
-        "frames_before_hit": 666,
+        "frames_before_hit": 916,
         "hit_fx": [],
         "icon": "mentalcontrol_hypnotize.png",
         "powersets": [
@@ -17187,7 +17187,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1033,
-        "frames_before_hit": 466,
+        "frames_before_hit": 591,
         "hit_fx": [
             "POWERS/MEDIEVALWEAPONS/DUALBLADES/DUALBLADES_LIGHTOPENING_HIT.FX"
         ],
@@ -17470,7 +17470,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 3300,
-        "frames_before_hit": 466,
+        "frames_before_hit": 566,
         "hit_fx": [
             "POWERS/MEDIEVALWEAPONS/DUALBLADES/DUALBLADES_HIGHLOW_HIT.FX"
         ],
@@ -17524,7 +17524,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 833,
+        "frames_before_hit": 1833,
         "hit_fx": [],
         "icon": "ninjas_calloni.png",
         "powersets": [
@@ -19343,7 +19343,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "robotics_constructprotectorbot.png",
         "powersets": [
@@ -19452,7 +19452,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1666,
-        "frames_before_hit": 1333,
+        "frames_before_hit": 1833,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/RADIATIONBLAST/ARMORGROUNDZEROHIT.FX"
         ],
@@ -20530,7 +20530,7 @@
         "frames_attack": 1166,
         "frames_before_hit": 500,
         "hit_fx": [],
-        "icon": "temporary_antigravitymatrix.png",
+        "icon": "flight_combatflight.png",
         "powersets": [
             "Flight",
             "Temporary Powers"
@@ -21703,7 +21703,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 1166,
-        "frames_before_hit": 333,
+        "frames_before_hit": 433,
         "hit_fx": [],
         "icon": "savagemelee_savageleap.png",
         "powersets": [
@@ -22352,7 +22352,7 @@
         ],
         "effect_area": "AoE",
         "frames_attack": 1666,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 2500,
         "hit_fx": [
             "POWERS/COSMICPOWERS/NICTUS/BLACKHOLE/TELEPORTSELF.FX"
         ],
@@ -22406,7 +22406,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 666,
+        "frames_before_hit": 1166,
         "hit_fx": [
             "V_COV/POWERS/PAINDOMINATION/SHAREPAIN_HIT.FX"
         ],
@@ -22515,7 +22515,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1500,
-        "frames_before_hit": 500,
+        "frames_before_hit": 1200,
         "hit_fx": [],
         "icon": "shielddefense_shieldcharge.png",
         "powersets": [
@@ -23135,7 +23135,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 2000,
-        "frames_before_hit": 1500,
+        "frames_before_hit": 1750,
         "hit_fx": [
             "POWERS/SONICCONTROL/BLASTS/STANDARDBLASTHIT.FX"
         ],
@@ -23770,7 +23770,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "paramilitary_draftarmy.png",
         "powersets": [
@@ -24187,7 +24187,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1666,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 2000,
         "hit_fx": [
             "V_COV/ENEMYPOWERS/GHOSTWIDOW/SOULSTORMHIT.FX"
         ],
@@ -24336,7 +24336,7 @@
         "attack_fx": [],
         "effect_area": "Location",
         "frames_attack": 2033,
-        "frames_before_hit": 1666,
+        "frames_before_hit": 3666,
         "hit_fx": [],
         "icon": "paramilitary_enlistspecialforces.png",
         "powersets": [
@@ -24796,7 +24796,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1500,
-        "frames_before_hit": 500,
+        "frames_before_hit": 1200,
         "hit_fx": [],
         "icon": "jump_springattack.png",
         "powersets": [
@@ -24924,7 +24924,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 666,
-        "frames_before_hit": 500,
+        "frames_before_hit": 800,
         "hit_fx": [],
         "icon": "umbralblast_starlessstep.png",
         "powersets": [
@@ -25811,7 +25811,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 33,
+        "frames_before_hit": 2683,
         "hit_fx": [],
         "icon": "demonsummoning_summondemonprince.png",
         "powersets": [
@@ -25836,7 +25836,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 33,
+        "frames_before_hit": 2683,
         "hit_fx": [],
         "icon": "demonsummoning_summondemonlings.png",
         "powersets": [
@@ -25861,7 +25861,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 33,
+        "frames_before_hit": 2683,
         "hit_fx": [],
         "icon": "demonsummoning_summondemons.png",
         "powersets": [
@@ -25888,7 +25888,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 3000,
         "hit_fx": [],
         "icon": "beastmastery_summondirewolves.png",
         "powersets": [
@@ -25915,7 +25915,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 2000,
-        "frames_before_hit": 1000,
+        "frames_before_hit": 3000,
         "hit_fx": [],
         "icon": "beastmastery_summonlions.png",
         "powersets": [
@@ -25973,7 +25973,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 1966,
-        "frames_before_hit": 566,
+        "frames_before_hit": 2566,
         "hit_fx": [],
         "icon": "beastmastery_summonwolves.png",
         "powersets": [
@@ -27357,7 +27357,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1666,
-        "frames_before_hit": 833,
+        "frames_before_hit": 1833,
         "hit_fx": [],
         "icon": "darkcast_tenebroustentacles.png",
         "powersets": [
@@ -27390,7 +27390,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 2033,
-        "frames_before_hit": 766,
+        "frames_before_hit": 1016,
         "hit_fx": [
             "POWERS/MENTALPOWERS/MINDCONTROLHIT.FX"
         ],
@@ -27641,7 +27641,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 1066,
-        "frames_before_hit": 966,
+        "frames_before_hit": 1216,
         "hit_fx": [
             "CUSTOMIZEABLEPOWERS/MARTIALMANIPULATION/THROWSAND_HIT.FX"
         ],
@@ -28746,7 +28746,7 @@
         ],
         "effect_area": "Cone",
         "frames_attack": 2000,
-        "frames_before_hit": 966,
+        "frames_before_hit": 1466,
         "hit_fx": [],
         "icon": "savagemelee_callravens.png",
         "powersets": [
@@ -30185,7 +30185,7 @@
         ],
         "effect_area": "AoE",
         "frames_attack": 3000,
-        "frames_before_hit": 1133,
+        "frames_before_hit": 2533,
         "hit_fx": [
             "POWERS/GRAVITYCONTROL/GCWORMHOLEHIT.FX"
         ],
@@ -30331,7 +30331,7 @@
         ],
         "effect_area": "Location",
         "frames_attack": 3100,
-        "frames_before_hit": 1066,
+        "frames_before_hit": 2066,
         "hit_fx": [],
         "icon": "necromancy_callzombiehorde.png",
         "powersets": [
