@@ -70,7 +70,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 1333,
+        "frames_before_hit": 1233,
         "hit_fx": [
             "POWERS/HEALING/HEALINGDRAINBALL.FX"
         ],
@@ -12750,7 +12750,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 833,
+        "frames_before_hit": 733,
         "hit_fx": [
             "POWERS/HEALING/HEALING.FX"
         ],
@@ -22406,7 +22406,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 1166,
+        "frames_before_hit": 1233,
         "hit_fx": [
             "V_COV/POWERS/PAINDOMINATION/SHAREPAIN_HIT.FX"
         ],
@@ -23977,7 +23977,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 833,
+        "frames_before_hit": 733,
         "hit_fx": [
             "V_COV/POWERS/PAINDOMINATION/SOOTH_HIT.FX"
         ],

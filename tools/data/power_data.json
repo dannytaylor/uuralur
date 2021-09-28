@@ -11,7 +11,11 @@
 		"AllowEpic":["Fossilize","Moonbeam","Total Focus"]
 	},
 	"frames_before_hit":{
-		"Enervating Field":1500
+		"Enervating Field":1500,
+		"Heal Other":733,
+		"Soothe":733,
+		"Absorb Pain":1233,
+		"Share Pain":1233
 	}
 
 }
