@@ -22,7 +22,7 @@ cur = con.cursor()
 # global vars/config
 config = yaml.safe_load(open('data/config.yaml'))
 h2p = json.loads(open('data/hero2player.json').read())
-query_params = st.experimental_get_query_params()
+# query_params = st.experimental_get_query_params()
 
 
 def getdbdata(table,columns=None,conditions=None):
@@ -40,6 +40,9 @@ def getdbdata(table,columns=None,conditions=None):
 		cur.execute(sql)
 	data = cur.fetchall()
 	return data
+
+def strsqlquery(table,columns,conditions):
+	return "SELECT " + ','.join(columns) + " FROM " + table + " WHERE " + ','.join(conditions)
 
 # https://www.kaggle.com/stassl/displaying-inline-images-in-pandas-dataframe
 # format images as base64 to get around streamlit static content limitations
@@ -108,9 +111,9 @@ def main():
 
 	sid,mid,matchdata = sidebar()
 
-	col1,col2,col3,col4 = st.columns([1,1,4,4])
+	col1,col2 = st.columns([1,1])
 
-	actioncontainer = col4.container()
+	actioncontainer = col2.container()
 	if len(sid) == 1:
 		sid = sid[0]
 		if len(mid) == 1:
@@ -118,32 +121,45 @@ def main():
 			matchdata = [m for m in matchdata if m[0] == mid][0]
 			if matchdata:
 				col1.header('match')
-				col2.header('.')
-				col1.metric("blue score",matchdata[4],matchdata[4]-matchdata[5])
-				col2.metric("red score",matchdata[5],matchdata[5]-matchdata[4])
-				col1.metric("blue spikes",matchdata[6],matchdata[6]-matchdata[7])
-				col2.metric("red spikes",matchdata[7],matchdata[7]-matchdata[6])
+				col1.text('score   ' + str(matchdata[4]) + " - " + str(matchdata[5]))
+				col1.text('spikes  ' + str(matchdata[6]) + " - " + str(matchdata[7]))
+				# col1.metric("blue score",matchdata[4],matchdata[4]-matchdata[5])
+				# col1.metric("red score",matchdata[5],matchdata[5]-matchdata[4])
+				# col1.metric("blue spikes",matchdata[6],matchdata[6]-matchdata[7])
+				# col1.metric("red spikes",matchdata[7],matchdata[7]-matchdata[6])
 
-			with col3:
+			with col1:
 				# hero sql query
 				st.header('heroes')
-				columns = "hero,team,archetype,set1,deaths,targets"
+				columns = "hero,team,archetype,set1,deaths,targets,support"
 				table = "heroes"
 				conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
 				sqlq = "SELECT " + columns + " FROM " + table + " WHERE " + conditions
 				hdf = pd.read_sql_query(sqlq, con)
 				if pname_toggle:
 					hdf['hero'] = hdf['hero'].map(h2p)
-				hdf = hdf.assign(hack='').set_index('hack')
-				col3.dataframe(hdf, height=600)
-
-			with col4:
-				st.header('spikes')
-				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
 				
-				spikefilters = col4.expander('spike filters')
+				
+				col1.dataframe(hdf.style.hide_index().hide_columns(), height=600)
+
+			with col2:
+				col2.header('spikes')
+
+				conditions = "(series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\')'
+				sqlq = strsqlquery('spikes',['spike_id','time_ms','target','target_team','kill','spike_duration'],[conditions])
+				spikedf = pd.read_sql_query(sqlq, con)
+
+				for i in range(len(spikedf['time_ms'])):
+					spikedf.at[i,'time'] = datetime.datetime.fromtimestamp(spikedf['time_ms'][i]/1000).strftime('%M:%S')
+				spikedf['kill'] = spikedf['kill'].fillna(0)
+				col2.dataframe(spikedf[['spike_id','time','target','kill']].style.format({"kill": "{:.0f}"}),height=200)
+
+
+				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
+
+				spikefilters = col2.expander('spike filters')
 				spikeform = spikefilters.form('spike filter form')
-				spike_heroes = {h[5] for h in spikedata}
+				spike_heroes = {h for h in spikedf['target']}
 				spf_heroes = spikeform.multiselect('heroes',spike_heroes)
 				spikeform.form_submit_button(label='apply filters', help=None, on_click=None)
 
@@ -151,19 +167,18 @@ def main():
 				if spf_heroes:
 					spikeliststr = [datetime.datetime.fromtimestamp(s[3]/1000).strftime('%M:%S') +  "  [" + str(s[0]) + "]  " + s[5] for s in spikedata if (s[5] in spf_heroes)]
 
-				spikeid = col4.selectbox('spikes', spikeliststr)
+				spikeid = col2.selectbox('spikes', spikeliststr)
 				spikeid = int(spikeid.split('[')[-1].split(']')[0])
 
 
 				# columns = "substr(strftime(\'%M:%f\', time_ms/1000.0, \'unixepoch\'),0,9) as action_time ,actor,action,target"
 
 				if spikeid:
-					spikestart = spikedata[spikeid-1][3]
-					spikeend   = spikedata[spikeid-1][4]+spikestart
+					spikestart = spikedf['time_ms'][spikeid-1]
+					spikeend   = spikedf['spike_duration'][spikeid-1]+spikestart
 
 					# spike sql query
-					# columns = "icon,time_ms,actor,action,target,hit_time,hit_hp"
-					columns = "time_ms,actor,action,target,hit_time,hit_hp"
+					columns = "time_ms,actor,action,target,hit_time,hit_hp,icon"
 					table = "actions"
 					conditions = "(series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
 					conditions += " AND time_ms>= " + str(spikestart - config['spike_display_extend'])
@@ -171,19 +186,19 @@ def main():
 					if toggle_only_spike:
 						conditions +=  " AND spike_id=" + str(spikeid)
 					if toggle_filter:
-						conditions +=  " AND (action_type != \'Toggle\' & action_target_type != \'Self\')"
-					# 	conditions +=  " AND NOT (action_type = 'Toggle' AND action_target_type = 'Self')"
+						conditions +=  " AND NOT ((action_type = 'Toggle' and action_type IS NOT NULL)"
+						conditions +=  " AND (action_target_type = 'Self' and action_target_type IS NOT NULL))"
 					sqlq = "SELECT " + columns + " FROM " + table + " WHERE " + conditions
 					df = pd.read_sql_query(sqlq, con)
 
 					# hp sql query
-					columns = "time_ms,hp,hp_loss"
-					table = "hp"
 					conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
-					conditions += " AND hero=\'"+spikedata[spikeid-1][5] + "\'"
+					conditions += " AND hero=\'"+spikedf['target'][spikeid-1] + "\'"
 					conditions += " AND time_ms>= " + str(spikestart - config['spike_display_extend'])
 					conditions += " AND time_ms<= " + str(spikeend + config['spike_display_extend'])
-					sqlq = "SELECT " + columns + " FROM " + table + " WHERE " + conditions
+					sqlq = strsqlquery('hp',
+										['time_ms','hp','hp_loss'],
+										[conditions])
 					hpdf = pd.read_sql_query(sqlq, con)
 
 					# hp graph data
@@ -197,19 +212,24 @@ def main():
 								deathatrow = i+1
 								break
 						hpdf = hpdf[0:deathatrow]
-					hpfig = px.line(hpdf, x="spike_time", y=["hp","hp_loss"])
+					hpfig = px.line(hpdf, x="spike_time", y=["hp_loss","hp"],markers=True)
 					hpfig.update_layout(
-						# title={'text':'HP and HP losses on spike'},
 						height=360,
 						# showlegend=False,
 						legend_title='',
-						plot_bgcolor='white',
+						plot_bgcolor='rgba(0,0,0,0)',
 						xaxis_title="time (s)",
 						yaxis={'visible': False, 'showticklabels': False,'fixedrange':True},
 						xaxis={'fixedrange':True}
 					)
 					
-					
+					icons = df['icon'][:]
+					icon_path = 'assets/icons/powers/'
+					icon_html = "<div style=\"text-align:center;\">"
+					for i in icons:
+						icon_html += image_formatter(i) + "	"
+					icon_html += "</div>"
+
 					df['time_ms'] = (df['time_ms']-spikestart)/1000
 					df['hit_time'] = (df['hit_time']-spikestart)/1000
 					df['hit_hp'] = df['hit_hp'].fillna(-1)
@@ -220,16 +240,21 @@ def main():
 						df['actor'] = df['actor'].map(h2p)
 						df['target'] = df['target'].map(h2p)
 					df['target'] = df['target'].replace(pd.NA,'')
+
 					# for i in range(len(df['icon'])):
 					# 	df.at[i,'icon'] = image_formatter(df['icon'][i])
+
+					df = df.drop(columns=['icon'])
 					df = df.assign(hack='').set_index('hack')
-					df = df.style.format({"time_ms": "{:.2f}"})
+					df = df.style.format({"time_ms": "{:.2f}","hit_time": "{:.2f}"})
 					
 					# df = df.to_html()
-					# col4.write(df,unsafe_allow_html=True)
+					# col2.write(df,unsafe_allow_html=True)
 
-					col4.dataframe(df,height=640)
-					col4.plotly_chart(hpfig, use_container_width=True)
+					col2.write('spike log')
+					col2.dataframe(df,height=640)
+					col2.write(icon_html,unsafe_allow_html=True)
+					col2.plotly_chart(hpfig, use_container_width=True)
 
 
 
