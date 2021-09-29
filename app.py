@@ -8,6 +8,7 @@ import sqlite3
 import pandas as pd
 import plotly.express as px
 import numpy as np
+from st_aggrid import AgGrid
 
 # for displaying icons
 from PIL import Image
@@ -153,11 +154,13 @@ def main():
 					spikedf.at[i,'time'] = datetime.datetime.fromtimestamp(spikedf['time_ms'][i]/1000).strftime('%M:%S')
 				spikedf['kill'] = spikedf['kill'].fillna(0)
 				col2.dataframe(spikedf[['spike_id','time','target','kill']].style.format({"kill": "{:.0f}"}),height=200)
+				spikeag = spikedf[['time','target','kill']]
+				AgGrid(spikeag)
 
 
 				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
 
-				spikefilters = col2.expander('spike filters')
+				spikefilters = col2.expander('spike filters',expanded=False)
 				spikeform = spikefilters.form('spike filter form')
 				spike_heroes = {h for h in spikedf['target']}
 				spf_heroes = spikeform.multiselect('heroes',spike_heroes)
