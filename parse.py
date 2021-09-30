@@ -258,8 +258,18 @@ def checktarget(hid,lines,h,i,a,reverse):
 	return a
 
 # assigns most recent HP value when a power is calculated to hit
-def hponhit(hitpoints,actions):
+def hponaction(hitpoints,actions):
 	for a in actions:
+		# cast hp of target
+		if a.tid:
+			casthp = None
+			for hp in hitpoints:
+				if hp.hid == a.tid and hp.time <= a.time_ms:
+					casthp = hp.hp
+				elif hp.hid == a.tid and hp.time > a.time_ms:
+					break
+			a.casthp = casthp
+		# hit hp
 		if a.hittime:
 			hithp = None
 			if a.tid:
@@ -276,6 +286,8 @@ def hponhit(hitpoints,actions):
 						break
 			a.hithp = hithp
 	return
+
+
 
 # tag actions with "Phase Hit" if target phases
 def phasehits(actions):
@@ -401,7 +413,7 @@ def demo2data(lines,h,starttime):
 	parseholdactions(actions,holdactions) # and updates power attribs
 	actions = parserepeatactions(h,actions)
 	determinepowersets(h,actions) # trys to guess AT and powersets based on actions done
-	hponhit(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
+	hponaction(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
 	phasehits(actions)
 	reorderactions(actions)
 
@@ -665,7 +677,6 @@ def countattackchains(heroes,actions,spikes):
 				h.attackchains[attackchain] += 1
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
-
 # parse spikes via actions, main function
 def spikeparse(heroes,actions,hp):
 
@@ -726,6 +737,16 @@ def spikeparse(heroes,actions,hp):
 
 	return spikes
 
+# tag heals with ff
+def tagfatfingers(heroes,actions):
+	for a in actions:
+		if a.tid in heroes and "Heal" in a.tags and a.target_type == "Ally (Alive)" and a.effect_area == "SingleTarget":
+			if a.hithp and a.casthp:
+				if a.hithp > heroes[a.tid].hpmax-2 and a.casthp > heroes[a.tid].hpmax-2 and not a.spikeid:
+					a.tags.add("Fat Finger")
+
+
+
 
 def parsematch(path): # primary demo parse function
 	parsestart = datetime.datetime.now()
@@ -749,6 +770,7 @@ def parsematch(path): # primary demo parse function
 		assignteams(heroes,actions)
 		spikes = spikeparse(heroes,actions,hp)
 		assignsupport(heroes,actions)
+		tagfatfingers(heroes,actions)
 
 		# score tally
 		for hid in heroes:
@@ -767,6 +789,8 @@ def parsematch(path): # primary demo parse function
 	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],targets[0],targets[1]])
 	return score
 	
+
+
 
 def parseseries(path): # parse series (i.e. single date folder full of demos)
 	db.createseriestable()
@@ -800,6 +824,8 @@ def parseseries(path): # parse series (i.e. single date folder full of demos)
 	db.insertsql("Series",[seriesid,seriesdate,serieskb,team1,team2,record[0],record[1],record[2]])
 
 	# return seriesdate,serieskb
+	
+
 	
 def parseall(path): # parse collection (i.e. folder full of series)
 	series = [s for s in os.listdir(path) if not os.path.isfile(os.path.join(path, s))] # only iterate folders in path
