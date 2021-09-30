@@ -59,7 +59,8 @@ class Action:
 		self.reverse = False
 
 		# addl action parsing
-		self.hithp = None
+		self.hithp = None # hit hp of TARGET
+		self.casthp = None # cast hp of TARGET, for fat fingers
 
 		# spike data
 		self.spikeid = None
