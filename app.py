@@ -1,23 +1,17 @@
-#!/usr/bin/env python
-
-# streamlist tutorial test/placeholder
-import os, sys, time, math, argparse, json, datetime, yaml, base64
-
+import os, sys, time, math, argparse, json, datetime, yaml, sqlite3
+import tools.util
 import streamlit as st
-import sqlite3
 import pandas as pd
-import plotly.express as px
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
 from st_aggrid import AgGrid
+import tools.util as util
 
-# for displaying icons
-from PIL import Image
-from io import BytesIO
-from IPython.core.display import HTML
 
 # sqlite connections
 con = sqlite3.connect('demos.db')
-# con = sqlite3.connect('publicdemos.db')
+# public = sqlite3.connect('publicdemos.db')
 cur = con.cursor()
 
 # global vars/config
@@ -25,82 +19,65 @@ config = yaml.safe_load(open('data/config.yaml'))
 h2p = json.loads(open('data/hero2player.json').read())
 # query_params = st.experimental_get_query_params()
 
-
-def getdbdata(table,columns=None,conditions=None):
-	if not columns and not conditions:
-		cur.execute('''SELECT * FROM '''+table)
-	elif columns or conditions:
-		sql = "SELECT * FROM " + table
-		if columns:
-			cols = columns[0]
-			for i in range(1,len(columns)):
-				cols += ','+columns[i]
-			sql = "SELECT "+ cols + " FROM " + table
-		if conditions:
-			sql += " WHERE " + conditions
-		cur.execute(sql)
-	data = cur.fetchall()
-	return data
-
-def strsqlquery(table,columns,conditions):
-	return "SELECT " + ','.join(columns) + " FROM " + table + " WHERE " + ','.join(conditions)
-
-# https://www.kaggle.com/stassl/displaying-inline-images-in-pandas-dataframe
-# format images as base64 to get around streamlit static content limitations
-def image_base64(path):
-	path = 'assets/icons/powers/' + path
-	im = Image.open(path)
-	with BytesIO() as buffer:
-		im.save(buffer, 'png')
-		return base64.b64encode(buffer.getvalue()).decode()
-def image_formatter(path):
-	return f'<img src="data:image/jpeg;base64,{image_base64(path)}">'
+# st state state vars
+if 'series' not in st.session_state:	st.session_state.series 	= pd.read_sql_query("SELECT * FROM Series", con)
 
 def sidebar():
-	st.sidebar.header('uuralur🪞')
-	seriesdata = getdbdata('series')
-	matchdata = []
+	st.sidebar.header('uuralur')
 
-	seriescontainer = st.sidebar.container()
-	matchescontainer = st.sidebar.container()
-	settingscontainer = st.sidebar.container()
+	series_container 		= st.sidebar.container()
+	matches_container 		= st.sidebar.container()
+	settings_container 		= st.sidebar.container()
+	filter_map_container 	= st.sidebar.container()
+	filter_series_container = st.sidebar.container()
 
-	seriesselect = seriescontainer.empty()
-	seriesdates = seriescontainer.expander('filter series dates')
-	with seriesdates:
-		date1=st.date_input('start date',datetime.date.fromisoformat('2020-07-15'),datetime.date.fromisoformat('2020-07-15'))
-		date2=st.date_input('end date',min_value=datetime.date.fromisoformat('2020-07-15'))
-		serieslist = [s[0] for s in seriesdata if (datetime.date.fromisoformat(s[1]) >= date1 and datetime.date.fromisoformat(s[1]) <= date2)]
-		serieslist.reverse()
-	seriesids = seriesselect.multiselect('series', serieslist)
+	seriesselect = series_container.empty()
+	date_filter = settings_container.expander('filter dates')
+	ss_series = st.session_state.series
+	ss_series['series_date'] = pd.to_datetime(ss_series['series_date'])
+	ss_series['series_date'] = ss_series['series_date'].dt.date
+	with date_filter:
+		dates = ss_series['series_date'].tolist()
+		dates.sort()
+		d_min = dates[0]
+		d_max = dates[-1]
+		date_first = st.date_input('start date',value=d_min,min_value=d_min,max_value=d_max)
+		date_last  = st.date_input('end date',value=d_max,min_value=d_min,max_value=d_max)
+	series_filtered = ss_series[(ss_series['series_date'] >= date_first) & (ss_series['series_date'] <= date_last)]
+	series_ids = seriesselect.multiselect('series', series_filtered['series_id'])
 
-	if seriesids:
-		matchdata = getdbdata('matches',conditions=('series_id IN ' + str(seriesids).replace('[','(').replace(']',')')))
+	if series_ids:
+		cond = "series_id IN " + str(series_ids).replace('[','(').replace(']',')')
+		sqlq = util.strsqlquery('Matches',conditions=cond)
+		matches_filtered = pd.read_sql_query(sqlq, con)
+
 	
 
-	matchids = []
-	if len(seriesids) == 1:
-		matchliststr = [str(m[0]) + " (" + m[2] + ")" for m in matchdata if m[1]==seriesids[0]]
-		matchliststr.sort()
-		matchids = matchescontainer.multiselect('matches', matchliststr)
-		matchids = [int(m.split(' ')[0]) for m in matchids]
+	match_ids = []
+	if len(series_ids) == 1:
+		match_str = matches_filtered['match_id'].astype(str) + ' (' +matches_filtered['map'] + ')'
+		match_ids = matches_container.multiselect('matches', match_str)
+		match_ids = [int(m.split(' ')[0]) for m in match_ids]
 
 
-	settings = settingscontainer.expander('settings',expanded=False)
-	settingsform = settings.form('settingsform')
+	settings = settings_container.expander('settings',expanded=False)
+	settings_form = settings.form('settings_form')
 	with settings:
 		global toggle_filter
 		global pname_toggle
 		global toggle_only_spike
-		toggle_filter = settingsform.checkbox('filter toggles', value=True,help='filters out misc. toggles from actions by default. e.g. fly, armour toggles')
-		pname_toggle = settingsform.checkbox('toggle player names', value=True,help='use playernames instead of hero names where available. e.g. change ghostmaster to xhiggy')
-		toggle_only_spike = settingsform.checkbox('toggle only spike actions', value=True,help='toggles to show other powers during spike window in spike log')
+		toggle_filter = settings_form.checkbox('filter toggles', value=True,help='filters out misc. toggles from actions by default. e.g. fly, armour toggles')
+		pname_toggle = settings_form.checkbox('toggle player names', value=True,help='use playernames instead of hero names where available. e.g. change ghostmaster to xhiggy')
+		toggle_only_spike = settings_form.checkbox('toggle only spike actions', value=True,help='toggles to show other powers during spike window in spike log')
 		
-		settings_save = settingsform.form_submit_button(label='save', help=None, on_click=None)
+		settings_save = settings_form.form_submit_button(label='save', help=None, on_click=None)
 
 
-	return seriesids,matchids,matchdata
+	return series_ids,match_ids
 
+def main_view():
+
+	return
 
 def main():
 	st.set_page_config(
@@ -110,7 +87,7 @@ def main():
 		initial_sidebar_state="expanded",
 	)
 
-	sid,mid,matchdata = sidebar()
+	sid,mid = sidebar()
 
 	col1,col2 = st.columns([1,1])
 
@@ -119,11 +96,15 @@ def main():
 		sid = sid[0]
 		if len(mid) == 1:
 			mid = mid[0]
-			matchdata = [m for m in matchdata if m[0] == mid][0]
-			if matchdata:
+			
+			cond = "series_id='" + str(sid) + "' AND match_id='" + str(mid) + "'"
+			sqlq = util.strsqlquery('Matches',conditions=cond)
+			match_data = pd.read_sql_query(sqlq, con)
+			
+			if 1:
 				col1.header('match')
-				col1.text('score   ' + str(matchdata[4]) + " - " + str(matchdata[5]))
-				col1.text('spikes  ' + str(matchdata[6]) + " - " + str(matchdata[7]))
+				col1.text('score   ' + str(match_data['score0'][0]) + " - " + str(match_data['score1'][0]))
+				col1.text('spikes  ' + str(match_data['spikes0'][0]) + " - " + str(match_data['spikes1'][0]))
 				# col1.metric("blue score",matchdata[4],matchdata[4]-matchdata[5])
 				# col1.metric("red score",matchdata[5],matchdata[5]-matchdata[4])
 				# col1.metric("blue spikes",matchdata[6],matchdata[6]-matchdata[7])
@@ -140,22 +121,26 @@ def main():
 				if pname_toggle:
 					hdf['hero'] = hdf['hero'].map(h2p)
 				
-				
 				col1.dataframe(hdf.style.hide_index().hide_columns(), height=600)
 
 			with col2:
 				col2.header('spikes')
 
-				conditions = "(series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\')'
-				sqlq = strsqlquery('spikes',['spike_id','time_ms','target','target_team','kill','spike_duration'],[conditions])
+				conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
+				sqlq = util.strsqlquery('spikes',['spike_id','time_ms','target','target_team','kill','spike_duration'],conditions)
 				spikedf = pd.read_sql_query(sqlq, con)
 
+				killmap = {0:'',1:'💀'}
+				spikedf['kill'] = spikedf['kill'].fillna(0).map(killmap)
 				for i in range(len(spikedf['time_ms'])):
-					spikedf.at[i,'time'] = datetime.datetime.fromtimestamp(spikedf['time_ms'][i]/1000).strftime('%M:%S')
-				spikedf['kill'] = spikedf['kill'].fillna(0)
-				col2.dataframe(spikedf[['spike_id','time','target','kill']].style.format({"kill": "{:.0f}"}),height=200)
-				spikeag = spikedf[['time','target','kill']]
-				AgGrid(spikeag)
+					spikedf.at[i,'start time'] = datetime.datetime.fromtimestamp(spikedf['time_ms'][i]/1000).strftime('%M:%S')
+					spikedf.at[i,'duration'] = datetime.datetime.fromtimestamp(spikedf['spike_duration'][i]/1000).strftime('%M:%S')
+				
+				spikeag = spikedf[['kill','start time','target','duration']]
+				AgGrid(spikeag,
+					    fit_columns_on_grid_load=True,
+					    theme='material'
+					)
 
 
 				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
@@ -199,9 +184,9 @@ def main():
 					conditions += " AND hero=\'"+spikedf['target'][spikeid-1] + "\'"
 					conditions += " AND time_ms>= " + str(spikestart - config['spike_display_extend'])
 					conditions += " AND time_ms<= " + str(spikeend + config['spike_display_extend'])
-					sqlq = strsqlquery('hp',
+					sqlq = util.strsqlquery('hp',
 										['time_ms','hp','hp_loss'],
-										[conditions])
+										conditions)
 					hpdf = pd.read_sql_query(sqlq, con)
 
 					# hp graph data
@@ -230,7 +215,7 @@ def main():
 					icon_path = 'assets/icons/powers/'
 					icon_html = "<div style=\"text-align:center;\">"
 					for i in icons:
-						icon_html += image_formatter(i) + "	"
+						icon_html += util.image_formatter(i) + "	"
 					icon_html += "</div>"
 
 					df['time_ms'] = (df['time_ms']-spikestart)/1000

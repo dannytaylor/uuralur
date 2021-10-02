@@ -99,7 +99,7 @@ def creatematchestable():
 def createseriestable():
 	cur.execute('''CREATE TABLE IF NOT EXISTS Series (
 				series_id TEXT PRIMARY KEY,
-				seriesdate TEXT, 
+				series_date TEXT, 
 				kb INTEGER, 
 				team0 TEXT, 
 				team1 TEXT, 
