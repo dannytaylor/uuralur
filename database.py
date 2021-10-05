@@ -70,6 +70,7 @@ def createdatatables():
 				archetype TEXT,
 				support INT, 
 				damage_taken REAL, 
+				hp_max REAL, 
 				deaths INT, 
 				targets INT,
 				attack_chains TEXT,
