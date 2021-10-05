@@ -2,8 +2,9 @@
 from PIL import Image
 from io import BytesIO
 import base64
+import streamlit as st
 
-
+@st.cache
 def strsqlquery(table,columns='*',conditions=None):
 	where = ""
 	if conditions: where = " WHERE " + conditions
@@ -12,6 +13,7 @@ def strsqlquery(table,columns='*',conditions=None):
 
 # https://www.kaggle.com/stassl/displaying-inline-images-in-pandas-dataframe
 # format images as base64 to get around streamlit static content limitations
+@st.cache
 def image_base64(path):
 	path = 'assets/icons/powers/' + path
 	im = Image.open(path)

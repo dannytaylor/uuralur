@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from st_aggrid import AgGrid
+from st_aggrid import AgGrid, DataReturnMode, GridOptionsBuilder
 import tools.util as util
 
 
@@ -20,8 +20,12 @@ h2p = json.loads(open('data/hero2player.json').read())
 # query_params = st.experimental_get_query_params()
 
 # st state state vars
+if 'matches' not in st.session_state:	st.session_state.matches 	= pd.read_sql_query("SELECT * FROM Matches", con)
 if 'series' not in st.session_state:	st.session_state.series 	= pd.read_sql_query("SELECT * FROM Series", con)
 
+########
+# sidebar, settings, and filters
+########
 def sidebar():
 	st.sidebar.header('uuralur')
 
@@ -44,7 +48,12 @@ def sidebar():
 		date_first = st.date_input('start date',value=d_min,min_value=d_min,max_value=d_max)
 		date_last  = st.date_input('end date',value=d_max,min_value=d_min,max_value=d_max)
 	series_filtered = ss_series[(ss_series['series_date'] >= date_first) & (ss_series['series_date'] <= date_last)]
-	series_ids = seriesselect.multiselect('series', series_filtered['series_id'])
+	series_filtered = series_filtered['series_id'].to_list()
+	query = st.experimental_get_query_params()
+	series_query = None
+	if 'series' in query and query['series'][0] in series_filtered:
+		series_query = query['series']
+	series_ids = seriesselect.multiselect('series', series_filtered,default=series_query)
 
 	if series_ids:
 		cond = "series_id IN " + str(series_ids).replace('[','(').replace(']',')')
@@ -54,10 +63,21 @@ def sidebar():
 	
 
 	match_ids = []
+	match_query = None
+	match_ids_filtered = matches_filtered['match_id'].to_list()
+	if 'match' in query:
+		if int(query['match'][0]) in match_ids_filtered:
+			match_query = query['match'][0]
 	if len(series_ids) == 1:
 		match_str = matches_filtered['match_id'].astype(str) + ' (' +matches_filtered['map'] + ')'
-		match_ids = matches_container.multiselect('matches', match_str)
+		if match_query:
+			match_query = match_query + " (" + matches_filtered.at[int(match_query)-1,'map'] + ")"
+		match_ids = matches_container.multiselect('matches', match_str,default=match_query)
 		match_ids = [int(m.split(' ')[0]) for m in match_ids]
+		if len(match_ids) == 1:
+			st.experimental_set_query_params(series=series_ids[0],match=match_ids[0])
+		else:
+			st.experimental_set_query_params(series=series_ids[0])
 
 
 	settings = settings_container.expander('settings',expanded=False)
@@ -94,7 +114,9 @@ def main():
 	actioncontainer = col2.container()
 	if len(sid) == 1:
 		sid = sid[0]
+		st.experimental_set_query_params(series=sid)
 		if len(mid) == 1:
+			st.experimental_set_query_params(series=sid,match=mid)
 			mid = mid[0]
 			
 			cond = "series_id='" + str(sid) + "' AND match_id='" + str(mid) + "'"
@@ -105,10 +127,6 @@ def main():
 				col1.header('match')
 				col1.text('score   ' + str(match_data['score0'][0]) + " - " + str(match_data['score1'][0]))
 				col1.text('spikes  ' + str(match_data['spikes0'][0]) + " - " + str(match_data['spikes1'][0]))
-				# col1.metric("blue score",matchdata[4],matchdata[4]-matchdata[5])
-				# col1.metric("red score",matchdata[5],matchdata[5]-matchdata[4])
-				# col1.metric("blue spikes",matchdata[6],matchdata[6]-matchdata[7])
-				# col1.metric("red spikes",matchdata[7],matchdata[7]-matchdata[6])
 
 			with col1:
 				# hero sql query
@@ -126,24 +144,23 @@ def main():
 			with col2:
 				col2.header('spikes')
 
-				conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
-				sqlq = util.strsqlquery('spikes',['spike_id','time_ms','target','target_team','kill','spike_duration'],conditions)
+				cond = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
+				sqlq = util.strsqlquery('spikes',conditions=cond)
 				spikedf = pd.read_sql_query(sqlq, con)
 
 				killmap = {0:'',1:'💀'}
 				spikedf['kill'] = spikedf['kill'].fillna(0).map(killmap)
-				for i in range(len(spikedf['time_ms'])):
-					spikedf.at[i,'start time'] = datetime.datetime.fromtimestamp(spikedf['time_ms'][i]/1000).strftime('%M:%S')
-					spikedf.at[i,'duration'] = datetime.datetime.fromtimestamp(spikedf['spike_duration'][i]/1000).strftime('%M:%S')
-				
-				spikeag = spikedf[['kill','start time','target','duration']]
-				AgGrid(spikeag,
+
+				spikedf['time'] 		= pd.to_datetime(spikedf['time_ms'],unit='ms').dt.strftime('%M:%S')
+				spikedf['duration'] 	= spikedf['spike_duration']/1000
+							
+				spike_ag = spikedf[['kill','time','target','duration']]
+				gb = GridOptionsBuilder.from_dataframe(spike_ag)
+				gb.configure_selection('single')
+				AgGrid(spike_ag,
 					    fit_columns_on_grid_load=True,
 					    theme='material'
 					)
-
-
-				spikedata = getdbdata('spikes',conditions=('series_id=\'' + str(sid) + '\' AND match_id=\'' + str(mid) + '\''))
 
 				spikefilters = col2.expander('spike filters',expanded=False)
 				spikeform = spikefilters.form('spike filter form')
@@ -151,11 +168,9 @@ def main():
 				spf_heroes = spikeform.multiselect('heroes',spike_heroes)
 				spikeform.form_submit_button(label='apply filters', help=None, on_click=None)
 
-				spikeliststr = [datetime.datetime.fromtimestamp(s[3]/1000).strftime('%M:%S') +  "  [" + str(s[0]) + "]  " + s[5] for s in spikedata]
-				if spf_heroes:
-					spikeliststr = [datetime.datetime.fromtimestamp(s[3]/1000).strftime('%M:%S') +  "  [" + str(s[0]) + "]  " + s[5] for s in spikedata if (s[5] in spf_heroes)]
-
-				spikeid = col2.selectbox('spikes', spikeliststr)
+				spikedf['spikestr'] = spikedf['time'] + " [" + spikedf['spike_id'].astype(str) + "] " + spikedf['target']
+				
+				spikeid = col2.selectbox('spikes', spikedf['spikestr'] )
 				spikeid = int(spikeid.split('[')[-1].split(']')[0])
 
 
@@ -180,8 +195,9 @@ def main():
 					df = pd.read_sql_query(sqlq, con)
 
 					# hp sql query
+					spike_target = spikedf['target'][spikeid-1].replace('\'','\'\'') # escape quote mark in name
 					conditions = "series_id=\'" + str(sid) + "\' AND match_id=\'" + str(mid) + '\''
-					conditions += " AND hero=\'"+spikedf['target'][spikeid-1] + "\'"
+					conditions += " AND hero=\'"+ spike_target + "\'"
 					conditions += " AND time_ms>= " + str(spikestart - config['spike_display_extend'])
 					conditions += " AND time_ms<= " + str(spikeend + config['spike_display_extend'])
 					sqlq = util.strsqlquery('hp',
@@ -193,7 +209,7 @@ def main():
 					hpdf['spike_time'] = (hpdf['time_ms']-spikestart)/1000 # convert to relative time
 					hpdf.at[0,'hp_loss'] = 0 # start at 0 HP loss
 					hpdf['hp_loss'] = hpdf['hp_loss'].cumsum() # convert hp loss @ time to cumulative
-					if spikedata[spikeid-1][8]:
+					if spikedf.at[spikeid-1,'kill'] == '💀':
 						deathatrow = len(hpdf)
 						for i in range(len(hpdf['hp'])):
 							if hpdf['hp'][i] == 0:
@@ -243,7 +259,10 @@ def main():
 					col2.dataframe(df,height=640)
 					col2.write(icon_html,unsafe_allow_html=True)
 					col2.plotly_chart(hpfig, use_container_width=True)
-
+		else:
+			st.experimental_set_query_params(series=sid)
+	else:
+		st.experimental_set_query_params()
 
 
 
