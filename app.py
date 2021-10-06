@@ -17,7 +17,6 @@ cur = con.cursor()
 # global vars/config
 config = yaml.safe_load(open('data/config.yaml'))
 h2p = json.loads(open('data/hero2player.json').read())
-# query_params = st.experimental_get_query_params()
 
 # st state state vars
 if 'matches' not in st.session_state:	st.session_state.matches 	= pd.read_sql_query("SELECT * FROM Matches", con)
@@ -26,7 +25,7 @@ if 'series' not in st.session_state:	st.session_state.series 	= pd.read_sql_quer
 ########
 # sidebar, settings, and filters
 ########
-def sidebar():
+def sidebar(sid,mid):
 	st.sidebar.header('uuralur')
 
 	series_container 		= st.sidebar.container()
@@ -55,6 +54,7 @@ def sidebar():
 		series_query = query['series']
 	series_ids = seriesselect.multiselect('series', series_filtered,default=series_query)
 
+	matches_filtered = pd.DataFrame()
 	if series_ids:
 		cond = "series_id IN " + str(series_ids).replace('[','(').replace(']',')')
 		sqlq = util.strsqlquery('Matches',conditions=cond)
@@ -64,7 +64,8 @@ def sidebar():
 
 	match_ids = []
 	match_query = None
-	match_ids_filtered = matches_filtered['match_id'].to_list()
+	if not matches_filtered.empty:
+		match_ids_filtered = matches_filtered['match_id'].to_list()
 	if 'match' in query:
 		if int(query['match'][0]) in match_ids_filtered:
 			match_query = query['match'][0]
@@ -95,20 +96,7 @@ def sidebar():
 
 	return series_ids,match_ids
 
-def main_view():
-
-	return
-
-def main():
-	st.set_page_config(
-		page_title='uuralur',
-		page_icon='🤖',
-		layout="wide",
-		initial_sidebar_state="expanded",
-	)
-
-	sid,mid = sidebar()
-
+def main_view(sid,mid):
 	col1,col2 = st.columns([1,1])
 
 	actioncontainer = col2.container()
@@ -263,6 +251,41 @@ def main():
 			st.experimental_set_query_params(series=sid)
 	else:
 		st.experimental_set_query_params()
+	return
+
+def get_query():
+	sid,mid = None, None
+	querys = st.experimental_get_query_params()
+	if 'series' in querys:
+		sid = querys['series']
+
+	return sid,mid
+
+def get_query(sid,mid):
+	if sid:
+		if mid:
+			st.experimental_set_query_params(series=sid,match=mid)
+		else:
+			st.experimental_set_query_params(series=sid)
+	return
+
+def main():
+	st.set_page_config(
+		page_title='uuralur',
+		page_icon='🤖',
+		layout="wide",
+		initial_sidebar_state="expanded",
+		theme="light",
+	)
+
+	sid,mid = get_query()
+
+	sid,mid = sidebar(sid,mid)
+	
+	set_query(sid,mid)
+
+	main_view(sid,mid)
+	
 
 
 
