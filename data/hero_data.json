@@ -7428,5 +7428,115 @@
     },
     "wmb": {
         "archetype": "defender/corruptor"
+    },
+    "Wreckkums": {
+        "archetype": "defender/corruptor"
+    },
+    "Pop sic le": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Rolex Pup": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Electrical Affinity"
+        ]
+    },
+    "Thought Crimes": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Torpedo Man": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Zwanze": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "DarthMalice": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Kencian X": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Measles": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "MilkandCookies": {
+        "archetype": "sentinel",
+        "sets": [
+            "Bio Armor",
+            "Ice Blast"
+        ]
+    },
+    "Sir Woofington Paul": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Wet Cheese": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Water Blast"
+        ]
+    },
+    "bundle of choco": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "el dannito caliente": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "hsbn2thedoc": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "4 Page Letter": {
+        "archetype": "defender/corruptor"
+    },
+    "Miss Janie": {
+        "archetype": "defender/corruptor"
+    },
+    "Wreckkums": {
+        "archetype": "defender/corruptor"
     }
 }

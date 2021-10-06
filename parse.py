@@ -196,7 +196,8 @@ def determinepowersets(heroes,actions):
 					if h.name not in herodump: herodump[h.name] = {}
 					herodump[h.name]['sets'] = list(h.sets)
 			else:
-				herodump[h.name] = {'sets':list(h.sets)}
+				if h.name not in herodump: herodump[h.name] = {}
+				herodump[h.name]['sets'] = list(h.sets)
 		# otherwise look if sets have been found before
 		else:
 			# if no archetype and only 1 healing set, assume it's a defender
@@ -857,7 +858,7 @@ def main():
 		herodump_undefined = {}
 		herodump_defined = {}
 		for hero,val in herodump.items():
-			if 'archetype' not in herodump[hero]:
+			if 'archetype' not in herodump[hero] and 'sets' not in herodump[hero]:
 				herodump_undefined[hero] = {}
 			else:
 				herodump_defined[hero] = val

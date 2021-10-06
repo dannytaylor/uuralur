@@ -119,7 +119,7 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 	for s in spikes:
 		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset])
 	for hid,h in heroes.items():
-		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,str(h.sets),h.set2,h.archetype,h.support,h.damagetaken,h.deaths,h.targets,str(h.attackchains)])
+		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,str(h.sets),h.set2,h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains)])
 	# con.commit()
 
 # if reparsing an existing db entry, delete and redo
