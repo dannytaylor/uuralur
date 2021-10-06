@@ -741,7 +741,7 @@ def spikeparse(heroes,actions,hp):
 # tag heals with ff
 def tagfatfingers(heroes,actions):
 	for a in actions:
-		if a.tid in heroes and "Heal" in a.tags and a.target_type == "Ally (Alive)" and a.effect_area == "SingleTarget":
+		if a.tid in heroes and "Heal" in a.tags and "Absorb" not in a.tags and a.target_type == "Ally (Alive)" and a.effect_area == "SingleTarget":
 			if a.hithp and a.casthp:
 				if a.hithp > heroes[a.tid].hpmax-2 and a.casthp > heroes[a.tid].hpmax-2 and not a.spikeid:
 					a.tags.add("Fat Finger")

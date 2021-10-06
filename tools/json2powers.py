@@ -155,8 +155,6 @@ def initpower(name,powers,data):
 	p['target_type'] = data['target_type']
 	p['frames_attack'] = int(1000*data['fx']['frames_attack']/30) # how long in animation in ms
 	p['frames_before_hit'] = int(1000*data['fx']['frames_before_hit']/30) # frames2ms from cast to projectile launch
-	if name == "Heal Other":
-		print(data['fx']['frames_before_hit'])
 	if data['effects'] and data['effects'][0]['templates'] and data['effects'][0]['templates'][0]:
 		p['frames_before_hit'] += int(1000*data['effects'][0]['templates'][0]['delay'])
 	if name in power_data["frames_before_hit"]:
@@ -245,6 +243,8 @@ def updatepower(name,powers,data):
 	elif '-RES' in data['display_short_help'].upper() and 'Foe (Alive)' in p['targets_affected']:
 		p['tags'].add("Debuff")
 		p['tags'].add("Attack")
+	if '+Absorb' in data['display_short_help']:
+		p['tags'].add("Absorb")		
 	for tag, power in power_data['tags'].items():
 		if name in power: p['tags'].add(tag)
 	addpooltags(name,powers,data)

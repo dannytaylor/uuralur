@@ -10924,6 +10924,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -10951,6 +10952,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 2000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -14515,6 +14517,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 20000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Ally (Alive)",
@@ -17855,6 +17858,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 270000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -17937,6 +17941,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 120000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -19226,6 +19231,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 200000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -24266,6 +24272,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -24706,6 +24713,7 @@
         "projectile_speed": 45.0,
         "recharge_time": 15000,
         "tags": [
+            "Absorb",
             "Heal",
             "NoMiss",
             "Pool",
@@ -27265,6 +27273,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
@@ -30012,6 +30021,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Absorb",
             "Heal"
         ],
         "target_type": "Self",
