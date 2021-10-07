@@ -15,9 +15,11 @@ count_cfx = {'Hibernate'} # 'Thaw','Forge'
 # all_ats = {"arachnos_soldier","arachnos_widow","blaster","brute","controller","corruptor","defender","dominator","mastermind","peacebringer","scrapper","sentinel","stalker","tanker","warshade"}
 all_ats = {"arachnos_soldier","arachnos_widow","blaster","melee","controller","defender/corruptor","dominator","mastermind","peacebringer","sentinel","warshade"}
 fix_pset_name = {"Sonic Attacks":"Sonic Attack"}
+melee_ats = {"brute","scrapper","stalker","tanker"}
 
 fxfolder  = './data/fx/'
 infolder  = './data/cod_json/powers/'
+codfolder = './data/cod_json/'
 outfolder = '../data/'
 
 # added a POWER and FX to the FXLIST
@@ -273,6 +275,43 @@ def sets2lists(powers):
 			
 	return powers
 
+# add primary and secondary set info for set sorting in parse.py
+def add_primary_secondary(powers):
+	atfolder  = codfolder+'/archetypes/'
+	pcfolder  = codfolder+'/powercategories/'
+	atfiles   = [f for f in os.listdir(atfolder) if f.endswith(".json")]
+	pcfiles   = [f for f in os.listdir(pcfolder) if f.endswith(".json")]
+	powers['powercategories'] = {}
+	for at in atfiles:
+		with open(atfolder+at) as f1:
+			at_data = json.load(f1)
+			archetype = at_data['name']
+			if archetype in melee_ats: archetype = 'melee'
+			if archetype == 'defender' or archetype == 'corruptor': archetype = 'defender/corruptor'
+			if archetype not in powers['powercategories']: powers['powercategories'][archetype] = {}
+
+			primary   = at_data['primary_category'].lower()
+			secondary = at_data['secondary_category'].lower()
+			if at_data['name'] == 'tanker' or at_data['name'] == 'defender':
+				primary   = at_data['secondary_category'].lower()
+				secondary = at_data['primary_category'].lower()
+			if 'primary_category' not in powers['powercategories'][archetype]:
+				powers['powercategories'][archetype]['primary_category'] = []
+			if 'secondary_category' not in powers['powercategories'][archetype]:
+				powers['powercategories'][archetype]['secondary_category'] = []
+
+			for pc in pcfiles:
+				with open(pcfolder+pc) as f2:
+					pc_data = json.load(f2)
+					if pc_data['archetypes'] and at_data['name'] == pc_data['archetypes'][0]:
+						if primary == pc_data['name'].lower():
+							powers['powercategories'][archetype]['primary_category'] += pc_data['powerset_display_names']
+						if secondary == pc_data['name'].lower():
+							powers['powercategories'][archetype]['secondary_category'] += pc_data['powerset_display_names']
+
+
+
+
 # convert json files to pase power dictionary structure with relevant information
 def json2powers():
 	powers = {}
@@ -299,6 +338,8 @@ def json2powers():
 
 
 	sets2lists(powers)
+
+	add_primary_secondary(powers)
 
 	with open(outfolder+'powers.json','w') as f:
 		json.dump(powers,f,indent=4,sort_keys=True)
