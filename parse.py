@@ -160,10 +160,29 @@ def determinearchetypes(heroes,actions):
 				h.archetype = hero_data[h.name]['archetype']
 				h.possible_ats.add(h.archetype)
 
+# fetch predetermined sets if AT + 1 set determined
+def fetchpowersets(heroes):
+	for hid,h in heroes.items():
+		if HERODUMP and h.name not in herodump and h.name not in hero_data: # add name for undefined dumping
+			herodump[h.name] = {}
+		if h.archetype and h.sets:
+			if len(h.sets) == 1 and h.name in hero_data and 'sets' in hero_data[h.name]: # if only 1 set determined by 2 sets logged
+				h.sets = hero_data[h.name]['sets']
+			elif HERODUMP and len(h.sets) == 2: # only dump sets if both are determined
+				if h.name not in hero_data and 'sets' not in herodump[h.name]: # only dump psets if archetype is determined
+					herodump[h.name]['sets'] = list(h.sets)
+
+
 # order the powers sets based on arch
 def orderpowersets(heroes):
 	for hid,h in heroes.items():
-		if hset = [None,None]
+
+		# assume if healer with no secondary power use it's a defender
+		# pretty safe assumption mostly
+		if not h.archetype and len(h.sets) == 1 and max(h.sets) in d.heal_sets:
+			h.archetype = "defender/corruptor"
+
+		hset = [None,None]
 		if h.archetype and h.sets:
 			primaries 	= powers['powercategories'][h.archetype]['primary_category']
 			secondaries = powers['powercategories'][h.archetype]['secondary_category']
@@ -173,7 +192,9 @@ def orderpowersets(heroes):
 				elif s in secondaries:
 					hset[1] = s
 		else:
-			hset = list(h.sets) 
+			hset = list(h.sets)
+			if len(hset) == 1:
+				hset.insert(0,None)
 		h.sets = hset
 
 
@@ -205,35 +226,11 @@ def determinepowersets(heroes,actions):
 			if len(h.sets) == 2:
 				break
 
+	fetchpowersets(heroes)
 
-	# assume if healer with no secondary power use it's a defender
-	# pretty safe assumption mostly
-	orderpowersets(heroes)
-
+	
 	# sort sets in correct order for the archetype
-
-	for hid,h in heroes.items():
-		# if sets have been pre-determined grab that info
-		if None not in h.sets and HERODUMP:
-			if h.name in hero_data:
-				if 'sets' not in hero_data[h.name]:
-					if h.name not in herodump: 
-						herodump[h.name] = {}
-					herodump[h.name]['sets'] = h.sets
-			else:
-				if h.name not in herodump: 
-					herodump[h.name] = {}
-				herodump[h.name]['sets'] = h.sets
-			if not h.archetype and len(h.sets) == 1 and max(h.sets) in d.heal_sets:
-				h.archetype = "defender/corruptor"
-		# otherwise look if sets have been found before
-		else:
-			# if the one determined set matches known info then add the other set
-			if h.name in hero_data and 'sets' in hero_data[h.name] and len(hero_data[h.name]['sets']) == 2:
-				if None in h.sets and (h.sets[0] in hero_data[h.name]['sets'] or h.sets[0] in hero_data[h.name]['sets']): # match set must be in saved old set
-					h.sets = hero_data[h.name]['sets']
-			elif h.name not in herodump and HERODUMP:
-				herodump[h.name] = {}
+	orderpowersets(heroes)
 
 # handle hold actions waiting to be determined
 def parseholdactions(actions,holdactions):
