@@ -26,7 +26,8 @@ if 'series' not in st.session_state:
 	st.session_state.series['date'] = st.session_state.series['date'].dt.date
 if 'matches' not in st.session_state:
 	st.session_state.matches 			= pd.read_sql_query("SELECT * FROM Matches", con)
-	st.session_state.matches['mid_map'] = st.session_state.matches['match_id'].astype(str) + ' (' + st.session_state.matches['map'] + ')'
+	st.session_state.matches['match_id'] = st.session_state.matches['match_id'].astype(str) # easier to work with strings for other sections
+	st.session_state.matches['mid_map'] = st.session_state.matches['match_id'] + ' (' + st.session_state.matches['map'] + ')'
 
 
 matches = st.session_state.matches
@@ -55,13 +56,16 @@ def match_series_picker(picker,filters=None):
 		match_display = match_ids['mid_map']
 		match_default = None
 		if mid:
-			match_default = match_ids.at(mid,'mid_map')
+			i = match_ids.loc[match_ids['match_id'] == mid].index[0]
+			match_default = match_ids.loc[i,'mid_map']
 		if mid not in match_ids['match_id'].values:
 			mid = None
 			
 		match_select = picker.multiselect('match', match_display ,default=match_default)
 		if len(match_select) == 1:
 			mid = match_select[0].split(' ')[0]
+		else:
+			mid = None
 	else:
 		sid,mid = None, None
 
@@ -82,7 +86,6 @@ def sidebar():
 		filters['match_type']   = st.radio('match types',['all','scrims','kickball'])
 
 	match_series_picker(picker,filters)
-	set_query()
 
 # main content window
 def viewer():
@@ -123,7 +126,7 @@ def main():
 	get_query()
 	sidebar()
 	viewer()
-	# set_query(sid,mid)
+	set_query()
 
 
 if __name__ == '__main__':
