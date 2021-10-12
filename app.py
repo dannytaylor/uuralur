@@ -37,18 +37,26 @@ def match_series_picker(picker,filters=None):
 	global sid
 	global mid
 
-	# apply filters to series id lister
 	series_ids = series[(series['date'] >= filters['date_first']) & (series['date'] <= filters['date_last'])]
+
+
+	# apply filters to series id lister
 	if filters['match_type'] == 'scrims':
 		series_ids = series_ids[series_ids['kb'] == 0]
 	elif filters['match_type'] == 'kickball':
 		series_ids = series_ids[series_ids['kb'] == 1]
 	series_ids = series_ids['series_id'].tolist()
 	series_ids.reverse()
-	if sid not in series_ids:
-		sid = None
 
-	series_select = picker.multiselect('series', series_ids,default=sid)
+	# get queries
+	queries = st.experimental_get_query_params()
+	queries = {k: v[0] if isinstance(v, list) else v for k, v in queries.items()}  # fetch the first item in each query string as we don't have multiple values for each query string key for this
+	default_sid = queries["s"] if "s" in queries and queries["s"] in series_ids else None
+	default_mid = queries["m"] if "m" in queries and default_sid else None
+	if 'sid_picker' not in st.session_state: st.session_state.sid_picker = default_sid
+	if 'mid_picker' not in st.session_state: st.session_state.mid_picker = default_mid
+
+	series_select = picker.multiselect('series', series_ids,default=sid,key='sid_picker')
 
 	if len(series_select) == 1:
 		sid = series_select[0]
@@ -70,7 +78,6 @@ def match_series_picker(picker,filters=None):
 		sid,mid = None, None
 
 	
-
 # sidebar content organization
 def sidebar():
 	st.sidebar.header('uuralur')
@@ -91,19 +98,6 @@ def sidebar():
 def viewer():
 	return
 
-# at script start grab valid sid,mid's from url query
-def get_query():
-	global sid
-	global mid
-	queries = st.experimental_get_query_params()
-	if 's' in queries and queries['s'][0] in series['series_id'].values:
-		sid = queries['s'][0]
-		if 'm' in queries:
-			series_matches = matches[matches['series_id'] == sid]['match_id']
-			if queries['m'][0] in series_matches.values:
-				mid = queries['m'][0]
-
-
 # set the URL query based on sid and mid
 def set_query():
 	if sid:
@@ -123,7 +117,6 @@ def main():
 		initial_sidebar_state="expanded",
 	)
 
-	get_query()
 	sidebar()
 	viewer()
 	set_query()
