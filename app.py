@@ -49,12 +49,19 @@ def match_series_picker(picker,filters=None):
 	series_ids.reverse()
 
 	# get queries
-	queries = st.experimental_get_query_params()
-	queries = {k: v[0] if isinstance(v, list) else v for k, v in queries.items()}  # fetch the first item in each query string as we don't have multiple values for each query string key for this
-	default_sid = queries["s"] if "s" in queries and queries["s"] in series_ids else None
-	default_mid = queries["m"] if "m" in queries and default_sid else None
-	if 'sid_picker' not in st.session_state: st.session_state.sid_picker = default_sid
-	if 'mid_picker' not in st.session_state: st.session_state.mid_picker = default_mid
+
+	def on_change():
+		queries = st.experimental_get_query_params()
+		queries = {k: v[0] if isinstance(v, list) else v for k, v in queries.items()}  # fetch the first item in each query string as we don't have multiple values for each query string key for this
+		
+		default_sid = queries["s"] if "s" in queries and queries["s"] in series_ids else None
+		default_mid = queries["m"] if "m" in queries and default_sid else None
+		
+		if 'sid_picker' not in st.session_state: st.session_state.sid_picker = 'sid_picker'
+		if 'mid_picker' not in st.session_state: st.session_state.mid_picker = 'mid_picker'
+		
+		params['s'] = st.session_state['sid_picker']
+		st.experimental_set_query_params(**params)
 
 	series_select = picker.multiselect('series', series_ids,default=sid,key='sid_picker')
 
