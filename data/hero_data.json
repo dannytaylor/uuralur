@@ -7538,5 +7538,125 @@
     },
     "Wreckkums": {
         "archetype": "defender/corruptor"
+    },
+    "-Boreas": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Antediluvian": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Bajillion": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Candomble": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Fire Bidet": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Frat Guy": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Ma Moniewasted": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Maximum Pad": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Pandillero": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Postpartum": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Pain Domination"
+        ]
+    },
+    "Puppy Power": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Swiftness": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "Wrecktalz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Fire Blast"
+        ]
+    },
+    "hot wheels": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Texas Cannoli": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Delicious Nectar": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "-Cryton": {
+        "archetype": "sentinel",
+        "sets": [
+            "Ice Blast",
+            "Invulnerability"
+        ]
     }
+
 }
