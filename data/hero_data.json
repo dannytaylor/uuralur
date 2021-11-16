@@ -7651,12 +7651,39 @@
             "Mind Control"
         ]
     },
+    "jotorola moe": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
     "-Cryton": {
         "archetype": "sentinel",
         "sets": [
             "Ice Blast",
             "Invulnerability"
         ]
+    },
+    "Peanut Parlor": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Plant Manipulation"
+        ]
+    },
+    "backsmack dougs": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "culogrande": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
     }
-
 }
