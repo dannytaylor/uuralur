@@ -7430,7 +7430,11 @@
         "archetype": "defender/corruptor"
     },
     "Wreckkums": {
-        "archetype": "defender/corruptor"
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Empathy"
+        ]
     },
     "Pop sic le": {
         "archetype": "blaster",
@@ -7684,6 +7688,27 @@
         "sets": [
             "Nature Affinity",
             "Fire Blast"
+        ]
+    },
+    "Mallex's Pain Build": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Pain Domination"
+        ]
+    },
+    "Exigent": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "529": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
         ]
     }
 }
