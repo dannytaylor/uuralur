@@ -21,7 +21,7 @@ h2p    = json.loads(open('data/hero2player.json').read())
 # setup global vars for st
 if "sid" not in ss: ss.sid = []
 if "mid" not in ss: ss.mid = []
-if "view" not in ss: ss.view = {}
+if "view" not in ss: ss.view = None
 
 # setup series/match multiselect dataframes
 if 'series' not in ss:	
@@ -55,6 +55,10 @@ def series_filters():
 
 
 def sidebar():
+	st.sidebar.header('uuralur')
+
+	# ss.view = st.sidebar.radio('view',['match','series','players'])
+
 	pickers = st.sidebar.container()
 	
 	sid_filtered = series_filters() # filter series for selecting by options
@@ -95,11 +99,12 @@ def body():
 
 		sqlq = util.str_sqlq('Actions',ss.sid[0],ss.mid[0])
 		actions_df = pd.read_sql_query(sqlq, con)
-		actions_df['time'] = pd.to_datetime(actions_df['time_ms'],unit='ms').dt.strftime('%M:%S')
+		actions_df['time'] = pd.to_datetime(actions_df['time_ms'],unit='ms').dt.strftime('%M:%S.%f').str[:-4]
 
 
 		# START SUMMARY PAGE
 		if ss.view['match'] == 'summary':
+			st.header('summary')
 			hdf = hero_df[['hero','team','archetype','set1','set2','deaths','targets']].copy()
 			teammap = {0:'🔵',1:'🔴'}
 			hdf['team'] = hdf['team'].map(teammap)
@@ -110,10 +115,12 @@ def body():
 
 		# START SPIKES
 		elif ss.view['match'] == 'spikes':
+			st.header('spikes')
 			c1,c2 = st.columns(2)
 
 			# left side
 			with c1:
+				st.subheader('spike list')
 				# get spike data for match
 				sqlq = util.str_sqlq('Spikes',ss.sid[0],ss.mid[0],columns=['spike_id','time_ms','spike_duration','target','target_team','spike_hp_loss','kill'])
 				df = pd.read_sql_query(sqlq, con)
@@ -165,6 +172,7 @@ def body():
 
 			# right side
 			with c2:
+				st.subheader('spike log')
 				# grab actions with spike id
 				sl = actions_df[(actions_df['spike_id'] == spid)] # spike log
 				
@@ -174,8 +182,8 @@ def body():
 				sl['hit'] = sl['hit']/1000
 				sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).replace(-1,pd.NA)
 				sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
-				sl_write = sl[['match_time','actor','action','time','hit','dist','hit_hp']]
-				sl_write = sl_write.set_index(['match_time','actor','action'])		
+				sl_write = sl[['actor','action','time','hit','dist','hit_hp']]
+				# sl_write = sl_write.set_index(['match_time','actor','action'])		
 
 				st.dataframe(sl_write.style.format(precision=2,na_rep=' '),height=800)
 
