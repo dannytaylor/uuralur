@@ -10,7 +10,7 @@ import tools.util as util
 import plotly.express as px
 import plotly.graph_objects as go
 
-from st_aggrid import AgGrid, GridOptionsBuilder
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
 # sqlite connections
 con = sqlite3.connect('demos.db')
@@ -95,7 +95,23 @@ def sidebar():
 
 def body():
 
-
+	st.markdown(
+				f"""
+		<style>
+			.reportview-container .main .block-container{{
+				max-width: 1560px;
+				padding-top: 1rem;
+				padding-right: 1rem;
+				padding-left: 1rem;
+				padding-bottom: 1rem;
+			}}
+			# .reportview-container .main {{
+			#     color: blue;
+			# }}
+		</style>
+		""",
+				unsafe_allow_html=True,
+	)
 	if 'match' in ss.view:
 		# high level score,map,etc. to go hero
 		
@@ -127,7 +143,13 @@ def body():
 		# START SPIKES
 		elif ss.view['match'] == 'spikes':
 			st.header('spikes')
-			c1,c2 = st.columns([3,2])
+
+			c1,c2,c3,c4,c5,c6,c7,c8,c9,c10 = st.columns(10)
+			c1.metric("test",1)
+			c2.metric("test",1)
+			c3.metric("test",1)
+
+			c1,c2 = st.columns(2)
 
 			# left side
 			with c1:
@@ -185,11 +207,15 @@ def body():
 				sf['dur'] = sf['dur']/1000
 				sf['dmg'] = sf['dmg'].astype(int)
 
-				sf_write = sf[['#','time','target','team','dur','kill','dmg']]
+				sf_write = sf[['#','time','team','target','dur','kill','dmg']]
 				# sf_write = sf_write.set_index(['time','target'])	
 
 				gb = GridOptionsBuilder.from_dataframe(sf_write)
+				gb.configure_columns(['#','team','kill'],width=22)
+				gb.configure_columns(['time','dur','dmg'],width=64)
 				gb.configure_selection('single', pre_selected_rows=[0])
+				gb.configure_columns('dur',type='customNumericFormat',precision=1)
+
 				response = AgGrid(
 					sf_write,
 					gridOptions=gb.build(),
@@ -255,24 +281,36 @@ def body():
 				sl['hit'] = sl['hit']/1000
 				sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).replace(-1,pd.NA)
 				sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
-				sl_write = sl[['time','actor','action','hit','dist','hit_hp']]	
+				# sl['image'] = '<image src=\'http:/localhost:8000/assets/icons/powers/' + sl['icon'] + '\'>'
+				sl['icon_path'] = 'powers/'+sl['icon']
+				sl['image'] = sl['icon_path'].apply(util.image_formatter)
+				sl_write = sl[['time','actor','image','action','hit','dist','hit_hp']]	
 				sl_write = sl_write.fillna('')
 
 
-				# st.table(sl_write.assign(hack='').set_index('hack').style.format(precision=2,na_rep=' '))
 
-				# power icons in order as html
-				icons = sl['icon'][:]
-				icon_html = "<div style=\"text-align:center;\">"
-				for i in icons:
-					icon_html += util.image_formatter('powers/'+i) + "	"
-				icon_html += "<br><br></div>"
-				st.write(icon_html,unsafe_allow_html=True)
+				## power icons in order as html, no aggrid
+				# icons = sl['icon'][:]
+				# icon_html = "<div style=\"text-align:center;\">"
+				# for i in icons:
+				# 	icon_html += util.image_formatter('powers/'+i) + "	"
+				# icon_html += "<br><br></div>"
+				# st.write(icon_html,unsafe_allow_html=True)
+
+				# render html text as html
+				icon_renderer = JsCode("""function(params) {
+	                        return params.value ? params.value : '';
+				}""")
+
+				sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
+				sl_gb.configure_columns(['time','hit','hit_hp','dist'],width=96)
+				sl_gb.configure_columns(['time','hit'],type='customNumericFormat',precision=2)
+				sl_gb.configure_columns('image',cellRenderer=icon_renderer,width=64)
 
 				sl_ag = AgGrid(
 					sl_write,
-					# gridOptions=sl_gb.build(),
-					# allow_unsafe_jscode=True,
+					allow_unsafe_jscode=True,
+					gridOptions=sl_gb.build(),
 					fit_columns_on_grid_load=True,
 					height = 640,
 					theme='material'
@@ -280,13 +318,11 @@ def body():
 
 		# END SPIKES
 
-
-
 def main():
 	st.set_page_config(
 		page_title='uuralur',
 		page_icon='🤖',
-		layout="wide",
+		# layout="wide",
 		initial_sidebar_state="expanded",
 	)
 

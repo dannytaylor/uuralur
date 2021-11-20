@@ -25,5 +25,6 @@ def image_base64(path):
 	with BytesIO() as buffer:
 		im.save(buffer, 'png')
 		return base64.b64encode(buffer.getvalue()).decode()
+@st.cache
 def image_formatter(path):
 	return f'<img src="data:image/jpeg;base64,{image_base64(path)}">'
