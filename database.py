@@ -52,7 +52,7 @@ def createdatatables():
 				time_ms REAL, 
 				spike_duration REAL, 
 				target TEXT, 
-				target_team TEXT, 
+				target_team INT, 
 				spike_hp_loss REAL, 
 				kill INT, 
 				reset TEXT, 
