@@ -17,6 +17,7 @@ class Hero:
 		self.damagetaken = 0
 		self.respites = 20 # assume re-buy and only greens
 		self.attackchains = {}
+		self.timing = []
 
 		self.sets = set()
 		self.set1 = None
@@ -92,6 +93,11 @@ class Spike:
 		self.reset = False
 		self.hploss = 0
 		self.hitwindow = None
+
+		self.nattacks = 0
+		self.nattackers = 0
+		self.nheals = 0
+		self.ngreens = 0
 
 class Hitpoints:
 	def __init__(self, hid, time, hp, hploss):

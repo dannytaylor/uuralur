@@ -618,10 +618,13 @@ def spikehploss(hid,hitpoints,start,end):
 	insertpoint = None
 	inserthp = None
 	for i in range(len(hitpoints)):
-		if hitpoints[i].time >= start:
+		if hitpoints[i].hid == hid and hitpoints[i].time >= start:
 			if i > 0: # for errors on first spikes w/o data
-				inserthp = c.Hitpoints(hid,start,hitpoints[i-1].hp,0)
 				insertpoint = i
+				if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000:
+					inserthp = c.Hitpoints(hid,start,hitpoints[i-1].hp,0)
+				else:
+					inserthp = c.Hitpoints(hid,start,hitpoints[i].hp,0)
 			break
 	if insertpoint and inserthp:
 		hitpoints.insert(insertpoint,inserthp)
@@ -708,6 +711,27 @@ def countattackchains(heroes,actions,spikes):
 				h.attackchains[attackchain] += 1
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
+# count number of attacks, attackers, heals, greens
+# and timing for each attack
+def calcspikestats(heroes,actions,spikes):
+	for s in spikes:
+		sa = [a for a in actions if s.sid == a.spikeid] # spike actions 
+		atkrlist = set()
+		for a in sa:
+			if a.spikeid == s.sid:
+				if 'Attack' in a.tags and 'Foe' in a.target_type:
+					s.nattacks += 1
+					if a.hid not in atkrlist:
+						heroes[a.hid].timing.append(a.spiketime) # append spiking timing to hero info
+					atkrlist.add(a.hid)
+				if 'Heal' in a.tags and 'Ally' in a.target_type:
+					s.nheals += 1
+				if 'Heal' in a.tags and 'Inspirations' in a.tags:
+					s.ngreens += 1
+		s.nattackers = len(atkrlist)
+
+
+
 # parse spikes via actions, main function
 def spikeparse(heroes,actions,hitpoints):
 
@@ -764,6 +788,7 @@ def spikeparse(heroes,actions,hitpoints):
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
 	
+	calcspikestats(heroes,actions,spikes)
 	countattackchains(heroes,actions,spikes)
 
 	return spikes
