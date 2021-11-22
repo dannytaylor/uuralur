@@ -79,21 +79,24 @@ def main(con):
 			kills_1 = sdf[(sdf['team'] == 1) & (sdf['kill'] == 1)]
 			fig = go.Figure()
 			# spike traces
+			lineoffset=50
 			fig.add_trace(go.Line(
 				x=spikes_1['time_m'],
 				name='spikes',
-				y=spikes_1.index,
+				y=spikes_1['#']+lineoffset,
 				text=spikes_1['target'],
 				mode='lines',
 				line=dict(color='DodgerBlue', width=6),
+				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>",
 			))
 			fig.add_trace(go.Line(
 				x=spikes_0['time_m'],
-				y=spikes_0.index,
+				y=spikes_0['#'],
 				text=spikes_0['target'],
 				name='spikes',
 				mode='lines',
 				line=dict(color='tomato', width=6),
+				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>",
 			))
 
 			# kill traces
@@ -105,15 +108,17 @@ def main(con):
 				mode='markers',
 				marker_color='tomato',
 				marker=dict(size=12,line=dict(width=2,color='DarkSlateGrey')),
+				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>kill",
 			))
 			fig.add_trace(go.Scatter(
 				x=kills_1['time_m'],
-				y=kills_1['#'],
+				y=kills_1['#']+lineoffset,
 				text=spikes_1['target'],
 				name='kills',
 				mode='markers',
 				marker_color='DodgerBlue',
 				marker=dict(size=12,line=dict(width=2,color='DarkSlateGrey')),
+				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>kill",
 			))
 
 
@@ -121,6 +126,8 @@ def main(con):
 				showlegend=False,
 				height=240,
 				xaxis_title="match time (m)",
+				xaxis={'range':[0,10]},
+				yaxis={'showticklabels':False,'title':'# spikes'},
 				margin={'t': 10,'b':0,'l':56,'r':0},
 			)
 			st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
@@ -346,14 +353,6 @@ def main(con):
 			)
 			st.plotly_chart(hp_fig, use_container_width=True,config={'displayModeBar': False})
 
-
-			## power icons in order as html, no aggrid
-			# icons = sl['icon'][:]
-			# icon_html = "<div style=\"text-align:center;\">"
-			# for i in icons:
-			# 	icon_html += util.image_formatter('powers/'+i) + "	"
-			# icon_html += "<br><br></div>"
-			# st.write(icon_html,unsafe_allow_html=True)
 
 			# render html text as html
 			icon_renderer = JsCode("""function(params) {
