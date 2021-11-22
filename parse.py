@@ -679,7 +679,8 @@ def flagspikeactions(heroes,actions):
 				recentprimaryattacks = 	[x for x in recentprimaryattacks if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
 				recentphases = 			[x for x in recentphases if isrecentaction(a.time_ms,x.time_ms,config['spike_extend_window'])]
 				recentjaunts = 			[x for x in recentjaunts if isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)]
-				recentjauntreact = 		[x for x in recentattacks if "Jaunt React" in x.tags] # for jauntoffone
+				recentjauntreact = 		[x for x in recentattacks if "Jaunt React" in x.tags and isrecentaction(a.time_ms,x.time_ms,config['spike_init_window']/2)] # for jauntoffone
+
 
 				if (
 					len(recentattacks) >= config['spike_attack_count'] # 4 any attacks in larger window
