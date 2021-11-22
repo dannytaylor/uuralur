@@ -240,7 +240,7 @@ def updatepower(name,powers,data):
 	# tags
 	if 'Enhance Heal' in data['boosts_allowed'] or name == "Respite" and data['target_type'] != 'Location':
 		p['tags'].add("Heal")
-	elif 'Universal Damage Sets' in data['allowed_boostset_cats'] and 'Foe (Alive)' in p['targets_affected']:
+	if 'Universal Damage Sets' in data['allowed_boostset_cats'] and 'Foe (Alive)' in p['targets_affected']:
 		p['tags'].add("Attack")
 	elif '-RES' in data['display_short_help'].upper() and 'Foe (Alive)' in p['targets_affected']:
 		p['tags'].add("Debuff")

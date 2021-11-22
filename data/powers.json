@@ -2282,6 +2282,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 15000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Foe (Alive)",
@@ -3960,6 +3961,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Self",
@@ -6594,6 +6596,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 8000,
         "tags": [
+            "Attack",
             "Delay",
             "Heal"
         ],
@@ -7377,6 +7380,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Self",
@@ -7420,6 +7424,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 90000,
         "tags": [
+            "Attack",
             "Epic",
             "Heal"
         ],
@@ -8855,6 +8860,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 15000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Foe (Alive)",
@@ -15414,6 +15420,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 8000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Foe (Alive)",
@@ -19499,6 +19506,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 60000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Self",
@@ -20398,6 +20406,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Foe (Alive)",
@@ -20634,6 +20643,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 90000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Self",
@@ -24244,6 +24254,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 300000,
         "tags": [
+            "Attack",
             "Epic",
             "Heal"
         ],
@@ -25716,6 +25727,7 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 300000,
         "tags": [
+            "Attack",
             "Heal"
         ],
         "target_type": "Self",
