@@ -457,7 +457,7 @@ def mergeintolargest(h1,h2,teams,remainders,maxteamsize):
 			return True,teams,remainders
 	return False,teams,remainders
 
-# apply
+# apply team numbers to heroes
 def applyteamnumbers(heroes,teams):
 	assignteam = 0
 	for h in teams[1]: # make sure first hero in demo is on team zero
@@ -614,12 +614,22 @@ def isspikereset(spikes,newspike,heroes):
 
 # returns total HP loss by a target on a spike
 def spikehploss(hid,hitpoints,start,end):
+	# create a copy of latest HP in on spike start for report graphing
+	insertpoint = None
+	inserthp = None
+	for i in range(len(hitpoints)):
+		if hitpoints[i].time >= start:
+			if i > 0: # for errors on first spikes w/o data
+				inserthp = c.Hitpoints(hid,start,hitpoints[i-1].hp,0)
+				insertpoint = i
+			break
+	if insertpoint and inserthp:
+		hitpoints.insert(insertpoint,inserthp)
+
 	hploss = 0
-	for hp in hitpoints:
-		if hp.hid == hid and hp.time >= start and hp.time<=end+config['spike_extend_window']:
-			hploss += hp.hploss
-		elif hp.time>end+config['spike_extend_window']:
-			return hploss
+	hplosses = [hp.hploss for hp in hitpoints if (hp.hid == hid and hp.time >= start and hp.time<=(end+config['spike_extend_window']))]
+	for hp in hplosses:
+		hploss += hp
 	return hploss
 
 # weighted spike determ
@@ -699,7 +709,7 @@ def countattackchains(heroes,actions,spikes):
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
 # parse spikes via actions, main function
-def spikeparse(heroes,actions,hp):
+def spikeparse(heroes,actions,hitpoints):
 
 	flagspikeactions(heroes,actions)
 	numspikes = reorderspikes(heroes,actions) # reorder cronologically (by start) from spikeid=1 and get number of spikes
@@ -742,7 +752,7 @@ def spikeparse(heroes,actions,hp):
 			a.spikeactioncount = spikeactors[a.hid]
 			spikeactors[a.hid] += 1
 
-		newspike.hploss = spikehploss(newspike.tid,hp,spikestart,spikeend)
+		newspike.hploss = spikehploss(newspike.tid,hitpoints,spikestart,spikeend)
 		# duration and hploss use absolute time to calculation
 		# spikestart is recalculated based on certain params
 		newspike.duration = spikeend - spikestart

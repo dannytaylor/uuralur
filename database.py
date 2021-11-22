@@ -109,7 +109,7 @@ def createseriestable():
 				tie INTEGER);''')
 
 def demo2db(mid,sid,hp,actions,spikes,heroes):
-	cleardemoentries(mid,sid)
+	cleardemoentries(mid,sid) # if rewriting existing data for a match
 	for h in hp:
 		insertsql("HP",[h.time,heroes[h.hid].name,mid,sid,h.hp,h.hploss])
 	for a in actions:
