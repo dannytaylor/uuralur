@@ -100,6 +100,23 @@ def sidebar():
 	with navigator:
 		if 'match' in ss.view:
 			ss.view['match'] = st.radio('navigation',['summary','spikes','offence','defence','support','logs'])
+		if 'series' in ss.view:
+			ss.view['series'] = st.radio('navigation',['summary','offence','defence','support'])
+
+# load URL queries only on initial load
+def load_queries():
+	querys = st.experimental_get_query_params()
+	ss.view = {'match':'summary'}
+	if 'init_queries' not in ss:
+		ss.init_queries = st.experimental_get_query_params()
+		if 's' in ss.init_queries:
+			sid_check = ss.init_queries['s'][0]
+			if sid_check in ss.series['series_id']:
+				ss.sid = sid_check
+				if 'm' in ss.init_queries:
+					ss.view = {'match':'summary'}
+				else:
+					ss.view = {'series':'summary'}
 
 def body_width(width):
 	st.markdown(
@@ -119,7 +136,7 @@ def body_width(width):
 )
 def body():
 
-	body_width(1560)
+	body_width(1440)
 
 	if 'match' in ss.view:
 		match.main(con)
@@ -135,21 +152,6 @@ def main():
 	sidebar()
 	body()
 
-
-# load URL queries only on initial load
-def load_queries():
-	querys = st.experimental_get_query_params()
-	ss.view = {'match':'summary'}
-	if 'init_queries' not in ss:
-		ss.init_queries = st.experimental_get_query_params()
-		if 's' in ss.init_queries:
-			sid_check = ss.init_queries['s'][0]
-			if sid_check in ss.series['series_id']:
-				ss.sid = sid_check
-				if 'm' in ss.init_queries:
-					ss.view = {'match':'summary'}
-				else:
-					ss.view = {'series':'summary'}
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import streamlit as st
 ss = st.session_state # global shorthand for this file
 
 import pandas as pd
+import seaborn as sns
 import tools.util as util
 
 import plotly.express as px
@@ -45,6 +46,92 @@ def main(con):
 	# END SUMMARY PAGE
 
 
+	# START OFFENCE
+	if ss.view['match'] == 'offence':
+		c1,c2 = st.columns([3,2])
+		hero_df = hero_df[(hero_df['attack_chains'] != "{}")].set_index('hero')
+
+		hero_df['avg timing'] = hero_df['attack_timing'].map(lambda x: statistics.mean(ast.literal_eval(x))/1000)
+		hero_df['med timing'] = hero_df['attack_timing'].map(lambda x: statistics.median(ast.literal_eval(x))/1000)
+		hero_df['var timing'] = hero_df['attack_timing'].map(lambda x: statistics.variance(ast.literal_eval(x))/1000000)
+
+
+		with c1:
+			def highlight_team(s):
+			     if s.team == 0:
+			         return ['background-color: rgba(30, 144, 255,0.2)'] * len(s)
+			     else:
+			         return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
+			cm = sns.light_palette("green", as_cmap=True)
+			
+			hero_write = hero_df[['team','targets','deaths','avg timing','med timing','var timing']]
+			hero_write = hero_write.style.apply(highlight_team, axis=1).format(precision=2)
+			
+			# st.dataframe(hero_write.style.format(precision=2).background_gradient(cmap=cm, subset=['avg timing','med timing']),height=640)
+			st.dataframe(hero_write,height=640)
+		with c2:
+			hero_sel = st.multiselect('attack chains',hero_df.index)
+			if hero_sel == []:
+				hero_sel = hero_df.index
+
+
+			at_dicts = []
+			at_dicts.append({'label':'Total','id':'Total','parent':'','count':0})
+			for h in hero_sel:
+				hat = ast.literal_eval(hero_df.loc[h]['attack_chains']) # hero attack chains dict (list:count)
+				for at,n in hat.items():
+					at_dict = {'label':None,'id':None,'parent':None,'count':0,'length':0}
+					at_list = ast.literal_eval(at)
+					at_dict['label'] = at_list[-1]
+					at_dict['length'] = len(at_list)
+					if len(at_list) == 1:
+						at_dict['parent'] = 'Total'
+						at_dict['id'] = 'Total - ' + at_dict['label']
+					else:
+						at_list.reverse()
+						at_dict['parent'] = 'Total - '+' - '.join(at_list[1:len(at_list)])
+						at_dict['id'] = 'Total - ' + ' - '.join(at_list)
+					at_dict['count'] = n
+					at_dicts.append(at_dict)
+
+			# if multiple heroes, merge same-IDs (must be unique)
+			for i in range(len(at_dicts)):
+				if at_dicts[i]['id'] != 'delete':
+					for j in range(len(at_dicts)):
+						if at_dicts[i]['id'] == at_dicts[j]['id'] and i != j:
+							at_dicts[i]['count'] += at_dicts[j]['count']
+							at_dicts[j]['id'] = 'delete' # flag ID for deletion
+							break
+			at_dicts = [atd for atd in at_dicts if atd['id'] != 'delete']
+
+
+			# for every dict, add count to parent
+			for atd in at_dicts:
+				addto = atd['parent']
+				for atd2 in at_dicts:
+					if atd['id'] == addto:
+						atd['count'] += atd['count']
+						break
+
+
+
+			at_df = pd.DataFrame.from_records(at_dicts)
+			st.write(at_df)
+
+			fig = px.sunburst(
+				at_df,
+				ids='id',
+				names='label',
+				parents='parent',
+				values='count',
+			)
+			fig.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+			st.plotly_chart(fig)
+
+
+	# END OFFENCE
+
+
 	# START SPIKES
 	elif ss.view['match'] == 'spikes':
 		# get spike data for match
@@ -71,27 +158,27 @@ def main(con):
 		ht = {0:[],1:[]}
 		h0 = hero_df[(hero_df['team'] == 0)]
 		h1 = hero_df[(hero_df['team'] == 1)]
-		for t in h0['timing']:
+		for t in h0['attack_timing']:
 			ht[0] += ast.literal_eval(t)
-		for t in h1['timing']:
+		for t in h1['attack_timing']:
 			ht[1] += ast.literal_eval(t)
 
 		for t in [0,1]:
 			t2 = abs(t-1)
 			c2.metric("Spikes",len(tspikes[t2].index),len(tspikes[t2].index)-len(tspikes[t].index))
 
-			ht0 = statistics.mean(ht[t])/1000
-			ht1 = statistics.mean(ht[t2])/1000
+			ht1 = statistics.mean(ht[t])/1000
+			ht0 = statistics.mean(ht[t2])/1000
 			c3.metric("Mean Timing",round(ht0,2),round(ht0-ht1,3),delta_color='inverse')
-			ht0 = statistics.median(ht[t])/1000
-			ht1 = statistics.median(ht[t2])/1000
+			ht1 = statistics.median(ht[t])/1000
+			ht0 = statistics.median(ht[t2])/1000
 			c4.metric("Median Timing",round(ht0,2),round(ht0-ht1,3),delta_color='inverse')
 
-			a0 = round(tspikes[t]['attacks'].mean(),2)
-			a1 = round(tspikes[t2]['attacks'].mean(),2)
+			a1 = round(tspikes[t]['attacks'].mean(),2)
+			a0 = round(tspikes[t2]['attacks'].mean(),2)
 			c5.metric("Avg Attacks",a0,round(a0-a1,2))
-			a0 = round(tspikes[t]['attackers'].mean(),2)
-			a1 = round(tspikes[t2]['attackers'].mean(),2)
+			a1 = round(tspikes[t]['attackers'].mean(),2)
+			a0 = round(tspikes[t2]['attackers'].mean(),2)
 			c6.metric("Avg Attackers",a0,round(a0-a1,2))
 
 		# graph spikes and kills for summary
@@ -139,7 +226,7 @@ def main(con):
 				marker=dict(size=12,line=dict(width=4,color='DodgerBlue')),
 				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>kill",
 			))
-			
+
 			fig.update_layout(
 				showlegend=False,
 				height=240,
@@ -152,7 +239,7 @@ def main(con):
 			st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
 
-		c1,c2 = st.columns([3,2])
+		c1,c2 = st.columns([2,2])
 
 		# left side
 		with c1:
@@ -236,9 +323,10 @@ def main(con):
 
 			sf_write = sf[['#','time','team','kill','target','dur','attacks','attackers','greens','dmg']]
 			gb = GridOptionsBuilder.from_dataframe(sf_write)
-			gb.configure_columns(['#','team','kill'],width=22)
+			gb.configure_columns(['#','team','kill'],width=20)
 			gb.configure_columns(['attacks','attackers','greens'],width=48)
 			gb.configure_columns(['time','dur','dmg'],width=64)
+			gb.configure_columns(['target'],width=128)
 			gb.configure_selection('single', pre_selected_rows=[0])
 			gb.configure_columns('dur',type='customNumericFormat',precision=1)
 			gb.configure_columns('dmg',type='customNumericFormat',precision=0)
@@ -320,7 +408,6 @@ def main(con):
 			sl['hit'] = sl['hit']/1000
 			sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).replace(-1,pd.NA)
 			sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
-			# sl['image'] = '<image src=\'http:/localhost:8000/assets/icons/powers/' + sl['icon'] + '\'>'
 			sl['icon_path'] = 'powers/'+sl['icon']
 			sl['image'] = sl['icon_path'].apply(util.image_formatter)
 			sl_write = sl[['cast','actor','image','action','hit','dist']]	
@@ -398,10 +485,10 @@ def main(con):
 			}""")
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
-			sl_gb.configure_columns(['actor','action'],width=86)
-			sl_gb.configure_columns(['cast','hit','dist'],width=44)
+			sl_gb.configure_columns(['actor','action'],width=84)
+			sl_gb.configure_columns(['cast','hit','dist'],width=40)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
-			sl_gb.configure_columns('image',cellRenderer=icon_renderer,width=32)
+			sl_gb.configure_columns('image',cellRenderer=icon_renderer,width=40)
 
 			sl_ag = AgGrid(
 				sl_write,
