@@ -713,23 +713,35 @@ def countattackchains(heroes,actions,spikes):
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
 # count number of attacks, attackers, heals, greens
-# and timing for each attack
+# and timing for each attack/heal/evade
 def calcspikestats(heroes,actions,spikes):
 	for s in spikes:
 		sa = [a for a in actions if s.sid == a.spikeid] # spike actions 
-		atkrlist = set()
+		attackerlist = set()
+		healerlist = set()
+		jaunttime = None
+		phasetime = None
 		for a in sa:
 			if a.spikeid == s.sid:
 				if 'Attack' in a.tags and 'Foe' in a.target_type:
 					s.nattacks += 1
-					if a.hid not in atkrlist:
-						heroes[a.hid].timing.append(a.spiketime) # append spiking timing to hero info
-					atkrlist.add(a.hid)
+					if a.hid not in attackerlist:
+						heroes[a.hid].attacktiming.append(a.spiketime) # append spiking timing to hero info
+					attackerlist.add(a.hid)
 				if 'Heal' in a.tags and 'Ally' in a.target_type:
 					s.nheals += 1
+					if a.hid not in healerlist:
+						heroes[a.hid].healtiming.append(a.spiketime) # append spiking timing to hero info
+					healerlist.add(a.hid)
 				if 'Heal' in a.tags and 'Inspirations' in a.tags:
 					s.ngreens += 1
-		s.nattackers = len(atkrlist)
+				if a.hid == s.tid:
+					if 'Phase' in a.tags and phasetime == None:
+						heroes[a.hid].phasetiming.append(a.spiketime) # append spiking timing to hero info
+					if 'Teleport' in a.tags and jaunttime == None:
+						heroes[a.hid].jaunttiming.append(a.spiketime) # append spiking timing to hero info
+
+		s.nattackers = len(attackerlist)
 
 
 

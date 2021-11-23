@@ -17,7 +17,11 @@ class Hero:
 		self.damagetaken = 0
 		self.respites = 20 # assume re-buy and only greens
 		self.attackchains = {}
-		self.timing = []
+
+		self.attacktiming = []
+		self.healtiming = []
+		self.phasetiming = []
+		self.jaunttiming = []
 
 		self.sets = set()
 		self.set1 = None
