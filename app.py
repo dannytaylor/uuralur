@@ -135,6 +135,13 @@ def init_css(width):
 		    margin-top: 12px;
 		    margin-bottom: 28px;
 		}
+		.font20 {
+		    font-size:20px !important;
+		    font-weight: bold;
+		    font-family: 'Open Sans', sans-serif;
+		    margin-top: 6px;
+		    margin-bottom: 6px;
+		}
 	</style>
 	""",
 			unsafe_allow_html=True,

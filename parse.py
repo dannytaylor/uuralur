@@ -139,6 +139,8 @@ def determinearchetypes(heroes,actions):
 		for a in actions: # loop until end or 2 powersets determined
 			if hid == a.hid and a.action in powers and len(powers[a.action]['archetypes'])>0:
 				possible_ats = possible_ats.intersection(set(powers[a.action]['archetypes']))
+
+			# found a demo with a controller with >1606 - manually corrected it, but could be a reoccuring error
 			for maxhp,ats in d.at_maxhp.items():
 				if h.hpmax > maxhp:
 					possible_ats.difference_update(ats)
@@ -231,6 +233,11 @@ def determinepowersets(heroes,actions):
 	
 	# sort sets in correct order for the archetype
 	orderpowersets(heroes)
+
+	# allow writing to db for no sets
+	for hid,h in heroes.items():
+		if not h.sets:
+			h.sets = [None,None]
 
 # handle hold actions waiting to be determined
 def parseholdactions(actions,holdactions):
@@ -619,7 +626,7 @@ def spikehploss(hid,hitpoints,start,end):
 	inserthp = None
 	for i in range(len(hitpoints)):
 		if hitpoints[i].hid == hid and hitpoints[i].time >= start:
-			if i > 0: # for errors on first spikes w/o data
+			if i > 0 and hitpoints[i].time != start: # for errors on first spikes w/o data
 				insertpoint = i
 				if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000:
 					inserthp = c.Hitpoints(hid,start,hitpoints[i-1].hp,0)

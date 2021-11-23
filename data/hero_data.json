@@ -7710,5 +7710,33 @@
             "Ice Blast",
             "Plant Manipulation"
         ]
+    },
+        "CrueI Existence": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "jueves": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "jueves'": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "watch dougs": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
     }
 }
