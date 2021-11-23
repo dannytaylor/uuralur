@@ -49,11 +49,24 @@ def main(con):
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
 		c1,c2 = st.columns([3,2])
+
+		# calc num spikes called
+		nspikes = {}
+		for t in [0,1]:
+			t2 = abs(t-1)
+			nspikes[t] = hero_df[hero_df['team']==t2]['targets'].sum()
+
+		# split to only heroes with attack chains
 		hero_df = hero_df[(hero_df['attack_chains'] != "{}")].set_index('hero')
 
+		hero_df['on_target']  = hero_df['attack_chains'].map(lambda x: sum(ast.literal_eval(x).values()))
+		hero_df['max_targets']= hero_df['team'].map(lambda x: nspikes[x])
+		hero_df['otp'] 		  = hero_df['on_target'] / hero_df['max_targets']
+		hero_df['otp'] 		  = hero_df['otp'].map("{:.0%}".format)
 		hero_df['avg timing'] = hero_df['attack_timing'].map(lambda x: statistics.mean(ast.literal_eval(x))/1000)
 		hero_df['med timing'] = hero_df['attack_timing'].map(lambda x: statistics.median(ast.literal_eval(x))/1000)
 		hero_df['var timing'] = hero_df['attack_timing'].map(lambda x: statistics.variance(ast.literal_eval(x))/1000000)
+
 
 
 		with c1:
@@ -64,7 +77,7 @@ def main(con):
 			         return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
 			cm = sns.light_palette("green", as_cmap=True)
 			
-			hero_write = hero_df[['team','targets','deaths','avg timing','med timing','var timing']]
+			hero_write = hero_df[['team','targets','deaths','on_target','otp','avg timing','med timing','var timing']]
 			hero_write = hero_write.style.apply(highlight_team, axis=1).format(precision=2)
 			
 			# st.dataframe(hero_write.style.format(precision=2).background_gradient(cmap=cm, subset=['avg timing','med timing']),height=640)
@@ -74,25 +87,45 @@ def main(con):
 			if hero_sel == []:
 				hero_sel = hero_df.index
 
-
 			at_dicts = []
-			at_dicts.append({'label':'Total','id':'Total','parent':'','count':0})
+			max_length = 0
 			for h in hero_sel:
+				hteam  = hero_df.loc[h]['team']
+				missed = nspikes[hteam] - hero_df.loc[h]['on_target']
+				at_dicts.append({'label':'Total','id':'Total','parent':'','name':'','count':missed,'length':0})
 				hat = ast.literal_eval(hero_df.loc[h]['attack_chains']) # hero attack chains dict (list:count)
 				for at,n in hat.items():
-					at_dict = {'label':None,'id':None,'parent':None,'count':0,'length':0}
+					at_dict = {'label':None,'id':None,'parent':None,'name':'','count':0,'length':0}
 					at_list = ast.literal_eval(at)
 					at_dict['label'] = at_list[-1]
 					at_dict['length'] = len(at_list)
+					max_length = max(len(at_list),max_length)
 					if len(at_list) == 1:
 						at_dict['parent'] = 'Total'
-						at_dict['id'] = 'Total - ' + at_dict['label']
+						at_dict['id'] = 'Total - ' + at_list[-1]
 					else:
-						at_list.reverse()
-						at_dict['parent'] = 'Total - '+' - '.join(at_list[1:len(at_list)])
-						at_dict['id'] = 'Total - ' + ' - '.join(at_list)
+						at_dict['parent'] = 'Total - '+' - '.join(at_list[0:len(at_list)-1])
+						at_dict['id'] = at_dict['parent'] + ' - ' + at_list[-1]
 					at_dict['count'] = n
 					at_dicts.append(at_dict)
+
+
+			# create empty dict if parent leaf doesn't exist
+			# traverse from longest lengths first
+			for i in range(max_length,0,-1):
+				add_dicts = []
+				for a in at_dicts:
+					if a['length'] == i:
+						parentid = a['parent']
+						# for each parentid, find all dicts with that ID
+						parentdicts = [b for b in at_dicts if b['id'] == parentid and b['id'] != a['id']]
+						# if none found, add it with count=0
+						if parentdicts == []:
+							label = parentid.split(' - ')[-1]
+							newparent  = parentid.split(' - ')
+							newparent  = ' - '.join(newparent[0:len(newparent)-1])
+							add_dicts.append({'label':label,'id':parentid,'parent':newparent,'name':'','count':0,'length':i-1})
+				at_dicts += add_dicts
 
 			# if multiple heroes, merge same-IDs (must be unique)
 			for i in range(len(at_dicts)):
@@ -104,30 +137,39 @@ def main(con):
 							break
 			at_dicts = [atd for atd in at_dicts if atd['id'] != 'delete']
 
-
-			# for every dict, add count to parent
-			for atd in at_dicts:
-				addto = atd['parent']
-				for atd2 in at_dicts:
-					if atd['id'] == addto:
-						atd['count'] += atd['count']
-						break
-
-
-
 			at_df = pd.DataFrame.from_records(at_dicts)
-			st.write(at_df)
 
-			fig = px.sunburst(
+			# text chains for table display
+			at_df['chain'] = at_df['id'].map(lambda x: x.replace("Total - ","").replace(" - "," → "))
+			at_write = at_df[['chain','count']].set_index('chain').sort_values(by='count',ascending=False)
+			at_write = at_write.drop('Total')
+
+			# format labels with counts
+			at_df['label'] = at_df['label'] + "<br>" + at_df['count'].astype(str)
+			# format center total to OTP or blank
+			if len(hero_sel) == 1:
+				hero = hero_sel[0]
+				at_df.loc[at_df['id'] == 'Total', 'label'] = '<b>' + str(hero_df.loc[hero,'on_target']) + ' (' + hero_df.loc[hero,'otp'] + ')</b>'
+			else:
+				at_df.loc[at_df['id'] == 'Total', 'label'] = ''
+
+
+			at_fig = px.sunburst(
 				at_df,
 				ids='id',
 				names='label',
+				labels='label',
 				parents='parent',
 				values='count',
 			)
-			fig.update_layout(margin = dict(t=0, l=0, r=0, b=0))
-			st.plotly_chart(fig)
+			at_fig.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+			st.plotly_chart(at_fig,use_container_width=True,config={'displayModeBar': False})
 
+			## debugging table
+			# at_df = at_df[['id','parent','count']]
+			# st.table(at_df)
+
+			st.dataframe(at_write,height=480)
 
 	# END OFFENCE
 
