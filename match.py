@@ -12,16 +12,15 @@ import plotly.graph_objects as go
 
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 config = yaml.safe_load(open('data/config.yaml'))
+powers = json.loads(open('data/powers.json').read())
 
 def main(con):
-	# high level score,map,etc. to go hero
-	# match header
-	mh = st.container()
-	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
-	header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
-	mh.markdown("""<p class="font40"" style="color:#4d4d4d";>{}</p>""".format(header_str),True)
+	# match info, relevant to all views
+	match_row = ss.matches[(ss.matches['match_id']==ss.mid)&(ss.matches['series_id']==ss.sid)]
+	m_score  = [int(match_row.iloc[0]['score0']),int(match_row.iloc[0]['score1'])]
+	m_spikes = [int(match_row.iloc[0]['spikes0']),int(match_row.iloc[0]['spikes1'])]
 
-	
+	# match wide dataframes
 	sqlq = util.str_sqlq('Heroes',ss.sid,ss.mid)
 	hero_df = pd.read_sql_query(sqlq, con)
 	hero_list = hero_df['hero'].tolist()
@@ -30,6 +29,39 @@ def main(con):
 	actions_df = pd.read_sql_query(sqlq, con)
 	actions_df['time'] = pd.to_datetime(actions_df['time_ms'],unit='ms').dt.strftime('%M:%S.%f').str[:-4]
 
+	# match wide vars
+	icon_renderer = JsCode("""function(params) {
+						return params.value ? params.value : '';
+			}""")
+	teammap = {0:'🔵',1:'🔴','':''}
+	killmap = {None:'',1:'❌'}
+
+	# hero info, setup heroname:player/team info for views
+	hero_team_map = {}
+	hero_player_map = {}
+	for index, row in hero_df.iterrows():
+		hname = row['hero']
+		hero_team_map[hname] = row['team']
+		pname = row['player_name']
+		if pname == None:
+			pname = hname
+		hero_player_map[hname] = pname
+    	
+
+	# MATCH HEADSER
+	c1,c2 = st.columns(2)
+	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
+	header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
+	with c1:
+		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
+	with c2:
+		score_str = """<p style="text-align: right;">"""
+		score_str += """<span class="font40" style="color:#666";>{}</span>""".format('score: ')
+		score_str += """<span class="font40" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
+		score_str += """<span class="font40" style="color:#666";>{}</span>""".format(' - ')
+		score_str += """<span class="font40" style="color:tomato";>{}</span>""".format(str(m_score[1]))
+		score_str += """</p>"""
+		st.markdown(score_str,True)
 
 	# START SUMMARY PAGE
 	if ss.view['match'] == 'summary':
@@ -39,7 +71,6 @@ def main(con):
 		hdf = hero_df[['hero','team','archetype','set1','set2','deaths','targets']].copy()
 
 		with c2:
-			teammap = {0:'🔵',1:'🔴'}
 			hdf = hdf.sort_values(by='team')
 			hdf['team'] = hdf['team'].map(teammap)
 			hdf = hdf.set_index(['hero'])
@@ -49,24 +80,21 @@ def main(con):
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
-		c1,c2 = st.columns([2,1])
-
-		# calc num spikes called
-		nspikes = {}
-		for t in [0,1]:
-			t2 = abs(t-1)
-			nspikes[t] = hero_df[hero_df['team']==t2]['targets'].sum()
+		c1,c2 = st.columns([3,2])
 
 		# split to only heroes with attack chains
-		hero_df = hero_df[(hero_df['attack_chains'] != "{}")].set_index('hero')
+		hero_df = hero_df[(hero_df['attack_chains'] != "{}")]
+		hero_df['index'] = hero_df['hero']
+		hero_df = hero_df.set_index('index')
 
 		hero_df['on_target']  = hero_df['attack_chains'].map(lambda x: sum(ast.literal_eval(x).values()))
-		hero_df['max_targets']= hero_df['team'].map(lambda x: nspikes[x])
+		hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
 		hero_df['otp'] 		  = hero_df['on_target'] / hero_df['max_targets']
 		hero_df['otp'] 		  = hero_df['otp'].map("{:.0%}".format)
-		hero_df['avg timing'] = hero_df['attack_timing'].map(lambda x: statistics.mean(ast.literal_eval(x))/1000)
-		hero_df['med timing'] = hero_df['attack_timing'].map(lambda x: statistics.median(ast.literal_eval(x))/1000)
-		hero_df['var timing'] = hero_df['attack_timing'].map(lambda x: statistics.variance(ast.literal_eval(x))/1000000)
+		hero_df['timing'] = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
+		hero_df['avg timing'] = hero_df['timing'].map(lambda x: statistics.mean(x)/1000)
+		hero_df['med timing'] = hero_df['timing'].map(lambda x: statistics.median(x)/1000)
+		hero_df['var timing'] = hero_df['timing'].map(lambda x:  statistics.variance(x)/1000000  if len(x) > 1 else 0)
 		
 		# calc num attacks for table and headers
 		hattacks = []
@@ -74,7 +102,7 @@ def main(con):
 		actions_df['is_atk'] = actions_df['action_tags'].map(lambda x: 1 if "Attack" in x else 0)
 		actions_df['is_spike_atk'] = actions_df['spike_id'].map(lambda x: 1 if x else 0)
 		actions_df['is_spike_atk'] = actions_df[['is_atk','is_spike_atk']].min(axis=1)
-		for h in hero_df.index:
+		for h in hero_df['hero']:
 			atks = actions_df[actions_df['actor'] == h]['is_atk'].sum()
 			spatks = actions_df[actions_df['actor'] == h]['is_spike_atk'].sum()
 			offtgt = spatks
@@ -83,26 +111,80 @@ def main(con):
 		hero_df['atks'] = hattacks
 		hero_df['offtgt']  = hrogues
 
+		m_attacks = {}
+		m_attacks[0] = hero_df[hero_df['team'] == 0]['atks'].sum()
+		m_attacks[1] = hero_df[hero_df['team'] == 1]['atks'].sum()
+
 
 		with c1:
-			def highlight_team(s):
-				 if s.team == 0:
-					 return ['background-color: rgba(30, 144, 255,0.2)'] * len(s)
-				 else:
-					 return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
-			cm = sns.light_palette("green", as_cmap=True)
+			spk_str = """<p style="">"""
+			spk_str += """<span class="font20" style="color:#666";>{}</span>""".format('spikes called '+'&nbsp;'*7)
+			spk_str += """<span class="font20" style="color:dodgerblue";>{}</span>""".format(str(m_spikes[0]))
+			spk_str += """<span class="font20" style="color:#666";>{}</span>""".format(' - ')
+			spk_str += """<span class="font20" style="color:tomato";>{}</span>""".format(str(m_spikes[1]))
+			spk_str += """</p>"""
+			st.markdown(spk_str,True)
+
+			spk_str = """<p style="">"""
+			spk_str += """<span class="font20" style="color:#666";>{}</span>""".format('attacks thrown '+'&nbsp;'*2)
+			spk_str += """<span class="font20" style="color:dodgerblue";>{}</span>""".format(str(m_attacks[0]))
+			spk_str += """<span class="font20" style="color:#666";>{}</span>""".format(' - ')
+			spk_str += """<span class="font20" style="color:tomato";>{}</span>""".format(str(m_attacks[1]))
+			spk_str += """</p>"""
+			st.markdown(spk_str,True)
+
+			## switched to aggrid format for now
+			# def highlight_team(s):
+			# 	 if s.team == 0:
+			# 		 return ['background-color: rgba(30, 144, 255,0.2)'] * len(s)
+			# 	 else:
+			# 		 return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
+			# cm = sns.light_palette("green", as_cmap=True)
 			
-			hero_write = hero_df[['team','targets','deaths','on_target','otp','avg timing','med timing','var timing','atks','offtgt']]
-			hero_write = hero_write.rename(columns={"targets":'tgts',"on_target": "ontgt", "avg timing": "avg","med timing": "median","var timing": "var"})
-			hero_write = hero_write.style.apply(highlight_team, axis=1).format(precision=2)
+			# slice DF to new df for offence
+			hero_write = hero_df[['team','hero','targets','deaths','on_target','otp','avg timing','med timing','var timing','atks','offtgt']]
+			hero_write = hero_write.rename(columns={"targets":'tgts',"on_target": "ontgt", "avg timing": "avg","med timing": "med","var timing": "var"})
+			hero_write = hero_write.sort_values(by='team')
+			hero_write['team'] = hero_write['team'].map(teammap)
+			# hero_write = hero_write.style.apply(highlight_team, axis=1).format(precision=2)
 			
 			# st.dataframe(hero_write.style.format(precision=2).background_gradient(cmap=cm, subset=['avg timing','med timing']),height=640)
-			st.dataframe(hero_write,height=640)
-			# st.table(hero_write)
+			# st.dataframe(hero_write,height=640)
+
+			# aggrid options for offence table
+			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
+			of_gb.configure_default_column(filterable=False)
+			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=32)
+			of_gb.configure_columns('team',width=32,filterable=False)
+			of_gb.configure_columns(['ontgt','otp','atks','offtgt'],width=36,filterable=False)
+			of_gb.configure_columns('hero',width=64)
+			of_gb.configure_columns(['tgts','deaths'],hide=True)
+
+			of_gb.configure_selection('multiple', pre_selected_rows=None)
+
+			of_ag = AgGrid(
+				hero_write,
+				# allow_unsafe_jscode=True,
+				gridOptions=of_gb.build(),
+				fit_columns_on_grid_load=True,
+				update_mode='SELECTION_CHANGED',
+				height = 720,
+				theme = 'material',
+			)
+
+			# get hero selection from aggrid clicks
+			rows = of_ag['selected_rows']
+			if rows:
+				hero_sel = [r['hero'] for r in rows]
+			else:
+				hero_sel = []
+			# hero_sel = hero_df.index
+
 		with c2:
 
 			# ATTACK CHAINS
-			hero_sel = st.multiselect('attack chains',hero_df.index)
+			hero_sel = st.multiselect('heroes',hero_df.index,default=hero_sel)
+			# default to all heroes if non selected
 			if hero_sel == []:
 				hero_sel = hero_df.index
 
@@ -110,7 +192,7 @@ def main(con):
 			max_length = 0
 			for h in hero_sel:
 				hteam  = hero_df.loc[h]['team']
-				missed = nspikes[hteam] - hero_df.loc[h]['on_target']
+				missed = m_spikes[hteam] - hero_df.loc[h]['on_target']
 				at_dicts.append({'label':'Total','id':'Total','parent':'','name':'','count':missed,'length':0})
 				hat = ast.literal_eval(hero_df.loc[h]['attack_chains']) # hero attack chains dict (list:count)
 				for at,n in hat.items():
@@ -158,10 +240,7 @@ def main(con):
 
 			at_df = pd.DataFrame.from_records(at_dicts)
 
-			# text chains for table display
-			at_df['chain'] = at_df['id'].map(lambda x: x.replace("Total - ","").replace(" - "," → "))
-			at_write = at_df[['chain','count']].set_index('chain').sort_values(by='count',ascending=False)
-			at_write = at_write.drop('Total')
+			
 
 			# format labels with counts
 			at_df['label'] = at_df['label'] + "<br>" + at_df['count'].astype(str)
@@ -187,7 +266,27 @@ def main(con):
 			# at_df = at_df[['id','parent','count']]
 			# st.table(at_df)
 
-			st.dataframe(at_write,height=480)
+			# text chains for table display
+			at_df['chain'] = at_df['id'].map(lambda x: x.replace("Total - ","").replace(" - "," → "))
+			at_write = at_df[['chain','count']].sort_values(by='count',ascending=False)
+			at_write = at_write[at_write['chain'] != 'Total']
+			# chain to icons
+			at_write['icons'] = at_write['chain'].map(lambda x: ' '.join([util.image_formatter('powers/' + powers[a]['icon']) for a in x.split(" → ")]))
+			at_write = at_write[['icons','chain','count']]
+
+			at_gb = GridOptionsBuilder.from_dataframe(at_write)
+			at_gb.configure_columns('icons',cellRenderer=icon_renderer,width=36)
+			at_gb.configure_columns('count',width=16)
+			at_gb.configure_columns('chain',width=64)
+
+			sl_ag = AgGrid(
+				at_write,
+				allow_unsafe_jscode=True,
+				gridOptions=at_gb.build(),
+				fit_columns_on_grid_load=True,
+				height = 480,
+				theme='material'
+			)
 
 	# END OFFENCE
 
@@ -225,7 +324,8 @@ def main(con):
 
 		for t in [0,1]:
 			t2 = abs(t-1)
-			c2.metric("Spikes",len(tspikes[t2].index),len(tspikes[t2].index)-len(tspikes[t].index))
+			
+			c2.metric("Spikes",m_spikes[t2],m_spikes[t2]-m_spikes[t])
 
 			ht1 = statistics.mean(ht[t])/1000
 			ht0 = statistics.mean(ht[t2])/1000
@@ -246,7 +346,7 @@ def main(con):
 			fig = go.Figure()
 			# spike traces
 			lineoffset=50
-			fig.add_trace(go.Line(
+			fig.add_trace(go.Scatter(
 				x=tspikes[1]['time_m'],
 				name='spikes',
 				y=tspikes[1]['#']+lineoffset,
@@ -255,7 +355,7 @@ def main(con):
 				line=dict(color='DodgerBlue', width=6),
 				hovertemplate = "%{x:.2f}<br><b>%{text}</b><br>",
 			))
-			fig.add_trace(go.Line(
+			fig.add_trace(go.Scatter(
 				x=tspikes[0]['time_m'],
 				y=tspikes[0]['#'],
 				text=tspikes[0]['target'],
@@ -363,18 +463,8 @@ def main(con):
 				sf = sf[(sf['kill'] == 1)]
 			elif spike_filters['deaths'] == 'alive':
 				sf = sf[(sf['kill'] != 1)]
-
-			# format selection text for spikes
-			# select spike for rightside viewing
-			def format_spike_str(spid):
-				text = '[' + sf.loc[spid-1,'time'] + '] ' + sf.loc[spid-1,'target']
-				if sf.loc[spid-1,'kill'] == 1:
-					text += " 💀"
-				return text		
 			
 			# format data for printing table
-			killmap = {None:'',1:'❌'}
-			teammap = {0:'🔵',1:'🔴'}
 			sf['team'] = sf['team'].map(teammap)
 			sf['kill'] = sf['kill'].map(killmap)
 			sf['dur'] = sf['dur']/1000
@@ -566,27 +656,65 @@ def main(con):
 	# START LOGs
 	elif ss.view['match'] == 'logs':
 
-		c1,c2 = st.columns([2,8])
-		actions_df['hit'] = actions_df['hit_time'] - actions_df['time_ms']
-		actions_df['hit'] = actions_df['hit']/1000
+			c1,c2,c3 = st.columns([2,1,7])
+			actions_df['hit'] = actions_df['hit_time'] - actions_df['time_ms']
+			actions_df['hit'] = actions_df['hit']/1000
 
-		with c1:
-			st.write('filters')
-			# list filters
-			a_filtertoggle = st.checkbox('show self toggles',value=False)
-			a_spikes = st.checkbox('show spike actions',value=True)
-			a_nonspikes = st.checkbox('show non-spike actions',value=True)
-			# time lower bound
-			t_start = st.slider('lower bound time', min_value=-1.0, max_value=10.0, value=0.0, step=0.25, format=None)
-			t_end = st.slider('', min_value=0.0, max_value=10.0, value=0.0, step=0.25, format=None)
-			# time upper bound
+			with c1:
+				st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
+				# list filters
+				# time bounds
+				t_start = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=0.0, step=0.25, format=None)
+				t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
+				t_start = min(t_start,t_end)*1000*60
+
+				# action toggles
+				a_filtertoggle = st.checkbox('show self toggles',value=False)
+				a_spikes = st.checkbox('show spike actions',value=True)
+				a_nonspikes = st.checkbox('show non-spike actions',value=True)
+				t_end = max(t_start,t_end)*1000*60
 
 
-			# apply filters
-			if a_filtertoggle:
-				actions_df = actions_df[actions_df['action_type'] == 'Toggle']
-		with c2:
-			actions_write = actions_df[['time','actor','action','target','hit']]
-			actions_write['target'] = actions_write['target'].fillna('')
-			st.write(actions_write)
+				# apply filters
+				if not a_filtertoggle:
+					actions_df = actions_df.loc[(actions_df['action_type'] != 'Toggle')&(actions_df['action_target_type'] != 'Self')]
+				if not a_spikes:
+					actions_df = actions_df.loc[(~actions_df['spike_id'].notnull())]
+				if not a_nonspikes:
+					actions_df = actions_df.loc[(actions_df['spike_id'] > 0)]
+
+				actions_df = actions_df.loc[(actions_df['time_ms'] >= t_start) & (actions_df['time_ms'] <= t_end)]
+			with c3:
+
+				# icons
+				actions_df['icon_path'] = 'powers/'+actions_df['icon']
+				actions_df['image'] = actions_df['icon_path'].apply(util.image_formatter)
+
+				# team emojis
+				actions_df['t'] = actions_df['actor'].map(hero_team_map)
+				actions_df['t'] = actions_df['t'].map(teammap)
+				# actions_df['tt'] = actions_df['target'].map(hero_team_map)
+				# actions_df['tt'] = actions_df['tt'].map(teammap)
+				# actions_df['tt'] = actions_df['tt'].fillna('')
+
+				actions_write = actions_df[['time','t','actor','image','action','target']]
+				actions_write = actions_write.rename(columns={"time":'cast'})
+				actions_write['target'] = actions_write['target'].fillna('')
+
+				al_gb = GridOptionsBuilder.from_dataframe(actions_write)
+				al_gb.configure_columns(['actor','target','action'],width=84)
+				al_gb.configure_columns(['cast','image'],width=48)
+				al_gb.configure_columns(['t'],width=32)
+				al_gb.configure_columns('image',cellRenderer=icon_renderer)
+				al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
+
+				sl_ag = AgGrid(
+					actions_write,
+					allow_unsafe_jscode=True,
+					gridOptions=al_gb.build(),
+					fit_columns_on_grid_load=True,
+					height = 1024,
+					theme='material'
+				)
+	# END LOGS
 
