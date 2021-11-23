@@ -18,7 +18,8 @@ def main(con):
 	# match header
 	mh = st.container()
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
-	mh.header(sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")")
+	header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
+	mh.markdown("""<p class="font40"" style="color:#4d4d4d";>{}</p>""".format(header_str),True)
 
 	
 	sqlq = util.str_sqlq('Heroes',ss.sid,ss.mid)
@@ -48,7 +49,7 @@ def main(con):
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
-		c1,c2 = st.columns([3,2])
+		c1,c2 = st.columns([2,1])
 
 		# calc num spikes called
 		nspikes = {}
@@ -66,23 +67,41 @@ def main(con):
 		hero_df['avg timing'] = hero_df['attack_timing'].map(lambda x: statistics.mean(ast.literal_eval(x))/1000)
 		hero_df['med timing'] = hero_df['attack_timing'].map(lambda x: statistics.median(ast.literal_eval(x))/1000)
 		hero_df['var timing'] = hero_df['attack_timing'].map(lambda x: statistics.variance(ast.literal_eval(x))/1000000)
-
+		
+		# calc num attacks for table and headers
+		hattacks = []
+		hrogues  = []
+		actions_df['is_atk'] = actions_df['action_tags'].map(lambda x: 1 if "Attack" in x else 0)
+		actions_df['is_spike_atk'] = actions_df['spike_id'].map(lambda x: 1 if x else 0)
+		actions_df['is_spike_atk'] = actions_df[['is_atk','is_spike_atk']].min(axis=1)
+		for h in hero_df.index:
+			atks = actions_df[actions_df['actor'] == h]['is_atk'].sum()
+			spatks = actions_df[actions_df['actor'] == h]['is_spike_atk'].sum()
+			offtgt = spatks
+			hattacks.append(atks)
+			hrogues.append(offtgt)
+		hero_df['atks'] = hattacks
+		hero_df['offtgt']  = hrogues
 
 
 		with c1:
 			def highlight_team(s):
-			     if s.team == 0:
-			         return ['background-color: rgba(30, 144, 255,0.2)'] * len(s)
-			     else:
-			         return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
+				 if s.team == 0:
+					 return ['background-color: rgba(30, 144, 255,0.2)'] * len(s)
+				 else:
+					 return ['background-color: rgba(255, 99, 71,0.2)'] * len(s)
 			cm = sns.light_palette("green", as_cmap=True)
 			
-			hero_write = hero_df[['team','targets','deaths','on_target','otp','avg timing','med timing','var timing']]
+			hero_write = hero_df[['team','targets','deaths','on_target','otp','avg timing','med timing','var timing','atks','offtgt']]
+			hero_write = hero_write.rename(columns={"targets":'tgts',"on_target": "ontgt", "avg timing": "avg","med timing": "median","var timing": "var"})
 			hero_write = hero_write.style.apply(highlight_team, axis=1).format(precision=2)
 			
 			# st.dataframe(hero_write.style.format(precision=2).background_gradient(cmap=cm, subset=['avg timing','med timing']),height=640)
 			st.dataframe(hero_write,height=640)
+			# st.table(hero_write)
 		with c2:
+
+			# ATTACK CHAINS
 			hero_sel = st.multiselect('attack chains',hero_df.index)
 			if hero_sel == []:
 				hero_sel = hero_df.index
@@ -153,15 +172,14 @@ def main(con):
 			else:
 				at_df.loc[at_df['id'] == 'Total', 'label'] = ''
 
+			at_fig  = go.Figure(go.Sunburst(
+				ids=at_df['id'],
+				labels=at_df['label'],
+				hoverinfo = "label",
+				parents=at_df['parent'],
+				values=at_df['count'],
+			))
 
-			at_fig = px.sunburst(
-				at_df,
-				ids='id',
-				names='label',
-				labels='label',
-				parents='parent',
-				values='count',
-			)
 			at_fig.update_layout(margin = dict(t=0, l=0, r=0, b=0))
 			st.plotly_chart(at_fig,use_container_width=True,config={'displayModeBar': False})
 
@@ -193,7 +211,7 @@ def main(con):
 		for t in [0,1]:
 			tspikes[t] = sdf[sdf['team'] == t]
 			tkills[t] = sdf[(sdf['team'] == t) & (sdf['kill'] == 1)]
-			teamstring = """<h2 style="color:{};">{}</h1>""".format(teams_dict[t]['color'],teams_dict[t]['name'],)
+			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(teams_dict[t]['color'],teams_dict[t]['name'],)
 			c1.markdown(teamstring,True)
 	
 		# calc hero timing
@@ -355,7 +373,7 @@ def main(con):
 				return text		
 			
 			# format data for printing table
-			killmap = {None:'',1:'💀'}
+			killmap = {None:'',1:'❌'}
 			teammap = {0:'🔵',1:'🔴'}
 			sf['team'] = sf['team'].map(teammap)
 			sf['kill'] = sf['kill'].map(killmap)
@@ -542,3 +560,33 @@ def main(con):
 			)
 
 	# END SPIKES
+
+
+
+	# START LOGs
+	elif ss.view['match'] == 'logs':
+
+		c1,c2 = st.columns([2,8])
+		actions_df['hit'] = actions_df['hit_time'] - actions_df['time_ms']
+		actions_df['hit'] = actions_df['hit']/1000
+
+		with c1:
+			st.write('filters')
+			# list filters
+			a_filtertoggle = st.checkbox('show self toggles',value=False)
+			a_spikes = st.checkbox('show spike actions',value=True)
+			a_nonspikes = st.checkbox('show non-spike actions',value=True)
+			# time lower bound
+			t_start = st.slider('lower bound time', min_value=-1.0, max_value=10.0, value=0.0, step=0.25, format=None)
+			t_end = st.slider('', min_value=0.0, max_value=10.0, value=0.0, step=0.25, format=None)
+			# time upper bound
+
+
+			# apply filters
+			if a_filtertoggle:
+				actions_df = actions_df[actions_df['action_type'] == 'Toggle']
+		with c2:
+			actions_write = actions_df[['time','actor','action','target','hit']]
+			actions_write['target'] = actions_write['target'].fillna('')
+			st.write(actions_write)
+
