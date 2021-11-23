@@ -69,7 +69,7 @@ def sidebar():
 	st.sidebar.title('uuralur')
 
 	with st.sidebar.container():
-		ss.view = {st.radio('view mode',['match','series','players'],):None}
+		ss.view = {st.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
 	
 	pickers = st.sidebar.container()
 
@@ -82,7 +82,7 @@ def sidebar():
 
 	# only show MID picker if single SID selected
 	if 'match' in ss.view or 'series' in ss.view:
-		ss.sid = pickers.selectbox("series",sid_filtered,on_change=update_query)
+		ss.sid = pickers.selectbox("series",sid_filtered,on_change=update_query,help='In YYMMDD format with tags for either teams playing or KB')
 
 		if 'match' in ss.view:
 			sid_matches = ss.matches[ss.matches['series_id'] == ss.sid] # update match list for SID only
@@ -94,7 +94,7 @@ def sidebar():
 			def format_mid_str(mid):
 				return str(mid) + " (" + sid_matches.loc[mid,'map'] + ")"
 			
-			ss.mid = pickers.selectbox("match",sid_mids,format_func=format_mid_str,on_change=update_query) 
+			ss.mid = pickers.selectbox("match",sid_mids,format_func=format_mid_str,on_change=update_query,help='Match number from series in order played') 
 			ss.map = sid_matches.loc[ss.mid,'map']
 	update_query()
 	with navigator:
@@ -118,25 +118,30 @@ def load_queries():
 				else:
 					ss.view = {'series':'summary'}
 
-def body_width(width):
+def init_css(width):
 	st.markdown(
 			f"""
 	<style>
 		.reportview-container .main .block-container{{
 			# min-width: """+str(width/2)+"""px;
 			max-width: """+str(width)+"""px;
-
 		}}
-		# .reportview-container .main {{
-		#     color: blue;
+		# {{
 		# }}
+		.font40 {
+		    font-size:40px !important;
+		    font-weight: bold;
+		    font-family: 'Open Sans', sans-serif;
+		    margin-top: 12px;
+		    margin-bottom: 28px;
+		}
 	</style>
 	""",
 			unsafe_allow_html=True,
 )
 def body():
 
-	body_width(1440)
+	init_css(1440)
 
 	if 'match' in ss.view:
 		match.main(con)
