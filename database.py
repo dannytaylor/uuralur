@@ -81,6 +81,8 @@ def createdatatables():
 				attack_timing TEXT,
 				phase_timing TEXT,
 				jaunt_timing TEXT,
+				first_attacks INT,
+				alpha_heals INT,
 				PRIMARY KEY (hero, series_id, match_id));
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS HP (
@@ -126,7 +128,7 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 	for s in spikes:
 		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset,s.nattacks,s.nattackers,s.nheals,s.ngreens])
 	for hid,h in heroes.items():
-		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.phasetiming),str(h.jaunttiming)])
+		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.phasetiming),str(h.jaunttiming),h.firstattacks,h.alphaheals])
 	# con.commit()
 
 # if reparsing an existing db entry, delete and redo

@@ -22,6 +22,8 @@ class Hero:
 		self.healtiming = []
 		self.phasetiming = []
 		self.jaunttiming = []
+		self.firstattacks = 0 # when first atk on spike
+		self.alphaheals   = 0 # when first heal on spike
 
 		self.sets = set()
 		self.set1 = None
@@ -91,6 +93,7 @@ class Spike:
 
 		# calculated
 		self.start = None
+		self.startdelta = 0
 		self.end = None
 		self.duration = None
 		self.kill = None
