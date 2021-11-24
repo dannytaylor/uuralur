@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, time, math, argparse, datetime
+import os, sys, time, math, argparse, datetime,statistics
 
 import yaml, json, re
 import numpy as np
@@ -386,6 +386,7 @@ def demo2data(lines,h,starttime):
 					if currenthp == 0:
 						if countdeath(h[hid],time_ms):
 							a = c.Action(actionid,hid,"Death",time_ms)
+							a.hittime = time_ms
 							a.tags.add("MOV")
 							actions.append(a)
 							actionid += 1
@@ -719,8 +720,32 @@ def countattackchains(heroes,actions,spikes):
 				h.attackchains[attackchain] += 1
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
+# for each spike calculate a new weighted spike start time based on the initial attacks
+def calcspikestarttime(actions,spikes):
+	for sp in spikes:
+		delta = 0.0 # delta to adjust all spike related times (ms)
+		a = [x for x in actions if x.spikeid == sp.sid] # get all actions on a spike
+		atks = [x for x in a if 'Attack' in x.tags] # get all attacks on a spike
+		debuff_first = 0 # weight first attack lower if it's a debuff
+		if 'Debuff' in atks[0].tags:
+			debuff_first = 1
+
+		atktime = [x.spiketime for x in atks if x.spiketime < (1+debuff_first)*1000.0]
+		def myround(x, base=1000/30): # https://stackoverflow.com/questions/2272149/round-to-5-or-other-number-in-python
+			return int(base * round(x/base))
+		delta = myround(statistics.mean(atktime[0:min(3+debuff_first,len(atktime))]))
+
+		for x in a:
+			x.spiketime -= delta
+			if x.spikehittime:
+				x.spikehittime -= delta
+		sp.start -= delta
+		sp.end -= delta
+		sp.startdelta = delta
+
 # count number of attacks, attackers, heals, greens
 # and timing for each attack/heal/evade
+# and count first atks/heals on spikes
 def calcspikestats(heroes,actions,spikes):
 	for s in spikes:
 		sa = [a for a in actions if s.sid == a.spikeid] # spike actions 
@@ -728,14 +753,22 @@ def calcspikestats(heroes,actions,spikes):
 		healerlist = set()
 		jaunttime = None
 		phasetime = None
+		first_attack = False
+		first_heal = False
 		for a in sa:
 			if a.spikeid == s.sid:
 				if 'Attack' in a.tags and 'Foe' in a.target_type:
+					if not first_attack:
+						first_attack = True
+						heroes[a.hid].firstattacks += 1
 					s.nattacks += 1
 					if a.hid not in attackerlist:
 						heroes[a.hid].attacktiming.append(a.spiketime) # append spiking timing to hero info
 					attackerlist.add(a.hid)
 				if 'Heal' in a.tags and 'Ally' in a.target_type:
+					if not first_heal:
+						first_heal = True
+						heroes[a.hid].alphaheals += 1
 					s.nheals += 1
 					if a.hid not in healerlist:
 						heroes[a.hid].healtiming.append(a.spiketime) # append spiking timing to hero info
@@ -796,7 +829,6 @@ def spikeparse(heroes,actions,hitpoints):
 			a.spikeactioncount = spikeactors[a.hid]
 			spikeactors[a.hid] += 1
 
-		newspike.hploss = spikehploss(newspike.tid,hitpoints,spikestart,spikeend)
 		# duration and hploss use absolute time to calculation
 		# spikestart is recalculated based on certain params
 		newspike.duration = spikeend - spikestart
@@ -807,8 +839,11 @@ def spikeparse(heroes,actions,hitpoints):
 
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
-	
-	calcspikestats(heroes,actions,spikes)
+
+	calcspikestarttime(actions,spikes) # calculate new spikestart based on initial attacks
+	calcspikestats(heroes,actions,spikes) # various stats for spikes
+	for sp in spikes: # calc hp loss after new start has been calculated
+		sp.hploss = spikehploss(sp.tid,hitpoints,sp.start-sp.startdelta,sp.end)
 	countattackchains(heroes,actions,spikes)
 
 	return spikes

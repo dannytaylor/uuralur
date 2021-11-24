@@ -131,14 +131,14 @@ def init_css(width):
 		.font40 {
 		    font-size:40px !important;
 		    font-weight: bold;
-		    font-family: 'Open Sans', sans-serif;
+		    font-family: 'Roboto', sans-serif;
 		    margin-top: 12px;
 		    margin-bottom: 28px;
 		}
 		.font20 {
 		    font-size:20px !important;
 		    font-weight: bold;
-		    font-family: 'Open Sans', sans-serif;
+		    font-family: 'Roboto', sans-serif;
 		    margin-top: 6px;
 		    margin-bottom: 6px;
 		}
