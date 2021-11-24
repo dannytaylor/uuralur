@@ -64,10 +64,10 @@ def main(con):
 
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: [a/1000 for a in x])
-	hero_df['avg phase'] = hero_df['phase_timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
+	hero_df['avg phase'] = hero_df['phase_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: [a/1000 for a in x])
-	hero_df['avg jaunt'] = hero_df['jaunt_timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
+	hero_df['avg jaunt'] = hero_df['jaunt_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 
 	hero_df['surv_float'] = hero_df['deaths']/hero_df['targets']
 	hero_df['surv'] = hero_df['surv_float'].map("{:.0%}".format)
@@ -462,8 +462,8 @@ def main(con):
 
 			c2.metric("Spikes",m_spikes[t],m_spikes[t]-m_spikes[t2])
 
-			ht0 = statistics.mean(ht[t])
-			ht1 = statistics.mean(ht[t2])
+			ht0 = statistics.mean([abs(x) for x in ht[t]])
+			ht1 = statistics.mean([abs(x) for x in ht[t2]])
 			c3.metric("Mean Timing",round(ht0,2),round(ht0-ht1,3),delta_color='inverse')
 			ht0 = statistics.median(ht[t])
 			ht1 = statistics.median(ht[t2])
@@ -529,7 +529,7 @@ def main(con):
 				xaxis={'range':[0,10]},
 				yaxis={'showticklabels':False,'title':'# spikes'},
 				margin={'t': 0,'b':0,'l':52,'r':0},
-				plot_bgcolor='rgba(0,0,0,0)',
+				# plot_bgcolor='rgba(0,0,0,0)',
 			)
 			st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
@@ -570,7 +570,7 @@ def main(con):
 				barmode="overlay",
 				showlegend=False,
 				height=250,
-				margin={'t': 20,'b':0,'l':0,'r':0},
+				margin={'t': 8,'b':0,'l':0,'r':0},
 				yaxis={'visible': True, 'fixedrange':True},
 				xaxis={'visible':True,'fixedrange':True},
 				hovermode="x unified"
@@ -637,25 +637,38 @@ def main(con):
 			else:
 				spid = 1
 
-			# times and target for spike hp log
-			sp_target   = sdf.loc[spid-1,'target'] # spiketarget
-			sp_start = sdf['time_ms'][spid-1]
-			sp_end   = sdf['dur'][spid-1]+sp_start
-
 		# right side
 		# spike log
 		with c2:
 			# st.subheader('spike log')
+
+			# grab actions with spike id
+			sl = actions_df[(actions_df['spike_id'] == spid)] 
+			sl = sl.rename(columns={"time": "match_time", "spike_time": "cast", "spike_hit_time": "hit", "cast_dist": "dist"})
+ 
+			# times and target for spike hp log
+			sp_target   = sdf.loc[spid-1,'target'] # spiketarget
+			sp_start = sdf['time_ms'][spid-1]
+			sp_end   = sdf['dur'][spid-1]+sp_start
+			sp_delta   = sdf['start_delta'][spid-1]
+
+			act_min = min(sl['cast'].tolist())
+			hit_max = max(sl['hit'].tolist())
 			
 			# spike hp log
 			conditions = " AND hero=\'"+ sp_target.replace('\'','\'\'') + "\'"
-			conditions += " AND time_ms>= " + str(sp_start - 2000)
-			conditions += " AND time_ms<= " + str(sp_end + config['spike_display_extend'] + 2000)
+			conditions += " AND time_ms>= " + str(min(sp_start - sp_delta,sp_start-act_min))
+			conditions += " AND time_ms<= " + str(max(sp_end+sp_delta,sp_start-hit_max))
 			sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hp','hp_loss'],conditions)
 			hp_df = pd.read_sql_query(sqlq, con)
 
+			act_min /= 1000
+			hit_max /= 1000
+
 			# hp graph data
-			hp_df['spike_time'] = (hp_df['time_ms']-sp_start)/1000 # convert to relative time
+			hp_df['spike_time'] = hp_df['time_ms'] - sp_start # convert to relative time
+			hp_df['spike_time'] = hp_df['spike_time'] - 2*sp_delta # convert to relative time
+			hp_df['spike_time'] = hp_df['spike_time']/1000 # convert to relative time
 			hp_df.at[0,'hp_loss'] = 0 # start at 0 HP loss
 			hp_df['hp_loss'] = hp_df['hp_loss'].cumsum() # convert hp loss @ time to cumulative
 			if sdf.at[spid-1,'kill'] == 1: # if spike death truncate graph at death
@@ -666,30 +679,27 @@ def main(con):
 						break 
 				hp_df = hp_df[0:deathatrow]
 			
-			hp_fig = go.Figure()
+			sp_fig = make_subplots(rows=2,cols=1,row_heights=[0.85, 0.15],vertical_spacing=0.1, shared_xaxes=True)
 
 			# hp at time
-			hp_fig.add_trace(go.Scatter(
+			sp_fig.add_trace(go.Scatter(
 				x=hp_df['spike_time'],
 				y=hp_df['hp'],
 				name='hp',
 				mode='lines',
 				line=dict(color='coral', width=6),
-			))
+			),row=1, col=1)
 			# cumu hp loss at time
-			hp_fig.add_trace(go.Scatter(
+			sp_fig.add_trace(go.Scatter(
 				x=hp_df['spike_time'],
 				y=hp_df['hp_loss'],
 				name='hp loss',
 				mode='lines',
 				line=dict(color='SlateBlue', width=6,dash='dash'),
-			))
+			),row=1, col=1)
 			hp_time = hp_df['spike_time'].tolist()
 
-			# grab actions with spike id
-			sl = actions_df[(actions_df['spike_id'] == spid)] 
 			# format spike dataframe
-			sl = sl.rename(columns={"time": "match_time", "spike_time": "cast", "spike_hit_time": "hit", "cast_dist": "dist"})
 			sl['cast'] = sl['cast']/1000
 			sl['hit'] = sl['hit']/1000
 			sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).replace(-1,pd.NA)
@@ -716,24 +726,8 @@ def main(con):
 				else:
 					acolours.append('Grey')
 
-			act_min = min(sl['cast'].tolist())
-			hit_max = max(sl['hit'].tolist())
-			hp_range=[min(act_min,hp_time[0]),max(hit_max,hp_time[-1])]
-			# hp graph, data above
-			hp_fig.update_layout(
-				height=200,
-				showlegend=False,
-				xaxis_title="spike time (s)",
-				yaxis={'visible': True, 'title':'hp','fixedrange':True,'range':[0,max(2000,max(hp_df['hp_loss']))]},
-				xaxis={'visible':False,'fixedrange':True,'range':hp_range},
-				margin={'t': 20,'b':0,'l':0,'r':0},
-				hovermode="x unified"
-			)
-			st.plotly_chart(hp_fig, use_container_width=True,config={'displayModeBar': False})
-
 			# add action markers to HP graph
-			act_fig = go.Figure()
-			act_fig.add_trace(go.Scatter(
+			sp_fig.add_trace(go.Scatter(
 				x=sl['cast'],
 				y=[1.6]*len(sl['cast']),
 				name='',
@@ -742,8 +736,8 @@ def main(con):
 				marker=dict(size=12,line=dict(width=2,color='DarkSlateGrey')),
 				mode='markers',
 				hovertemplate = "<b>cast time</b> <br>%{text}"
-			))
-			act_fig.add_trace(go.Scatter(
+			),row=2, col=1)
+			sp_fig.add_trace(go.Scatter(
 				x=sl['hit'],
 				y=[0.6]*len(sl['cast']),
 				name='',
@@ -753,17 +747,25 @@ def main(con):
 				# opacity=0.5,
 				mode='markers',
 				hovertemplate = "<b>hit time</b> <br>%{text}"
-			))
-			act_fig.update_layout(
-				height=91,
+			),row=2, col=1)
+
+			hp_y_max = max(hp_df['hp'].max(),hp_df['hp_loss'].max(),2000)
+			hp_range=[min(act_min,hp_time[0]),max(hit_max,hp_time[-1])]
+
+			sp_fig.update_layout(
+				height=314,
 				showlegend=False,
-				xaxis_title="spike time (s)",
-				yaxis={'visible': True,'title':'hit/cast','showticklabels':False,'fixedrange':True,'range':[0,2]},
-				xaxis={'visible':True,'fixedrange':True,'range':hp_range},
+				xaxis={'fixedrange':True,'range':hp_range},
 				margin={'t': 0,'b':40,'l':48,'r':0},
-				plot_bgcolor='rgba(0,0,0,0)',
+				# plot_bgcolor='rgba(0,0,0,0)',
 			)
-			st.plotly_chart(act_fig, use_container_width=True,config={'displayModeBar': False})
+			sp_fig.update_xaxes(title_text="spike time (s)", row=2, col=1, showgrid=False)
+			sp_fig.update_yaxes(visible=True, fixedrange=True, showgrid=True, title='hp',row=1, col=1)
+			sp_fig.update_yaxes(visible=False, fixedrange=True, showgrid=False,title='hit/cast',row=2, col=1)
+
+			sp_fig.update_yaxes(range=[0,hp_y_max], row=1, col=1)
+
+			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
 
 
 			# render html text as html
