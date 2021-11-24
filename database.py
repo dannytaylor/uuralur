@@ -60,6 +60,7 @@ def createdatatables():
 				attackers INT, 
 				heals INT, 
 				greens INT, 
+				start_delta REAL, 
 				PRIMARY KEY (spike_id, series_id, match_id));
 				''')
 	cur.execute('''CREATE TABLE IF NOT EXISTS Heroes (
@@ -126,7 +127,7 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 		if a.tid: target = heroes[a.tid].name
 		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.hithp,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount,str(a.tags),a.type,a.target_type,a.effect_area,a.icon])
 	for s in spikes:
-		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset,s.nattacks,s.nattackers,s.nheals,s.ngreens])
+		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset,s.nattacks,s.nattackers,s.nheals,s.ngreens,s.startdelta])
 	for hid,h in heroes.items():
 		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.phasetiming),str(h.jaunttiming),h.firstattacks,h.alphaheals])
 	# con.commit()

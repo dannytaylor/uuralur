@@ -621,7 +621,7 @@ def isspikereset(spikes,newspike,heroes):
 	return False			
 
 # returns total HP loss by a target on a spike
-def spikehploss(hid,hitpoints,start,end):
+def spikehploss(hid,hitpoints,start,end,kill=False):
 	# create a copy of latest HP in on spike start for report graphing
 	insertpoint = None
 	inserthp = None
@@ -629,13 +629,29 @@ def spikehploss(hid,hitpoints,start,end):
 		if hitpoints[i].hid == hid and hitpoints[i].time >= start:
 			if i > 0 and hitpoints[i].time != start: # for errors on first spikes w/o data
 				insertpoint = i
-				if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000:
+				if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000: # must be semi-recent hp
 					inserthp = c.Hitpoints(hid,start,hitpoints[i-1].hp,0)
 				else:
 					inserthp = c.Hitpoints(hid,start,hitpoints[i].hp,0)
 			break
 	if insertpoint and inserthp:
 		hitpoints.insert(insertpoint,inserthp)
+
+	# also create a copy of last HP in on spike at end (last hit) for report graphing
+	if not kill:
+		insertpoint = None
+		inserthp = None
+		for i in range(len(hitpoints)):
+			if hitpoints[i].hid == hid and hitpoints[i].time <= end:
+				if i > 0 and hitpoints[i].time != end: # for errors on first spikes w/o data
+					insertpoint = i
+					if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000:
+						inserthp = c.Hitpoints(hid,end,hitpoints[i-1].hp,0)
+					else:
+						inserthp = c.Hitpoints(hid,end,hitpoints[i].hp,0)
+				break
+		if insertpoint and inserthp:
+			hitpoints.insert(insertpoint,inserthp)
 
 	hploss = 0
 	hplosses = [hp.hploss for hp in hitpoints if (hp.hid == hid and hp.time >= start and hp.time<=(end+config['spike_extend_window']))]
@@ -721,7 +737,7 @@ def countattackchains(heroes,actions,spikes):
 		h.attackchains = {k: v for k, v in sorted(h.attackchains.items(), key=lambda item: item[1], reverse=True)}
 
 # for each spike calculate a new weighted spike start time based on the initial attacks
-def calcspikestarttime(actions,spikes):
+def calcspikestartdelta(actions,spikes):
 	for sp in spikes:
 		delta = 0.0 # delta to adjust all spike related times (ms)
 		a = [x for x in actions if x.spikeid == sp.sid] # get all actions on a spike
@@ -840,10 +856,10 @@ def spikeparse(heroes,actions,hitpoints):
 		spikes.append(newspike)
 		newspike.reset = isspikereset(spikes,newspike,heroes)
 
-	calcspikestarttime(actions,spikes) # calculate new spikestart based on initial attacks
+	calcspikestartdelta(actions,spikes) # calculate new spikestart based on initial attacks
 	calcspikestats(heroes,actions,spikes) # various stats for spikes
 	for sp in spikes: # calc hp loss after new start has been calculated
-		sp.hploss = spikehploss(sp.tid,hitpoints,sp.start-sp.startdelta,sp.end)
+		sp.hploss = spikehploss(sp.tid,hitpoints,sp.start-sp.startdelta,sp.end,sp.kill)
 	countattackchains(heroes,actions,spikes)
 
 	return spikes
@@ -855,8 +871,6 @@ def tagfatfingers(heroes,actions):
 			if a.hithp and a.casthp:
 				if a.hithp > heroes[a.tid].hpmax-2 and a.casthp > heroes[a.tid].hpmax-2 and not a.spikeid:
 					a.tags.add("Fat Finger")
-
-
 
 
 def parsematch(path): # primary demo parse function

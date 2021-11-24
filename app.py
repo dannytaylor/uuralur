@@ -88,7 +88,8 @@ def sidebar():
 			sid_matches = ss.matches[ss.matches['series_id'] == ss.sid] # update match list for SID only
 
 			# format text to display map name in multiselect
-			sid_mids = sid_matches['match_id']
+			sid_mids = sid_matches['match_id'].tolist()
+			sid_mids.sort()
 			
 			sid_matches = sid_matches.set_index('match_id') # update match list for SID only
 			def format_mid_str(mid):
