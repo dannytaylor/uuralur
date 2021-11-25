@@ -3,7 +3,7 @@
 death_cooldown: 5000   # time plus death to ignore new deaths
 phase_cooldown: 5000   # time after phase HIT to ignore heals
 spike_init_window: 2000   # time window to count attacks for initializing a spike
-spike_extend_window: 3500   # time window to count adding more attacks to a spike after it's been initialized, must be greater than init window
+spike_extend_window: 3000   # time window to count adding more attacks to a spike after it's been initialized, must be greater than init window
 spike_attack_count: 3   # number of attacks to count a spike
 spike_enemy_count: 2   # minimum enemies attacking to count a spike
 spike_weighted_score: 4   # weighted count to determine spikes

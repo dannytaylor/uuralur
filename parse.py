@@ -581,7 +581,8 @@ def groupactionsunderspike(hid,actions):
 		if isactiononplayer(a,hid,'Self') or isactiononplayer(a,hid,'Heal') or isactiononplayer(a,hid,'Attack'):
 			if lastspikeid: # if first spike found
 				if a.time_ms - lastspiketime < config['spike_extend_window']: # if action within cooldown on spike extend count
-						a.spikeid = lastspikeid
+					a.spikeid = lastspikeid
+					if "Heal" not in a.tags:
 						lastspiketime = a.time_ms
 				elif a.spikeid: # found new spike outside of spike window
 					lastspikeid = a.spikeid # start counting from this spike
@@ -636,22 +637,6 @@ def spikehploss(hid,hitpoints,start,end,kill=False):
 			break
 	if insertpoint and inserthp:
 		hitpoints.insert(insertpoint,inserthp)
-
-	# also create a copy of last HP in on spike at end (last hit) for report graphing
-	if not kill:
-		insertpoint = None
-		inserthp = None
-		for i in range(len(hitpoints)):
-			if hitpoints[i].hid == hid and hitpoints[i].time <= end:
-				if i > 0 and hitpoints[i].time != end: # for errors on first spikes w/o data
-					insertpoint = i
-					if hitpoints[i-1].hp > 0 and hitpoints[i-1].time > hitpoints[i].time - 5000:
-						inserthp = c.Hitpoints(hid,end,hitpoints[i-1].hp,0)
-					else:
-						inserthp = c.Hitpoints(hid,end,hitpoints[i].hp,0)
-				break
-		if insertpoint and inserthp:
-			hitpoints.insert(insertpoint,inserthp)
 
 	hploss = 0
 	hplosses = [hp.hploss for hp in hitpoints if (hp.hid == hid and hp.time >= start and hp.time<=(end+config['spike_extend_window']))]
