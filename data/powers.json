@@ -399,7 +399,6 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 300000,
         "tags": [
-            "Heal",
             "NoMiss"
         ],
         "target_type": "Ally (Alive)",
@@ -17719,9 +17718,7 @@
         ],
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 300000,
-        "tags": [
-            "Heal"
-        ],
+        "tags": [],
         "target_type": "Ally (Alive)",
         "targets_affected": [
             "Ally (Alive)"
@@ -24034,9 +24031,7 @@
         ],
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 10000,
-        "tags": [
-            "Heal"
-        ],
+        "tags": [],
         "target_type": "Self",
         "targets_affected": [
             "Ally (Alive)",
@@ -28978,7 +28973,6 @@
         "projectile_speed": 3.4028234663852886e+38,
         "recharge_time": 300000,
         "tags": [
-            "Heal",
             "Pool"
         ],
         "target_type": "Leaguemate (Dead)",
@@ -29591,7 +29585,6 @@
         "projectile_speed": 90.0,
         "recharge_time": 4000,
         "tags": [
-            "Attack",
             "Epic",
             "Temporary_Powers"
         ],

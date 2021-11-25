@@ -249,6 +249,10 @@ def updatepower(name,powers,data):
 		p['tags'].add("Absorb")		
 	for tag, power in power_data['tags'].items():
 		if name in power: p['tags'].add(tag)
+	# manual correction for miss flagged powers
+	for tag, power in power_data['notags'].items():
+		if name in power and tag in p['tags']: p['tags'].remove(tag)
+
 	addpooltags(name,powers,data)
 
 	# for dict of Powerset Name:Allowable ATs
