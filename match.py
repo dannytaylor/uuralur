@@ -58,9 +58,9 @@ def main(con):
 	hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
 	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
 	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
-	hero_df['otp'] = hero_df['otp'].map(lambda x: '' if x == '0%' else x)
-	hero_df['timing'] = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
-	hero_df['timing'] = hero_df['timing'].map(lambda x: [a/1000 for a in x])
+	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x)
+	hero_df['timing']  = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
+	hero_df['timing']  = hero_df['timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg atk'] = hero_df['timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
 	hero_df['med atk'] = hero_df['timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var atk'] = hero_df['timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else 0)
@@ -453,8 +453,6 @@ def main(con):
 
 	# END DEFENCE 
 
-
-
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
@@ -530,9 +528,9 @@ def main(con):
 
 			# aggrid options for offence table
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
-			of_gb.configure_default_column(filterable=False)
+			of_gb.configure_default_column(filterable=False,width=32)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
-			of_gb.configure_columns(['ontgt','otp','atks','offtgt','first'],width=32,filterable=False,type='customNumericFormat',precision=0)
+			of_gb.configure_columns(['ontgt','atks','offtgt','first'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60)
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
 			of_gb.configure_columns(['tgts','deaths','team'],hide=True)
@@ -849,7 +847,7 @@ def main(con):
 				# data_return_mode="filtered_and_sorted",
 				update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load=True,
-				height = 640,
+				height = 560,
 				theme=table_theme
 			)
 
@@ -1007,7 +1005,7 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=sl_gb.build(),
 				fit_columns_on_grid_load=True,
-				height = 720,
+				height = 560,
 				theme=table_theme
 			)
 

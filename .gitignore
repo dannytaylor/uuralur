@@ -131,6 +131,7 @@ dmypy.json
 # manual
 demos.db
 *.db
+*.db-journal
 demos/
 testdemos/
 streamlit/assets/
