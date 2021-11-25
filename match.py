@@ -6,6 +6,7 @@ ss = st.session_state # global shorthand for this file
 import pandas as pd
 import numpy as np
 import tools.util as util
+import tools.render as render
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -35,9 +36,6 @@ def main(con):
 	actions_df['time_m'] = actions_df['time_ms']/60000
 
 	# match wide vars
-	icon_renderer = JsCode("""function(params) {
-						return params.value ? params.value : '';
-			}""")
 	team_emoji_map = {0:'🔵',1:'🔴','':''}
 	kill_emoji_map = {None:'',1:'❌'}
 	team_colour_map = {0:'dodgerblue',1:'tomato'}
@@ -78,6 +76,9 @@ def main(con):
 	hero_df['avg heal']    = hero_df['heal_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['med heal']    = hero_df['heal_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 0 else None)
+	# hero_df['on_heal']     = hero_df['heal_timing'].map(lambda x: sum(ast.literal_eval(x).values()))
+	# hero_df['ohp'] 	       = hero_df['on_heal'] / m_spikes[]
+
 
 	hero_df['surv_float'] = 1-hero_df['deaths']/hero_df['targets']
 	hero_df['surv'] = hero_df['surv_float'].map("{:.0%}".format)
@@ -211,13 +212,12 @@ def main(con):
 		# hdf = hdf.set_index(['hero'])
 		# st.dataframe(hdf.style.format(na_rep='-'),height=520)
 
-		hdf['sup'] = hdf['support'].map({1:'🟢',np.nan:''})
 		hdf['atk t'] = hdf['avg atk'].map("{:0.2f}".format)
 		hdf['atk t'] = hdf['atk t'].map(lambda x: '' if x == 'nan' else x)
 		hdf['heal t'] = hdf['avg heal'].map("{:0.2f}".format)
 		hdf['heal t'] = hdf['heal t'].map(lambda x: '' if x == 'nan' else x)
 		hdf['otp'] = hdf['otp'].map(lambda x: '' if x == '0%' else x)
-		hdf = hdf[['team','hero','sup','at','set1','set2','deaths','targets','surv','otp','atk t','heal t']]
+		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','otp',]]
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False)
 		# sum_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
@@ -226,47 +226,20 @@ def main(con):
 		sum_gb.configure_columns(['targets','deaths'],width=24)
 		sum_gb.configure_columns(['otp','surv'],width=32)
 		sum_gb.configure_columns(['otp','surv','atk t','heal t'],width=32)
-		sum_gb.configure_columns(['otp','surv','atk t','heal t'],width=32)
 
-
-		console_helper = JsCode("""
-			  function(params) {
-			  console.log({
-				"params": params,
-				"data": params.data.team,
-			  })}
-		""")
-
-		# cellsytle_jscode = JsCode("""
-		# 	function(params) {
-		# 		if (params.value == 'A') {
-		# 			return {
-		# 				'color': 'white',
-		# 				'backgroundColor': 'darkred'
-		# 			}
-		# 		} else {
-		# 			return {
-		# 				'color': 'black',
-		# 				'backgroundColor': 'white'
-		# 			}
-		# 		}
-		# 	};
-		# 	""")
 
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
-		# sum_gb.configure_columns('team',cellRenderer=console_helper,width=24)
-
-		sum_gb.configure_columns('at',cellRenderer=icon_renderer,width=24)
-
-		# sum_gb.configure_selection('multiple', pre_selected_rows=None)
+		sum_gb.configure_columns('hero',cellStyle=render.team_color)
+		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color)
+		sum_gb.configure_columns('at',cellRenderer=render.icon,width=24)
+		sum_gb.configure_columns(['team','support'],hide=True)
 
 		sum_ag = AgGrid(
 			hdf,
 			allow_unsafe_jscode=True,
 			gridOptions=sum_gb.build(),
 			fit_columns_on_grid_load=True,
-			# update_mode='SELECTION_CHANGED',
-			height = 860,
+			height = 828,
 			theme = table_theme,
 		)
 
@@ -274,10 +247,9 @@ def main(con):
 
 	# START DEFENCE
 	if ss.view['match'] == 'defence':
-		c1,c2,c3,c4,c5,c6 = st.columns([1,1,1,1,4,2])
+		c1,c2,c3,c4,c5 = st.columns([1,1,1,1,6])
 
 		hp_loss_st = c5.empty()
-		hero_sel_st = c6.empty()
 
 
 		def flag_heals(df):
@@ -336,7 +308,7 @@ def main(con):
 		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike']/1000
 		hero_df['dmg'] = hero_df['dmg'].map("{:0.1f}K".format)
 		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike'].map("{:0.1f}K".format)
-		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','heals_taken','avg phase','avg jaunt']]
+		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','heals_taken','avg phase','avg jaunt']].copy()
 		# hero_write = hero_write.fillna('')
 		hero_write['team'] = hero_write['team'].map(team_emoji_map)
 		hero_write['avg jaunt'] = hero_write['avg jaunt'].fillna('')
@@ -347,13 +319,14 @@ def main(con):
 		def_gb.configure_default_column(filterable=False,width=64)
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
-		def_gb.configure_columns('team',width=32)
+		def_gb.configure_columns('team',hide=True)
 		def_gb.configure_columns('hero',width=96)
+		def_gb.configure_columns('hero',cellStyle=render.team_color)
 
 
 		def_ag = AgGrid(
 			hero_write,
-			# allow_unsafe_jscode=True,
+			allow_unsafe_jscode=True,
 			gridOptions=def_gb.build(),
 			fit_columns_on_grid_load=True,
 			update_mode='SELECTION_CHANGED',
@@ -376,8 +349,6 @@ def main(con):
 
 
 		hpl_fig = make_subplots(rows=1,cols=2,horizontal_spacing=0.15,shared_xaxes=True,)
-		hero_sel = hero_sel_st.multiselect('heroes',hero_df.index,default=hero_sel,help='You can also click/ctrl-click from the table on the below to select heroes. If none select displays graphs by team.')
-
 
 		if hero_sel:
 			for h in hero_sel:
@@ -431,10 +402,10 @@ def main(con):
 				),row=1, col=2)
 		else:
 			for t in [0,1]:
-				hero_hp_df = hp_df[hp_df['team']==t]
+				hero_hp_df = hp_df[hp_df['team']==t].copy()
 				hero_hp_df['cumsum'] = hero_hp_df['hp_loss'].cumsum()
 
-				greens = actions_df[actions_df['team']==t]
+				greens = actions_df[actions_df['team']==t].copy()
 				greens['greens'] = greens['is_green'].cumsum()
 
 				hpl_fig.add_trace(go.Scatter(
@@ -552,13 +523,14 @@ def main(con):
 			of_gb.configure_columns('team',width=10,filterable=False)
 			of_gb.configure_columns(['ontgt','otp','atks','offtgt','first'],width=32,filterable=False)
 			of_gb.configure_columns('hero',width=60)
-			of_gb.configure_columns(['tgts','deaths'],hide=True)
+			of_gb.configure_columns('hero',cellStyle=render.team_color)
+			of_gb.configure_columns(['tgts','deaths','team'],hide=True)
 
 			of_gb.configure_selection('multiple', pre_selected_rows=None)
 
 			of_ag = AgGrid(
 				hero_write,
-				# allow_unsafe_jscode=True,
+				allow_unsafe_jscode=True,
 				gridOptions=of_gb.build(),
 				fit_columns_on_grid_load=True,
 				update_mode='SELECTION_CHANGED',
@@ -676,7 +648,7 @@ def main(con):
 			at_write = at_write[['icons','chain','count']]
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
-			at_gb.configure_columns('icons',cellRenderer=icon_renderer,width=36)
+			at_gb.configure_columns('icons',cellRenderer=render.icon,width=36)
 			at_gb.configure_columns('count',width=16)
 			at_gb.configure_columns('chain',width=56)
 
@@ -854,15 +826,15 @@ def main(con):
 			sf_gb.configure_columns(['#','team','kill'],width=16)
 			sf_gb.configure_columns(['atks','atkr'],width=60)
 			sf_gb.configure_columns(['time','dur','dmg'],width=54)
-			sf_gb.configure_columns(['target'],width=100)
+			sf_gb.configure_columns(['target'],width=100,cellStyle=render.team_color)
 			sf_gb.configure_selection('single', pre_selected_rows=[0])
 			sf_gb.configure_columns('dur',type='customNumericFormat',precision=1)
 			sf_gb.configure_columns('dmg',type='customNumericFormat',precision=0)
-			# sf_gb.configure_columns('team',hide=True)
+			sf_gb.configure_columns('team',hide=True)
 
 			response = AgGrid(
 				sf_write,
-				# allow_unsafe_jscode=True,
+				allow_unsafe_jscode=True,
 				gridOptions=sf_gb.build(),
 				# data_return_mode="filtered_and_sorted",
 				update_mode='SELECTION_CHANGED',
@@ -1018,7 +990,7 @@ def main(con):
 			sl_gb.configure_columns(['actor','action'],width=84)
 			sl_gb.configure_columns(['cast','hit','dist'],width=40)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
-			sl_gb.configure_columns('image',cellRenderer=icon_renderer,width=40)
+			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
 
 			sl_ag = AgGrid(
 				sl_write,
@@ -1085,7 +1057,7 @@ def main(con):
 				al_gb.configure_columns(['actor','target','action'],width=84)
 				al_gb.configure_columns(['cast','image'],width=48)
 				al_gb.configure_columns(['t'],width=32)
-				al_gb.configure_columns('image',cellRenderer=icon_renderer)
+				al_gb.configure_columns('image',cellRenderer=render.icon)
 				al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
 
 				sl_ag = AgGrid(
