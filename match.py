@@ -58,6 +58,7 @@ def main(con):
 	hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
 	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
 	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
+	hero_df['otp'] = hero_df['otp'].map(lambda x: '' if x == '0%' else x)
 	hero_df['timing'] = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['timing'] = hero_df['timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg atk'] = hero_df['timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
@@ -76,8 +77,11 @@ def main(con):
 	hero_df['avg heal']    = hero_df['heal_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['med heal']    = hero_df['heal_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 0 else None)
-	# hero_df['on_heal']     = hero_df['heal_timing'].map(lambda x: sum(ast.literal_eval(x).values()))
-	# hero_df['ohp'] 	       = hero_df['on_heal'] / m_spikes[]
+	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x))
+	hero_df['on heal divisor'] = hero_df['team'].map(lambda x: m_spikes[abs(x-1)]) - hero_df['targets']
+	hero_df['on heal float']   = hero_df['on heal']/hero_df['on heal divisor']
+	hero_df['on heal%']    = hero_df['on heal float'].map("{:.0%}".format)
+	hero_df['on heal%']	   = hero_df['on heal%'].map(lambda x: '' if x == '0%' else x)
 
 
 	hero_df['surv_float'] = 1-hero_df['deaths']/hero_df['targets']
@@ -134,6 +138,12 @@ def main(con):
 	for t in [0,1]:
 		ht_mean[t] = statistics.mean([abs(x) for x in ht[t]])
 		ht_med[t] = statistics.median(ht[t])
+
+
+	# get hp data for later views
+	sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
+	hp_df = pd.read_sql_query(sqlq, con)
+
 
 
 	# MATCH HEADSER
@@ -212,26 +222,28 @@ def main(con):
 		# hdf = hdf.set_index(['hero'])
 		# st.dataframe(hdf.style.format(na_rep='-'),height=520)
 
-		hdf['atk t'] = hdf['avg atk'].map("{:0.2f}".format)
-		hdf['atk t'] = hdf['atk t'].map(lambda x: '' if x == 'nan' else x)
+		hdf['atk tm'] = hdf['avg atk'].map("{:0.2f}".format)
+		hdf['atk tm'] = hdf['atk tm'].map(lambda x: '' if x == 'nan' else x)
 		hdf['heal t'] = hdf['avg heal'].map("{:0.2f}".format)
 		hdf['heal t'] = hdf['heal t'].map(lambda x: '' if x == 'nan' else x)
-		hdf['otp'] = hdf['otp'].map(lambda x: '' if x == '0%' else x)
-		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','otp',]]
+		hdf['dmg tk'] = hdf['damage_taken']/1000
+		hdf['dmg tk'] = hdf['dmg tk'].map("{:0.1f}K".format)
+		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','dmg tk','otp','atks','atk tm','on heal%']]
+
+		# hdf = hdf.rename(columns={})
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
-		sum_gb.configure_default_column(filterable=False)
+		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
 		# sum_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
-		sum_gb.configure_columns(['team','sup'],width=16)
-		sum_gb.configure_columns(['hero','set1','set2'],width=40)
-		sum_gb.configure_columns(['targets','deaths'],width=24)
-		sum_gb.configure_columns(['otp','surv'],width=32)
-		sum_gb.configure_columns(['otp','surv','atk t','heal t'],width=32)
+		sum_gb.configure_columns(['hero','set1','set2'],width=56)
+		# sum_gb.configure_columns(['targets','deaths','atks'],width=24)
+		# sum_gb.configure_columns(['dmg tk','otp','surv'],width=32)
+		# sum_gb.configure_columns(['otp','surv','atk t','heal t'],width=32)
 
 
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
 		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color)
-		sum_gb.configure_columns('at',cellRenderer=render.icon,width=24)
+		sum_gb.configure_columns('at',cellRenderer=render.icon)
 		sum_gb.configure_columns(['team','support'],hide=True)
 
 		sum_ag = AgGrid(
@@ -316,7 +328,7 @@ def main(con):
 		
 		def_gb = GridOptionsBuilder.from_dataframe(hero_write)
 		# type=["numericColumn","numberColumnFilter"], )
-		def_gb.configure_default_column(filterable=False,width=64)
+		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
 		def_gb.configure_columns('team',hide=True)
@@ -520,8 +532,7 @@ def main(con):
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
 			of_gb.configure_default_column(filterable=False)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
-			of_gb.configure_columns('team',width=10,filterable=False)
-			of_gb.configure_columns(['ontgt','otp','atks','offtgt','first'],width=32,filterable=False)
+			of_gb.configure_columns(['ontgt','otp','atks','offtgt','first'],width=32,filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60)
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
 			of_gb.configure_columns(['tgts','deaths','team'],hide=True)
@@ -815,20 +826,19 @@ def main(con):
 			# format data for printing table
 			sf['team'] = sf['team'].map(team_emoji_map)
 			sf['kill'] = sf['kill'].map(kill_emoji_map)
-			sf['dur'] = sf['dur']/1000
-			sf['dmg'] = sf['dmg']
+			sf['dur'] = sf['dur'].map(lambda x: round(x/1000,1))
 
 
 			sf_write = sf[['#','time','team','kill','target','dur','attacks','attackers','dmg']]
 			sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
 			sf_gb = GridOptionsBuilder.from_dataframe(sf_write)
 			sf_gb.configure_default_column(filterable=False)
-			sf_gb.configure_columns(['#','team','kill'],width=16)
+			sf_gb.configure_columns(['#','team','kill'],width=18)
 			sf_gb.configure_columns(['atks','atkr'],width=60)
 			sf_gb.configure_columns(['time','dur','dmg'],width=54)
 			sf_gb.configure_columns(['target'],width=100,cellStyle=render.team_color)
 			sf_gb.configure_selection('single', pre_selected_rows=[0])
-			sf_gb.configure_columns('dur',type='customNumericFormat',precision=1)
+			sf_gb.configure_columns('dur',filterable=True)
 			sf_gb.configure_columns('dmg',type='customNumericFormat',precision=0)
 			sf_gb.configure_columns('team',hide=True)
 
@@ -870,48 +880,48 @@ def main(con):
 			hit_max = max(sl['hit'].tolist())
 			
 			# spike hp log
-			conditions = " AND hero=\'"+ sp_target.replace('\'','\'\'') + "\'"
-			conditions += " AND time_ms>= " + str(min(sp_start - sp_delta,sp_start-act_min))
-			conditions += " AND time_ms<= " + str(max(sp_end+sp_delta+1000,sp_start+hit_max+sp_delta+1000))
-			sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hp','hp_loss'],conditions)
-			hp_df = pd.read_sql_query(sqlq, con)
+			hp_start_time = min(sp_start - sp_delta,sp_start-act_min)
+			hp_end_time   = max(sp_end+sp_delta+1000,sp_start+hit_max+sp_delta+1000)
+			sp_hp_df = hp_df[(hp_df['hero'] == sp_target)&(hp_df['time_ms'] >= hp_start_time)&(hp_df['time_ms'] <= hp_end_time)].copy()
+			sp_hp_df = sp_hp_df.reset_index()
+
 
 			act_min /= 1000
 			hit_max /= 1000
 
 			# hp graph data
-			hp_df['spike_time'] = hp_df['time_ms'] - sp_start  - sp_delta # convert to relative time
-			hp_df['spike_time'] = hp_df['spike_time'] - sp_delta # convert to relative time
-			hp_df['spike_time'] = hp_df['spike_time']/1000 # convert to relative time
-			hp_df.at[0,'hp_loss'] = 0 # start at 0 HP loss
-			hp_df['hp_loss'] = hp_df['hp_loss'].cumsum() # convert hp loss @ time to cumulative
+			sp_hp_df['spike_time'] = sp_hp_df['time_ms'] - sp_start  - sp_delta # convert to relative time
+			sp_hp_df['spike_time'] = sp_hp_df['spike_time'] - sp_delta # convert to relative time
+			sp_hp_df['spike_time'] = sp_hp_df['spike_time']/1000 # convert to relative time
+			sp_hp_df.at[0,'hp_loss'] = 0 # start at 0 HP loss
+			sp_hp_df['hp_loss'] = sp_hp_df['hp_loss'].cumsum() # convert hp loss @ time to cumulative
 			if sdf.at[spid-1,'kill'] == 1: # if spike death truncate graph at death
-				deathatrow = len(hp_df)
-				for i in range(len(hp_df['hp'])):
-					if hp_df['hp'][i] == 0:
+				deathatrow = len(sp_hp_df)
+				for i in range(len(sp_hp_df['hp'])):
+					if sp_hp_df['hp'][i] == 0:
 						deathatrow = i+1
 						break 
-				hp_df = hp_df[0:deathatrow]
+				sp_hp_df = sp_hp_df[0:deathatrow]
 			
 			sp_fig = make_subplots(rows=2,cols=1,row_heights=[0.80, 0.20],vertical_spacing=0.1, shared_xaxes=True)
 
 			# hp at time
 			sp_fig.add_trace(go.Scatter(
-				x=hp_df['spike_time'],
-				y=hp_df['hp'],
+				x=sp_hp_df['spike_time'],
+				y=sp_hp_df['hp'],
 				name='hp',
 				mode='lines',
 				line=dict(color='coral', width=6),
 			),row=1, col=1)
 			# cumu hp loss at time
 			sp_fig.add_trace(go.Scatter(
-				x=hp_df['spike_time'],
-				y=hp_df['hp_loss'],
+				x=sp_hp_df['spike_time'],
+				y=sp_hp_df['hp_loss'],
 				name='hp loss',
 				mode='lines',
 				line=dict(color='SlateBlue', width=6,dash='dash'),
 			),row=1, col=1)
-			hp_time = hp_df['spike_time'].tolist()
+			hp_time = sp_hp_df['spike_time'].tolist()
 
 			# format spike dataframe
 			sl['cast'] = sl['cast']/1000
@@ -966,7 +976,7 @@ def main(con):
 				hovertemplate = "<b>hit time</b> <br>%{text}"
 			),row=2, col=1)
 
-			hp_y_max = max(hp_df['hp'].max(),hp_df['hp_loss'].max(),2000)
+			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
 			hp_range=[act_min,hit_max-sp_delta/1000]
 
 			sp_fig.update_layout(
