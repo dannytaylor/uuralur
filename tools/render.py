@@ -1,6 +1,7 @@
 from st_aggrid import JsCode
 
 # functions for rendering styles and formatting in AgGrid
+# and color maps for graphs
 
 # return base64 image html to be rendered
 icon = JsCode("""
@@ -22,10 +23,18 @@ function(params) {
 # render cell text color from team
 team_color = JsCode("""
 function(params) {
-	if(params.data.team == "🔵") {return {"color":"dodgerblue",};} 
+	if(params.data.team == "0") {return {"color":"dodgerblue",};} 
 	else return {"color":"tomato",};
 }
 """)
+
+target_team_color = JsCode("""
+function(params) {
+	if(params.data.target_team == "0") {return {"color":"dodgerblue",};} 
+	else return {"color":"tomato",};
+}
+""")
+
 
 # render cell text color from support tag
 support_color = JsCode("""
@@ -44,3 +53,17 @@ function(params) {
 }
 """)
 
+heal_colours = {
+	"Heal Other":"#5ac54f",
+	"Absorb Pain":"#33984b",
+	"Soothe":"#ea323c",
+	"Share Pain":"#891e2b",
+	"Rejuvenating Circuit":"#00cdf9",
+	"Insulating Circuit":"#0069aa",
+	"Cauterize":"#ffa214",
+	"O2 Boost":"#657392",
+	"Glowing Touch":"#fdd2ed",
+	"Aid Other":"#134c4c",
+	"Spirit Ward":"#622461",
+	"Alkaloid":"#99e65f",
+}

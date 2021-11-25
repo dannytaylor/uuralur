@@ -76,7 +76,7 @@ def main(con):
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg heal']    = hero_df['heal_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['med heal']    = hero_df['heal_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
-	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 0 else None)
+	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 1 else None)
 	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x))
 	hero_df['on heal divisor'] = hero_df['team'].map(lambda x: m_spikes[abs(x-1)]) - hero_df['targets']
 	hero_df['on heal float']   = hero_df['on heal']/hero_df['on heal divisor']
@@ -217,7 +217,7 @@ def main(con):
 		)
 		c7.plotly_chart(score_fig,use_container_width=True,config={'displayModeBar': False})
 
-		hdf['team'] = hdf['team'].map(team_emoji_map)
+		# hdf['team'] = hdf['team'].map(team_emoji_map)
 
 		# hdf = hdf.set_index(['hero'])
 		# st.dataframe(hdf.style.format(na_rep='-'),height=520)
@@ -256,6 +256,191 @@ def main(con):
 		)
 
 	# END SUMMARY PAGE
+	if ss.view['match'] == 'support':
+
+		# support data setup
+		sup_df = hero_df[hero_df['support']==1].copy()
+		sup_heroes  = sup_df['hero'].tolist()
+		sup_actions = actions_df[(actions_df['actor'].isin(sup_heroes))]
+		sup_heals   = sup_actions[(sup_actions['actor'].isin(sup_heroes))&(sup_actions['action_tags'].str.contains('Heal'))&(sup_actions['action_target_type']=='Ally (Alive)')].copy()
+
+		# filter out powers for displaying extras
+		sup_extras  = sup_actions.loc[~sup_actions.index.isin(sup_heals.index)]
+		sup_extras  = sup_extras[~((sup_extras['action_tags'].str.contains('MOV'))|(sup_extras['action_tags'].str.contains('Teleport'))|(sup_extras['action_tags'].str.contains('Phase')))]
+		sup_extras  = sup_extras[~((sup_extras['action_type']=='Toggle')&(sup_extras['action_target_type']=='Self'))]
+		sup_extras  = sup_extras[~(sup_extras['action_type']=='Inspiration')&~((sup_extras['action_type']=='Toggle')&(sup_extras['action_target_type']=='Self'))]
+
+
+		sup_timing_fig = go.Figure()
+
+		h_heal_powers = {}
+		h_extra_powers = {}
+		min_timing = 10 # start high
+		max_timing = 0 # start high
+		for h, row in sup_df.iterrows():
+			h_heal_powers[h] = {} # for action iterate later
+			h_extra_powers[h] = {} # for action iterate later
+			# for timing box plot
+			timing = row['heal_timing']
+			min_timing = min(min(timing),min_timing)
+			max_timing = max(max(timing),max_timing)
+
+			sup_timing_fig.add_trace(go.Box(
+				y=timing,
+				name=h,
+				boxpoints='outliers',
+				opacity=max(min(1,0.3+row['on heal float'])**2,0.4),
+				line_width=4*row['on heal float'],
+				boxmean=True,
+				marker=dict(
+					color=team_colour_map[row['team']],
+					line_width=0,
+					size = 4,
+					)
+			))
+
+		for a, row in sup_heals.iterrows():
+			hp = row['action'] # heal power
+			h  = row['actor']
+			if hp not in h_heal_powers[h]:
+				h_heal_powers[h][hp] = 0
+			h_heal_powers[h][hp] += 1
+
+
+		for a, row in sup_extras.iterrows():
+			hp = row['action'] # heal power
+			h  = row['actor']
+			if hp not in h_extra_powers[h]:
+				h_extra_powers[h][hp] = 0
+			h_extra_powers[h][hp] += 1
+
+
+		sup_heal_fig = go.Figure()
+		for h,hp in h_heal_powers.items():
+			h_powers = list(hp.keys())
+			h_powers.sort()
+			for p in h_powers:
+				colour = "grey"
+				if p in render.heal_colours: colour = render.heal_colours[p]
+				sup_heal_fig.add_trace(go.Bar(
+					y=[hp[p]],
+					x=[h],
+					name=p,
+					hovertemplate="<br>".join([p,str(hp[p])]),
+					marker_color=colour,
+					opacity=0.8,
+					marker_line_width=0,
+				))
+
+		sup_extras_fig = go.Figure()
+		for h,hp in h_extra_powers.items():
+			cs = 'teal'
+			if hero_team_map[h] == 1: cs = 'burg'
+			sup_extras_fig.add_trace(go.Bar(
+				y=list(hp.values()),
+				x=[h]*len(hp),
+				text=list(hp.keys()),
+				# hovertemplate="<br>".join([h,str(hp[p])]),
+				opacity=0.8,
+				marker_line_width=0,
+				marker={'color': list(hp.values())},
+				marker_colorscale = cs,
+			))
+
+		sup_heals['hp_max']   = sup_heals['target'].map(lambda x: 0 if not x else hero_df.loc[x,'hp_max'])
+		sup_heals['efficacy'] = sup_heals['hp_max'] - sup_heals['hit_hp']
+		sup_heals['efficacy'] = sup_heals[(sup_heals['hp_max'] != 0)&(~sup_heals['action_tags'].str.contains('Absorb'))&(sup_heals['hit_hp'] != 0)]['efficacy']
+
+		sup_eff_fig = go.Figure()
+		for h in sup_heroes:
+			sup_eff_fig.add_trace(go.Box(
+				y=sup_heals[sup_heals['actor']==h]['efficacy'],
+				name=h,
+				boxpoints='outliers',
+				line_width=2,
+				boxmean=True,
+				marker=dict(
+					color=team_colour_map[hero_team_map[h]],
+					line_width=0,
+					size = 4,
+					)
+			))
+
+
+
+
+		c1,c2,c3,c4 = st.columns(4)
+		row_height = 320
+		h_margins = dict(t=32, l=16, r=16, b=0)
+		with c1:
+			sup_timing_fig.update_layout(
+				title_text='timing',
+				height=row_height,
+				margin = h_margins,
+				showlegend=False,
+				yaxis_title='first heal cast (s)',
+				yaxis={'range': [min_timing,min(6,max_timing)]},
+				)
+			st.plotly_chart(sup_timing_fig,use_container_width=True, config={'displayModeBar': False})
+
+		with c2:
+			sup_heal_fig.update_layout(
+				title_text='heal powers',
+				height=row_height,
+				margin = h_margins,
+				showlegend=False,
+				barmode='stack',
+				)
+			st.plotly_chart(sup_heal_fig,use_container_width=True, config={'displayModeBar': False})
+
+
+		with c3:
+			sup_eff_fig.update_layout(
+				title_text='hit efficacy',
+				height=row_height,
+				margin = h_margins,
+				showlegend=False,
+				yaxis_title='hp missing on hit',
+				yaxis={'range': [1850,-5]},
+				)
+			st.plotly_chart(sup_eff_fig,use_container_width=True, config={'displayModeBar': False})
+		
+		with c4:
+			sup_extras_fig.update_layout(
+				title_text='extras',
+				height=row_height,
+				margin = h_margins,
+				showlegend=False,
+				barmode='stack',
+				)
+			st.plotly_chart(sup_extras_fig,use_container_width=True, config={'displayModeBar': False})
+
+
+		sup_write = sup_df[['hero','set2','team','support','on heal','on heal%','avg heal','med heal','var heal','alpha_heals']].copy()
+
+		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
+		sup_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
+		# sup_gb.configure_columns('hero',width=96)
+		sup_gb.configure_columns('hero',cellStyle=render.team_color)
+		sup_gb.configure_columns('set2',cellStyle=render.support_color)
+		sup_gb.configure_columns(['avg heal','med heal','var heal'],type='customNumericFormat',precision=2)
+		sup_gb.configure_columns(['team','support'],hide=True)
+
+		st.write(sup_write)
+		sup_ag = AgGrid(
+			sup_write,
+			allow_unsafe_jscode=True,
+			gridOptions=sup_gb.build(),
+			fit_columns_on_grid_load=True,
+			height = 640,
+			theme=table_theme
+		)
+
+
+	# START SUPPORT
+
+
+	# END SUPPORT
 
 	# START DEFENCE
 	if ss.view['match'] == 'defence':
@@ -322,7 +507,7 @@ def main(con):
 		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike'].map("{:0.1f}K".format)
 		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','heals_taken','avg phase','avg jaunt']].copy()
 		# hero_write = hero_write.fillna('')
-		hero_write['team'] = hero_write['team'].map(team_emoji_map)
+		# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 		hero_write['avg jaunt'] = hero_write['avg jaunt'].fillna('')
 		hero_write['avg phase'] = hero_write['avg phase'].fillna('')
 		
@@ -524,7 +709,7 @@ def main(con):
 			hero_write = hero_df[['team','hero','targets','deaths','on_target','otp','avg atk','med atk','var atk','atks','offtgt','first_attacks']]
 			hero_write = hero_write.rename(columns={"targets":'tgts',"on_target": "ontgt", "avg atk": "avg","med atk": "med","var atk": "var","first_attacks":'first'})
 			hero_write = hero_write.sort_values(by='team')
-			hero_write['team'] = hero_write['team'].map(team_emoji_map)
+			# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 
 			# aggrid options for offence table
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
@@ -659,7 +844,7 @@ def main(con):
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_columns('icons',cellRenderer=render.icon,width=36)
 			at_gb.configure_columns('count',width=16)
-			at_gb.configure_columns('chain',width=56)
+			at_gb.configure_columns('chain',width=48)
 
 			sl_ag = AgGrid(
 				at_write,
@@ -822,7 +1007,7 @@ def main(con):
 				sf = sf[(sf['kill'] != 1)]
 			
 			# format data for printing table
-			sf['team'] = sf['team'].map(team_emoji_map)
+			# sf['team'] = sf['team'].map(team_emoji_map)
 			sf['kill'] = sf['kill'].map(kill_emoji_map)
 			sf['dur'] = sf['dur'].map(lambda x: round(x/1000,1))
 
@@ -1051,21 +1236,24 @@ def main(con):
 				actions_df['image'] = actions_df['icon_path'].apply(util.image_formatter)
 
 				# team emojis
-				actions_df['t'] = actions_df['actor'].map(hero_team_map)
-				actions_df['t'] = actions_df['t'].map(team_emoji_map)
+				actions_df['team'] = actions_df['actor'].map(hero_team_map)
+				actions_df['target_team'] = actions_df['target'].map(hero_team_map)
+				# actions_df['t'] = actions_df['t'].map(team_emoji_map)
 				# actions_df['tt'] = actions_df['target'].map(hero_team_map)
 				# actions_df['tt'] = actions_df['tt'].map(team_emoji_map)
 				# actions_df['tt'] = actions_df['tt'].fillna('')
 
-				actions_write = actions_df[['time','t','actor','image','action','target']]
+				actions_write = actions_df[['time','team','actor','image','action','target_team','target']]
 				actions_write = actions_write.rename(columns={"time":'cast'})
 				actions_write['target'] = actions_write['target'].fillna('')
 
 				al_gb = GridOptionsBuilder.from_dataframe(actions_write)
 				al_gb.configure_columns(['actor','target','action'],width=84)
 				al_gb.configure_columns(['cast','image'],width=48)
-				al_gb.configure_columns(['t'],width=32)
+				al_gb.configure_columns(['team','target_team'],hide=True)
 				al_gb.configure_columns('image',cellRenderer=render.icon)
+				al_gb.configure_columns('actor',cellStyle=render.team_color)
+				al_gb.configure_columns('target',cellStyle=render.target_team_color)
 				al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
 
 				sl_ag = AgGrid(
