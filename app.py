@@ -5,7 +5,8 @@ ss = st.session_state # global shorthand for this file
 
 import pandas as pd
 import tools.util as util
-import match
+import view.match as match
+import view.series as series
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -158,6 +159,8 @@ def body():
 
 	if 'match' in ss.view:
 		match.main(con)
+	if 'series' in ss.view:
+		series.main(con)
 
 def main():
 	st.set_page_config(

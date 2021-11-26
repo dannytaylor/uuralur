@@ -20,7 +20,7 @@ phase_hit_reset: 4500 # time after phasehit to start counting hits again
 repeat_cd_factor: 3 # fraction of power's recharge time to use as a repeated power time window
 
 # for streamlit
-spike_display_extend: 2000
+table_theme: "material"
 
 
 # FROM DEMOPARSE
