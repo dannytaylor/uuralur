@@ -6,7 +6,7 @@ ss = st.session_state # global shorthand for this file
 import pandas as pd
 import tools.util as util
 import view.match as match
-import view.series as series
+import view.players as players
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -21,11 +21,6 @@ cur = con.cursor()
 config = yaml.safe_load(open('data/config.yaml'))
 h2p    = json.loads(open('data/hero2player.json').read())
 
-# setup global vars for st
-if "sid" not in ss: ss.sid = []
-if "mid" not in ss: ss.mid = []
-if "view" not in ss: ss.view = None
-
 # setup series/match multiselect dataframes
 if 'series' not in ss:	
 	ss.series 		= pd.read_sql_query("SELECT * FROM Series", con)
@@ -34,100 +29,8 @@ if 'series' not in ss:
 if 'matches' not in ss:
 	ss.matches 			= pd.read_sql_query("SELECT * FROM Matches", con)
 
-
-
-# filter series by settings
-def series_filters():
-	dates_expander = st.sidebar.expander('series filters',expanded=False)
-	series_filters = {}
-	with dates_expander:
-		dates = ss.series['date'].tolist()
-		series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
-		series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
-		series_filters['kickball']   = st.checkbox('kickball',	  value=True,help="Any kickball/community series")
-		series_filters['scrims']     = st.checkbox('scrims', value=True,help="Any non-KB, typically set team versus team")
-	series_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]
-
-	# filter series by series type
-	if not series_filters['kickball'] and series_filters['scrims']:
-		series_filtered = series_filtered[series_filtered['kb'] == 0]
-	if series_filters['kickball'] and not series_filters['scrims']:
-		series_filtered = series_filtered[series_filtered['kb'] == 1]
-
-	return series_filtered
-
-
-def update_query():
-	if 'match' in ss.view:
-		st.experimental_set_query_params(s=ss.sid,m=ss.mid)
-	elif 'series' in ss.view:
-		st.experimental_set_query_params(s=ss.sid)
-	else:
-		st.experimental_set_query_params()
-
-
-def sidebar():
-	st.sidebar.title('uuralur')
-
-	# with view_exp:
-	# 	ss.view = {view_exp.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
-	
-	pickers = st.sidebar.container()
-
-	navigator = st.sidebar.container()
-	
-	view_exp = st.sidebar.expander('viewer', expanded=False)
-
-	sid_filtered = series_filters() # filter series for selecting by options
-	sid_filtered = sid_filtered['series_id'].to_list()
-	sid_filtered.reverse()
-	
-	with view_exp:
-		ss.view = {st.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
-		ss.nametoggle = st.checkbox('toggle player name',value=False,help="View names by player name instead of hero name.")
-
-	# only show MID picker if single SID selected
-	if 'match' in ss.view or 'series' in ss.view:
-		ss.sid = pickers.selectbox("series",sid_filtered,on_change=update_query,help='In YYMMDD format with tags for either teams playing or KB')
-
-		if 'match' in ss.view:
-			sid_matches = ss.matches[ss.matches['series_id'] == ss.sid] # update match list for SID only
-
-			# format text to display map name in multiselect
-			sid_mids = sid_matches['match_id'].tolist()
-			sid_mids.sort()
-			
-			sid_matches = sid_matches.set_index('match_id') # update match list for SID only
-			def format_mid_str(mid):
-				return str(mid) + " (" + sid_matches.loc[mid,'map'] + ")"
-			
-			ss.mid = pickers.selectbox("match",sid_mids,format_func=format_mid_str,on_change=update_query,help='Match number from series in order played') 
-			ss.map = sid_matches.loc[ss.mid,'map']
-	update_query()
-	with navigator:
-		if 'match' in ss.view:
-			ss.view['match'] = st.radio('navigation',['summary','spikes','offence','defence','support','logs'])
-		if 'series' in ss.view:
-			ss.view['series'] = st.radio('navigation',['summary','offence','defence','support'])
-
-# load URL queries only on initial load
-def load_queries():
-	querys = st.experimental_get_query_params()
-	ss.view = {'match':'summary'}
-	if 'init_queries' not in ss:
-		ss.init_queries = st.experimental_get_query_params()
-		if 's' in ss.init_queries:
-			sid_check = ss.init_queries['s'][0]
-			if sid_check in ss.series['series_id']:
-				ss.sid = sid_check
-				if 'm' in ss.init_queries:
-					ss.view = {'match':'summary'}
-				else:
-					ss.view = {'series':'summary'}
-
 def init_css(width):
-	st.markdown(
-			f"""
+	st.markdown(f"""
 	<style>
 		.reportview-container .main .block-container{{
 			# min-width: """+str(width/2)+"""px;
@@ -150,30 +53,79 @@ def init_css(width):
 		    margin-bottom: 6px;
 		}
 	</style>
-	""",
-			unsafe_allow_html=True,
+	""", unsafe_allow_html=True,
 )
-def body():
 
-	init_css(1440)
+class MultiPage:
+	def __init__(self):
+		self.apps = []
+		self.app_names = []
 
-	if 'match' in ss.view:
-		match.main(con)
-	if 'series' in ss.view:
-		series.main(con)
+	def add_app(self, title, func, *args, **kwargs):
+		self.app_names.append(title)
+		self.apps.append({
+			"title": title,
+			"function": func,
+			"args":args,
+			"kwargs": kwargs
+		})
+
+	def sidebar(self):
+		# common key
+		key='viewer'
+
+		# get app choice from query_params
+		query_params = st.experimental_get_query_params()
+		query_app_choice = query_params['app'][0] if 'app' in query_params else None
+
+		# update session state (this also sets the default radio button selection as it shares the key!)
+		ss[key] = query_app_choice if query_app_choice in self.app_names else self.app_names[0]
+
+		def on_change():
+			params = st.experimental_get_query_params()
+			params['app'] = ss[key]
+			st.experimental_set_query_params(**params)
+
+		app_choice = st.sidebar.radio("viewer", self.app_names, on_change=on_change, key=key)
+		return app_choice
+
+	def run(self):
+		# callback to update query param from app choice
+		viewer = self.sidebar()
+
+		# run the selected app
+		app = self.apps[self.app_names.index(viewer)]
+		app['function'](app['title'], *app['args'], **app['kwargs'])
+
+def app1(title, info=None):
+	ss.mid = 1
+	ss.sid = '211109_kb'
+	ss.view = {'match':'summary'}
+
+	match.main(con)
+
+def app2(title, info=None):
+	st.title(title)
+	st.write(info)
+
+	# player.main(con)
+
 
 def main():
+	mp = MultiPage()
+	mp.add_app('Application 1', app1, info='Hello from App 1')
+	mp.add_app('Application 2', app2, info='Hello from App 2')
+	mp.run()
+
+
+
+
+if __name__ == '__main__':
 	st.set_page_config(
 		page_title='uuralur',
 		page_icon='🤖',
 		# layout="wide", # manual widths via body_width hack
 		initial_sidebar_state="expanded",
 	)
-	# load_queries() # not working yet
-	sidebar()
-	body()
-
-
-
-if __name__ == '__main__':
+	init_css(1440)
 	main()
