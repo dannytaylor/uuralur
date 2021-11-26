@@ -17,6 +17,3 @@ config = yaml.safe_load(open('data/config.yaml'))
 powers = json.loads(open('data/powers.json').read())
 
 table_theme = config['table_theme']
-
-def main(con):
-	pass

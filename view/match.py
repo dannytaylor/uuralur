@@ -151,7 +151,8 @@ def main(con):
 	# MATCH HEADSER
 	c1,c2 = st.columns(2)
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
-	header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
+	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
+	header_str = sid_date +" > Match "+str(ss.mid)
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 	with c2:
@@ -228,7 +229,6 @@ def main(con):
 			margin={'t': 0,'b':0,'l':0,'r':0},
 			yaxis={'title':'score','fixedrange':True,'range':[0,max(m_score[0],m_score[1])]},
 			xaxis={'visible':True,'fixedrange':True,'range':[0,10],'title':'match time (m)'},
-			hovermode="x unified",
 		)
 		spike_fig.update_layout(
 			barmode="overlay",
@@ -280,7 +280,7 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=sum_gb.build(),
 			fit_columns_on_grid_load=True,
-			height = 828,
+			height = 56*16,
 			theme = table_theme,
 		)
 
@@ -1240,7 +1240,7 @@ def main(con):
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
 
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log'),True)
+			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
 			sl_ag = AgGrid(
 				sl_write,
 				allow_unsafe_jscode=True,
@@ -1258,8 +1258,9 @@ def main(con):
 	elif ss.view['match'] == 'logs':
 		
 		c1,c2,c3 = st.columns([2,1,7])
-		actions_df['hit'] = actions_df['hit_time'] - actions_df['time_ms']
-		actions_df['hit'] = actions_df['hit']/1000
+		a_df = actions_df.copy()
+		a_df['hit'] = a_df['hit_time'] - a_df['time_ms']
+		a_df['hit'] = a_df['hit']/1000
 
 		with c1:
 			st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
@@ -1268,38 +1269,45 @@ def main(con):
 			t_start = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=0.0, step=0.25, format=None)
 			t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
 			t_start = min(t_start,t_end)*1000*60
+			t_end = max(t_start,t_end)*1000*60
 
 			# action toggles
 			a_filtertoggle = st.checkbox('show self toggles',value=False)
 			a_spikes = st.checkbox('show spike actions',value=True)
 			a_nonspikes = st.checkbox('show non-spike actions',value=True)
-			t_end = max(t_start,t_end)*1000*60
+			# a_by_blu = st.checkbox('target by blue',value=True)
+			# a_by_red = st.checkbox('target by red',value=True)
+			# a_on_blu = st.checkbox('target on blue',value=True)
+			# a_on_red = st.checkbox('target on red',value=True)
 
 
 			# apply filters
 			if not a_filtertoggle:
-				actions_df = actions_df.loc[(actions_df['action_type'] != 'Toggle')&(actions_df['action_target_type'] != 'Self')]
+				a_df = a_df.loc[(a_df['action_type'] != 'Toggle')&(a_df['action_target_type'] != 'Self')]
 			if not a_spikes:
-				actions_df = actions_df.loc[(~actions_df['spike_id'].notnull())]
+				a_df = a_df.loc[(~a_df['spike_id'].notnull())]
 			if not a_nonspikes:
-				actions_df = actions_df.loc[(actions_df['spike_id'] > 0)]
+				a_df = a_df.loc[(a_df['spike_id'] > 0)]
 
-			actions_df = actions_df.loc[(actions_df['time_ms'] >= t_start) & (actions_df['time_ms'] <= t_end)]
+			if not a_nonspikes:
+				a_df = a_df.loc[(a_df['spike_id'] > 0)]
+
+			a_df = a_df.loc[(a_df['time_ms'] >= t_start) & (a_df['time_ms'] <= t_end)]
 		with c3:
 
 			# icons
-			actions_df['icon_path'] = 'powers/'+actions_df['icon']
-			actions_df['image'] = actions_df['icon_path'].apply(util.image_formatter)
+			a_df['icon_path'] = 'powers/'+a_df['icon']
+			a_df['image'] = a_df['icon_path'].apply(util.image_formatter)
 
 			# team emojis
-			actions_df['team'] = actions_df['actor'].map(hero_team_map)
-			actions_df['target_team'] = actions_df['target'].map(hero_team_map)
-			# actions_df['t'] = actions_df['t'].map(team_emoji_map)
-			# actions_df['tt'] = actions_df['target'].map(hero_team_map)
-			# actions_df['tt'] = actions_df['tt'].map(team_emoji_map)
-			# actions_df['tt'] = actions_df['tt'].fillna('')
+			a_df['team'] = a_df['actor'].map(hero_team_map)
+			a_df['target_team'] = a_df['target'].map(hero_team_map)
+			# a_df['t'] = a_df['t'].map(team_emoji_map)
+			# a_df['tt'] = a_df['target'].map(hero_team_map)
+			# a_df['tt'] = a_df['tt'].map(team_emoji_map)
+			# a_df['tt'] = a_df['tt'].fillna('')
 
-			actions_write = actions_df[['time','team','actor','image','action','target_team','target']]
+			actions_write = a_df[['time','team','actor','image','action','target_team','target']]
 			actions_write = actions_write.rename(columns={"time":'cast'})
 			actions_write['target'] = actions_write['target'].fillna('')
 
@@ -1312,7 +1320,7 @@ def main(con):
 			al_gb.configure_columns('target',cellStyle=render.target_team_color)
 			al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
 
-			sl_ag = AgGrid(
+			al_ag = AgGrid(
 				actions_write,
 				allow_unsafe_jscode=True,
 				gridOptions=al_gb.build(),
@@ -1322,3 +1330,28 @@ def main(con):
 			)
 	# END LOGS
 
+	# START SERIES
+	elif ss.view['match'] == 'series':
+		m_df = ss.matches[ss.matches['series_id']==ss.sid].copy()
+
+		m_write = m_df[['match_id','map','score0','score1']]
+
+		m_gb = GridOptionsBuilder.from_dataframe(m_write)
+		m_gb.configure_default_column(width=16)
+		# m_gb.configure_grid_options(rowHeight=36)
+		m_gb.configure_columns('map',width=48)
+		m_gb.configure_columns('score0',cellStyle=render.blu)
+		m_gb.configure_columns('score1',cellStyle=render.red)
+		# m_gb.configure_selection('single', pre_selected_rows=None)
+
+
+		c1,c2 = st.columns([2,8])
+		with c1:
+			m_write.set_index('match_id')
+			st.write(m_write.set_index('match_id'))
+
+		sqlq = util.str_sqlq('Heroes',ss.sid)
+		mh_df = pd.read_sql_query(sqlq, con)
+		st.write(mh_df)
+
+	# END SERIES

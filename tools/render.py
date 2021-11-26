@@ -35,6 +35,18 @@ function(params) {
 }
 """)
 
+blu = JsCode("""
+function(params) {
+	return {"color":"dodgerblue"};
+}
+""")
+
+red = JsCode("""
+function(params) {
+	return {"color":"tomato"};
+}
+""")
+
 
 # render cell text color from support tag
 support_color = JsCode("""
