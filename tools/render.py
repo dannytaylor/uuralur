@@ -40,7 +40,7 @@ function(params) {
 support_color = JsCode("""
 function(params) {
 	if(params.data.support == "1") {return {"color":"seagreen",};} 
-	else return {"color":"black",};
+	else return {"color":"rgba(0,0,0,0.87)",};
 }
 """)
 

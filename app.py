@@ -37,7 +37,7 @@ if 'matches' not in ss:
 
 # filter series by settings
 def series_filters():
-	dates_expander = st.sidebar.expander('filters',expanded=False)
+	dates_expander = st.sidebar.expander('series filters',expanded=False)
 	series_filters = {}
 	with dates_expander:
 		dates = ss.series['date'].tolist()
@@ -68,17 +68,22 @@ def update_query():
 def sidebar():
 	st.sidebar.title('uuralur')
 
-	with st.sidebar.container():
-		ss.view = {st.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
+	# with view_exp:
+	# 	ss.view = {view_exp.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
 	
 	pickers = st.sidebar.container()
 
 	navigator = st.sidebar.container()
+	
+	view_exp = st.sidebar.expander('viewer', expanded=False)
 
 	sid_filtered = series_filters() # filter series for selecting by options
 	sid_filtered = sid_filtered['series_id'].to_list()
 	sid_filtered.reverse()
 	
+	with view_exp:
+		ss.view = {st.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
+		ss.nametoggle = st.checkbox('toggle player name',value=False,help="View names by player name instead of hero name.")
 
 	# only show MID picker if single SID selected
 	if 'match' in ss.view or 'series' in ss.view:
