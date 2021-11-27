@@ -149,12 +149,13 @@ def main(con):
 
 
 	# MATCH HEADSER
-	c1,c2 = st.columns(2)
+	c1,c2 = st.columns([7,3])
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
-	header_str = sid_date +" > Match "
+	header_str = sid_date +" · match "
 	if ss.view['matches'] != 'series':
 		header_str += str(ss.mid)
+		header_str += ' · ' + ss.sid[7:].replace('_',' ')
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 	with c2:
