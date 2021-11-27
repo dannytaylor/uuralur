@@ -362,7 +362,7 @@ def heroactionstats(heroes,actions):
 			heroes[a.hid].jaunts += 1
 		elif 'Heal' in a.tags and 'Ally (Alive)' in a.target_type:
 			heroes[a.hid].heals += 1
-		elif 'Attack' in a.tags and 'Ally (Alive)' in a.target_type:
+		elif 'Attack' in a.tags and 'Foe (Alive)' in a.target_type:
 			heroes[a.hid].attacks += 1
 
 
@@ -901,6 +901,10 @@ def parsematch(path): # primary demo parse function
 		for hid in heroes:
 			score[heroes[hid].team]   += heroes[hid].deaths
 			targets[heroes[hid].team] += heroes[hid].targets
+
+		score.reverse()
+		targets.reverse()
+
 		for hid in heroes: # w/l record for database
 			if score[heroes[hid].team] == score[abs(heroes[hid].team-1)]:
 				heroes[hid].tie = 1
@@ -908,9 +912,7 @@ def parsematch(path): # primary demo parse function
 				heroes[hid].win = 1
 			else:
 				heroes[hid].loss = 1
-
-		score.reverse()
-		targets.reverse()
+		
 		if OVERRIDE and sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:
 			score[0]+= overrides[sid][mid]['SCORE'][0]
 			score[1]+= overrides[sid][mid]['SCORE'][1]
