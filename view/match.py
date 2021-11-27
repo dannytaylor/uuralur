@@ -152,7 +152,9 @@ def main(con):
 	c1,c2 = st.columns(2)
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
-	header_str = sid_date +" > Match "+str(ss.mid)
+	header_str = sid_date +" > Match "
+	if ss.view['match'] != 'series':
+		header_str += str(ss.mid)
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 	with c2:
@@ -1345,13 +1347,99 @@ def main(con):
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 
-		c1,c2 = st.columns([2,8])
-		with c1:
-			m_write.set_index('match_id')
-			st.write(m_write.set_index('match_id'))
+		c1,c2,c3 = st.columns([2,6,2])
 
+		with c3:
+			with st.expander('filters',expanded=True):
+				name_toggle = st.radio('group by',['hero name','player name'])
+				data_aggr   = st.radio('show data by',['average per match','total for series'])
+				support_toggle = st.radio('show ',['all','non-support','support'])
+
+		with c1:
+			# m_write.set_index('match_id')
+			# st.write(m_write.set_index('match_id'))
+			def set_query():
+				ss.mid = ss['radiochange']
+				params = st.experimental_get_query_params()
+				params['s'] = ss.sid
+				params['m'] = ss.mid
+				ss.new_mid = True
+				st.experimental_set_query_params(**params)
+
+			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format('matches'),True)
+			m_ag = AgGrid(
+				m_write,
+				allow_unsafe_jscode=True,
+				gridOptions=m_gb.build(),
+				# update_mode='SELECTION_CHANGED',
+				fit_columns_on_grid_load=True,
+				height = len(m_write)*48+64,
+				theme=table_theme
+			)
+
+			# row = m_ag['selected_rows']
+			# if row:
+			# 	ss.mid = row[0]['match_id']
+			# 	print(ss.mid)
+			# 	set_query()
+			# ss.mid = st.radio('test',[1,2,3],on_change=set_query,key='radiochange')
+
+		# get hero data for all matches
 		sqlq = util.str_sqlq('Heroes',ss.sid)
 		mh_df = pd.read_sql_query(sqlq, con)
-		st.write(mh_df)
+
+		# toggles for viewing data by
+		table_title = 'heroes'
+		if name_toggle == 'player name':
+			table_title = 'players'
+			mh_df['hero'] = mh_df['player_name']
+
+
+		# initial toggle filters
+		if support_toggle == 'support':
+			mh_df = mh_df[mh_df['support']==1]
+		elif support_toggle == 'non-support':
+			mh_df = mh_df[~(mh_df['support']==1)]
+
+		# setup player table
+		mh_write = mh_df.groupby('hero')[['match_id']].count().copy()
+		mh_write['player'] = mh_write.index
+		mh_write['#matches'] = mh_df.groupby('hero')[['match_id']].count()
+		# get data by mean or total
+		if data_aggr == 'average per match':
+			mh_write[['deaths','targets','dmg']] = mh_df.groupby('hero')['deaths','targets','damage_taken'].mean()
+		else:
+			mh_write[['deaths','targets','dmg']] = mh_df.groupby('hero')['deaths','targets','damage_taken'].sum()
+		mh_write['dmg'] = mh_write['dmg'].map(lambda x: x/1000).map("{:0.1f}K".format)
+		
+		# calc overall stats
+		mh_write['surv'] = 1-mh_write['deaths']/mh_write['targets'] 
+		mh_write['surv'] = mh_write['surv'].map("{:.0%}".format)
+		mh_write['surv'] = mh_write['surv'].map(lambda x: '' if x == 'nan%' else x)
+
+		if data_aggr == 'average per match':
+			mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
+			mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
+
+		mh_write = mh_write[['player','#matches','deaths','targets','surv','dmg']]
+		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
+		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
+		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
+		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
+		# mh_gb.configure_columns('score0',cellStyle=render.blu)
+		# mh_gb.configure_columns('score1',cellStyle=render.red)
+		# st.write(mh_write)
+		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
+		mh_ag = AgGrid(
+			mh_write,
+			allow_unsafe_jscode=True,
+			gridOptions=mh_gb.build(),
+			# update_mode='SELECTION_CHANGED',
+			fit_columns_on_grid_load=True,
+			height = 800,
+			theme=table_theme
+		)
 
 	# END SERIES
+	
+# end match viewer
