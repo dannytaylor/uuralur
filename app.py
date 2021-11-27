@@ -113,11 +113,11 @@ class MultiPage:
 
 		# page selecter
 		if ss.new_mid:
-			app_choice = app_exp.radio("viewer", self.app_names,index=0,on_change=clear_query)
-			app_choice = 'match'
+			ss['app_choice'] = 'match'
+			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
 			ss.new_mid = False
 		else:
-			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query)
+			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
 		nav_names = self.app_view[app_choice]
 		st_sidebar_title.title(app_choice)
 
@@ -176,11 +176,8 @@ class MultiPage:
 		# if in match view mode
 		if app_choice == 'match':
 			match_select()
-			ss.view = {app_choice:page_view}
-
-
-
-
+		ss.view = {app_choice:page_view}
+		
 		return app_choice
 
 	def run(self):
