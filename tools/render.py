@@ -69,12 +69,19 @@ function(params) {
 # heal, atk, green, jaunt, phase, other/death
 spike_action_color = JsCode("""
 function(params) {
-	if(params.data.cell_color == 0) {return {"color":"#328464"};}
+	if(params.data.cell_color == "0") {return {"color":"#328464"};}
 	else if(params.data.cell_color == "1") {return {"color":"#b4202a"};}
 	else if(params.data.cell_color == "2") {return {"color":"#14a02e"};}
 	else if(params.data.cell_color == "3") {return {"color":"#588dbe"};}
 	else if(params.data.cell_color == "4") {return {"color":"#285cc4"};}
 	else {return {"color":"#333941"};}
+}
+""")
+
+spike_hit_color = JsCode("""
+function(params) {
+	if(params.data.hit_color == "1") {return {"color":"crimson"};}
+	else if(params.data.hit_color == "2") {return {"color":"darkblue"};}
 }
 """)
 
@@ -119,3 +126,9 @@ def init_css(width):
 	</style>
 	""", unsafe_allow_html=True,
 )
+
+team_name_map = {
+	"wd":"watchdogs",
+	"rng":"renegades",
+	"gb":"good boys"
+}

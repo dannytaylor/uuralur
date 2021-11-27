@@ -1121,17 +1121,27 @@ def main(con):
 			sl = actions_df[(actions_df['spike_id'] == spid)].copy()
 			sl = sl.rename(columns={"time": "match_time", "spike_time": "cast", "spike_hit_time": "hit", "cast_dist": "dist"})
 
-			sl['actor_team'] = sl['actor'].map(hero_team_map)
+			# sl['actor_team'] = sl['actor'].map(hero_team_map)
 
-			target_team = sdf[sdf['#']==spid]['team']
-			target_team = target_team.iloc[0]
-			sl['cell_color']  = sl['action_tags'].map(lambda x: 2 if 'Inspirations' in x else (3 if 'Teleport' in x else(4 if 'Phase\'' in x else (1 if 'Attack' in x else (0 if 'Heal' in x else 5)))))
 			# times and target for spike hp log
 			sp_target   = sdf.loc[spid-1,'target'] # spiketarget
 			sp_delta   = sdf['start_delta'][spid-1]
 			sp_start = sdf['time_ms'][spid-1]
 			sp_end   = sdf['dur'][spid-1] + sp_start
 
+			# columns for formatting spike log cells
+			# actor/action color
+			target_team = sdf[sdf['#']==spid]['team']
+			target_team = target_team.iloc[0]
+			sl['cell_color']  = sl['action_tags'].map(lambda x: 2 if 'Inspirations' in x else (3 if 'Teleport' in x else(4 if 'Phase\'' in x else (1 if 'Attack' in x else (0 if 'Heal' in x else 5)))))
+			
+			# hit time color
+			sp_kill = sl[sl['action']=='Death']['hit_time']
+			sp_kill_time = None
+			if not sp_kill.empty:
+				sp_kill_time = sp_kill.iloc[0]
+			sl['hit_color'] = sl['hit_time'].map(lambda x: 1 if sp_kill_time and x>(sp_kill_time+120) else 0)
+			
 			act_min = min(sl['cast'].tolist())
 			hit_max = max(sl['hit'].tolist())
 			
@@ -1186,7 +1196,7 @@ def main(con):
 			sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
 			sl['icon_path'] = 'powers/'+sl['icon']
 			sl['image'] = sl['icon_path'].apply(util.image_formatter)
-			sl_write = sl[['cast','actor','image','action','hit','dist','cell_color']]   
+			sl_write = sl[['cast','actor','image','action','hit','dist','cell_color','hit_color']]   
 			sl_write = sl_write.fillna('')
 
 			# color action markers by type
@@ -1258,7 +1268,8 @@ def main(con):
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
 			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)
-			sl_gb.configure_columns('cell_color',hide=True)
+			sl_gb.configure_columns(['hit'],cellStyle=render.spike_hit_color)
+			sl_gb.configure_columns(['cell_color','hit_color'],hide=True)
 
 			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
 			sl_ag = AgGrid(
