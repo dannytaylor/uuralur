@@ -199,7 +199,7 @@ def view_players(title, info=None):
 def main():
 	mp = MultiPage()
 	mp.add_app('matches', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
-	mp.add_app('players',['matches','stats'], view_players, info='')
+	mp.add_app('players',['records','stats'], view_players, info='')
 	mp.run()
 
 
