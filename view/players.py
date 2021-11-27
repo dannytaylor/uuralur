@@ -70,14 +70,14 @@ def main(con):
 			))
 		map_fig.update_layout(
 			showlegend=False,
-			height=280,
+			height=240,
 			margin={'t': 32,'b':0,'l':0,'r':0},
 		)
 		c5.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
 
 		match_linker = c6.empty()
 
-		c1,c2,c3 = st.columns([4,3,3])
+		c1,c2,c3 = st.columns([4,2,2])
 		player_sel = None
 		with c1:
 			hero_ag = AgGrid(
@@ -94,12 +94,14 @@ def main(con):
 			if row:
 				player_sel = row[0]['player']
 
-		with c3:
+		with c2:
 			if player_sel:
-				p_heroes = hero_df[hero_df['player']==player_sel].groupby('hero')['match_id'].count().copy()
+				p_heroes = hero_df[hero_df['player']==player_sel].copy()
+				p_heroes = p_heroes.groupby('hero')[['match_id']].count()
 				p_heroes['hero'] = p_heroes.index
-				print(p_heroes)
-				st.write(p_heroes)
+				p_heroes = p_heroes.rename(columns={"match_id":'#'})
+
+				p_heroes = p_heroes.sort_values(by='#',ascending=False)
 				p_heroes_gb = GridOptionsBuilder.from_dataframe(p_heroes)
 				p_heroes_gb.configure_selection('single', pre_selected_rows=None)
 				p_heroes_gb.configure_default_column(filterable=False)
@@ -111,20 +113,25 @@ def main(con):
 					theme=table_theme
 				)
 			else:
+				st.write('')
 				st.write('select player to list heroes played')
 
 		with c3:
 			matches = ss.matches.copy()
 			if player_sel:
-				h_matches = hero_df[hero_df['player']==player_sel]			
-				matches = matches[(matches['series_id'].isin(h_matches['series_id']))&(matches['match_id'].isin(h_matches['match_id']))]
+				h_matches = hero_df[hero_df['player']==player_sel]		
+				h_matches['sid_mid'] = h_matches['series_id'] + h_matches['match_id'].astype(str)
+				matches['sid_mid'] = matches['series_id'] + matches['match_id'].astype(str)
+				matches = matches[(matches['sid_mid'].isin(h_matches['sid_mid']))]
 			matches = matches[['series_id','match_id','map']]
 			matches = matches.iloc[::-1]
 
 
 			matches_gb = GridOptionsBuilder.from_dataframe(matches)
 			matches_gb.configure_selection('single', pre_selected_rows=None)
-			matches_gb.configure_default_column(filterable=False)
+			matches_gb.configure_default_column(width=12)
+			matches_gb.configure_columns(['map'],width=24)
+			matches_gb.configure_columns(['series_id'],width=36)
 			matches_ag = AgGrid(
 				matches,
 				allow_unsafe_jscode=True,
@@ -159,6 +166,6 @@ def main(con):
 
 					st.form_submit_button(label="go to {} - #{}".format(sid,mid), on_click=go_to_match)
 				else:
-					st.form_submit_button(label="select a player to list played matches below")
+					st.form_submit_button(label="select a player from the left to list played matches below")
 
 
