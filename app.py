@@ -28,6 +28,7 @@ if 'series' not in ss:
 	ss.series['date'] = ss.series['date'].dt.date
 if 'matches' not in ss:
 	ss.matches = pd.read_sql_query("SELECT * FROM Matches", con)
+if 'new_mid' not in ss: ss.new_mid = False
 
 def init_css(width):
 	st.markdown(f"""
@@ -56,6 +57,7 @@ def init_css(width):
 	""", unsafe_allow_html=True,
 )
 
+
 class MultiPage:
 	def __init__(self):
 		self.apps = []
@@ -75,7 +77,7 @@ class MultiPage:
 
 	def sidebar(self):
 
-		st.sidebar.title('uuralur')
+		st_sidebar_title = st.sidebar.empty()
 		# st keys
 		sid_key='sid_key'
 		mid_key='mid_key'
@@ -94,50 +96,90 @@ class MultiPage:
 		# 	if 'sid_key' in ss and 'mid_key' in ss:
 		# 		ss[sid_key] = query_sid_choice if query_sid_choice in self.app_names else self.app_names[0]
 
-		def on_change():
+		def set_query():
 			params = st.experimental_get_query_params()
 			params['s'] = ss['sid_key']
 			params['m'] = ss['mid_key']
 			st.experimental_set_query_params(**params)
+		def clear_query():
+			st.experimental_set_query_params()
 
 		# sidebar layout setup
 		sid_empty = st.sidebar.empty()
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
 		app_exp = st.sidebar.expander('viewer', expanded=False)
+		filter_exp = st.sidebar.expander('series filters', expanded=False)
 
 		# page selecter
-		app_choice = app_exp.radio("viewer", self.app_names)
+		if ss.new_mid:
+			app_choice = app_exp.radio("viewer", self.app_names,index=0,on_change=clear_query)
+			app_choice = 'match'
+			ss.new_mid = False
+		else:
+			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query)
 		nav_names = self.app_view[app_choice]
+		st_sidebar_title.title(app_choice)
 
-		if app_choice == 'match':
-			# series picker
-			series_ids = ss.series['series_id'].to_list()
+		# series list getter and filterer
+		def series_filters():
+			series_filters = {}
+			dates = ss.series['date'].tolist()
+			series_filters['date_first'] = filter_exp.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1],on_change=clear_query)
+			series_filters['date_last']  = filter_exp.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1],on_change=clear_query)
+			series_filters['kickball']   = filter_exp.checkbox('kickball',	  value=True,help="Any kickball/community series",on_change=clear_query)
+			series_filters['scrims']     = filter_exp.checkbox('scrims', value=True,help="Any non-KB, typically set team versus team",on_change=clear_query)
+			
+			# apply filters and list sids
+			series_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]
+			# filter series by series type
+			if not series_filters['kickball'] and series_filters['scrims']:
+				series_filtered = series_filtered[series_filtered['kb'] == 0]
+			if series_filters['kickball'] and not series_filters['scrims']:
+				series_filtered = series_filtered[series_filtered['kb'] == 1]
+			series_ids = series_filtered['series_id'].to_list()
 			series_ids.reverse()
+			return series_ids
+		series_ids = series_filters()
 
+
+		def match_select():
 			# get query and set if allowable
 			if query_sid_choice in series_ids:
 				ss[sid_key] = query_sid_choice
 				sid_mids = ss.matches[ss.matches['series_id'] == query_sid_choice]['match_id'].tolist()
-				ss[mid_key] = query_mid_choice if query_mid_choice in sid_mids else sid_mids[0]
+				if ss.new_mid:
+					ss[mid_key] = ss.mid
+					ss.new_mid = False
+				elif query_mid_choice in sid_mids:
+					ss[mid_key] = query_mid_choice 
+				else: 
+					ss[mid_key] = sid_mids[0]
 			else:
 				ss[sid_key] = series_ids[0]
 
-			ss.sid = sid_empty.selectbox("series",series_ids,on_change=on_change,help='In YYMMDD format with tags for either teams playing or KB',key=sid_key)
+			ss.sid = sid_empty.selectbox("series",series_ids,on_change=set_query,help='In YYMMDD format with tags for either teams playing or KB',key=sid_key)
 
 
 			# match picker
 			sid_matches = ss.matches[ss.matches['series_id'] == ss.sid] # update match list for SID only
-			sid_mids = sid_matches['match_id'].tolist()
-			sid_mids.sort()
+			ss.sid_mids = sid_matches['match_id'].tolist()
+			ss.sid_mids.sort()
 			def format_mid_str(mid):
 				row = sid_matches[sid_matches['match_id']==mid]
 				mid_map = row.iloc[0]['map']
 				return str(mid) + " (" + mid_map + ")"
-			ss.mid = mid_empty.selectbox("match",sid_mids,format_func=format_mid_str,on_change=on_change,help='Match number from series in order played',key=mid_key) 
+			ss.mid = mid_empty.selectbox("match",ss.sid_mids,format_func=format_mid_str,on_change=set_query,help='Match number from series in order played',key=mid_key) 
 
-		page_view  = nav_empty.radio("navigation", nav_names ,on_change=on_change)
-		ss.view = {app_choice:page_view}
+		page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
+
+		# if in match view mode
+		if app_choice == 'match':
+			match_select()
+			ss.view = {app_choice:page_view}
+
+
+
 
 		return app_choice
 
@@ -149,23 +191,18 @@ class MultiPage:
 		app = self.apps[self.app_names.index(viewer)]
 		app['function'](app['title'], *app['args'], **app['kwargs'])
 
-def app1(title, info=None):
+def view_match(title, info=None):
 	match.main(con)
 
-def app2(title, info=None):
-	st.title(title)
-	st.write(info)
-
-	# player.main(con)
+def view_players(title, info=None):
+	players.main(con)
 
 
 def main():
 	mp = MultiPage()
-	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , app1, info='Hello from App 1')
-	mp.add_app('player',['summary'], app2, info='Hello from App 2')
+	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
+	mp.add_app('players',['matches','stats'], view_players, info='')
 	mp.run()
-
-
 
 
 if __name__ == '__main__':

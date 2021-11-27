@@ -82,7 +82,7 @@ def sidebar():
 	sid_filtered.reverse()
 	
 	with view_exp:
-		ss.view = {st.radio('view mode',['match','series','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
+		ss.view = {st.radio('view mode',['match','players'],help='View demo data by single Match, Series (i.e. a night of matches), or by Players (with series filtering)'):None}
 		ss.nametoggle = st.checkbox('toggle player name',value=False,help="View names by player name instead of hero name.")
 
 	# only show MID picker if single SID selected
@@ -105,7 +105,7 @@ def sidebar():
 	update_query()
 	with navigator:
 		if 'match' in ss.view:
-			ss.view['match'] = st.radio('navigation',['summary','spikes','offence','defence','support','logs'])
+			ss.view['match'] = st.radio('navigation',['summary','spikes','offence','defence','support','logs','series'])
 		if 'series' in ss.view:
 			ss.view['series'] = st.radio('navigation',['summary','offence','defence','support'])
 
