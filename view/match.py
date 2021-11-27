@@ -1,4 +1,4 @@
-import os, sys, time, math, argparse, json, datetime, yaml, sqlite3, ast, statistics
+import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -153,7 +153,7 @@ def main(con):
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
 	header_str = sid_date +" > Match "
-	if ss.view['match'] != 'series':
+	if ss.view['matches'] != 'series':
 		header_str += str(ss.mid)
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
@@ -169,7 +169,7 @@ def main(con):
 
 
 	# START SUMMARY PAGE
-	if ss.view['match'] == 'summary':
+	if ss.view['matches'] == 'summary':
 
 		hdf = hero_df.copy()
 
@@ -287,7 +287,7 @@ def main(con):
 		)
 
 	# END SUMMARY PAGE
-	if ss.view['match'] == 'support':
+	if ss.view['matches'] == 'support':
 
 		# support data setup
 		sup_df = hero_df[hero_df['support']==1].copy()
@@ -499,7 +499,7 @@ def main(con):
 	# END SUPPORT
 
 	# START DEFENCE
-	if ss.view['match'] == 'defence':
+	if ss.view['matches'] == 'defence':
 		c1,c2,c3,c4,c5 = st.columns([1,1,1,1,6])
 
 		hp_loss_st = c5.empty()
@@ -666,14 +666,14 @@ def main(con):
 					x=hero_hp_df['time_m'],
 					name=team_name_map[t],
 					mode='lines',
-					line=dict(color=team_colour_map[t], width=3),
+					line=dict(color=team_colour_map[t], width=4),
 				),row=1, col=1)
 				hpl_fig.add_trace(go.Scatter(
 					x=greens['time_m'],
 					y=greens['greens'],
 					name=team_name_map[t],
 					mode='lines',
-					line=dict(color=team_colour_map[t], width=3),
+					line=dict(color=team_colour_map[t], width=4),
 				),row=1, col=2)
 
 		hpl_fig.update_layout(
@@ -695,7 +695,7 @@ def main(con):
 	# END DEFENCE 
 
 	# START OFFENCE
-	if ss.view['match'] == 'offence':
+	if ss.view['matches'] == 'offence':
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
 
 		for t in [0,1]:
@@ -916,7 +916,7 @@ def main(con):
 
 
 	# START SPIKES
-	elif ss.view['match'] == 'spikes':
+	elif ss.view['matches'] == 'spikes':
 		
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,4])
 
@@ -1257,7 +1257,7 @@ def main(con):
 
 
 	# START LOGs
-	elif ss.view['match'] == 'logs':
+	elif ss.view['matches'] == 'logs':
 		
 		c1,c2,c3 = st.columns([2,1,7])
 		a_df = actions_df.copy()
@@ -1333,7 +1333,7 @@ def main(con):
 	# END LOGS
 
 	# START SERIES
-	elif ss.view['match'] == 'series':
+	elif ss.view['matches'] == 'series':
 		m_df = ss.matches[ss.matches['series_id']==ss.sid].copy()
 
 		m_write = m_df[['match_id','map','score0','score1']]

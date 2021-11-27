@@ -92,15 +92,16 @@ class MultiPage:
 
 		# update session state (this also sets the default radio button selection as it shares the key!)
 		# ss[key] = query_app_choice if query_app_choice in self.app_names else self.app_names[0]
-		# if 'match' in ss.view:
+		# if 'matches' in ss.view:
 		# 	if 'sid_key' in ss and 'mid_key' in ss:
 		# 		ss[sid_key] = query_sid_choice if query_sid_choice in self.app_names else self.app_names[0]
 
 		def set_query():
 			params = st.experimental_get_query_params()
-			params['s'] = ss['sid_key']
-			params['m'] = ss['mid_key']
-			st.experimental_set_query_params(**params)
+			if 'sid_key' in ss:
+				params['s'] = ss['sid_key']
+				params['m'] = ss['mid_key']
+				st.experimental_set_query_params(**params)
 		def clear_query():
 			st.experimental_set_query_params()
 
@@ -108,12 +109,12 @@ class MultiPage:
 		sid_empty = st.sidebar.empty()
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
-		app_exp = st.sidebar.expander('viewer', expanded=False)
+		app_exp = st.sidebar.expander('viewer', expanded=True)
 		filter_exp = st.sidebar.expander('series filters', expanded=False)
 
 		# page selecter
 		if ss.new_mid:
-			ss['app_choice'] = 'match'
+			ss['app_choice'] = 'matches'
 			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
 			ss.new_mid = False
 		else:
@@ -169,12 +170,12 @@ class MultiPage:
 				row = sid_matches[sid_matches['match_id']==mid]
 				mid_map = row.iloc[0]['map']
 				return str(mid) + " (" + mid_map + ")"
-			ss.mid = mid_empty.selectbox("match",ss.sid_mids,format_func=format_mid_str,on_change=set_query,help='Match number from series in order played',key=mid_key) 
+			ss.mid = mid_empty.selectbox("matches",ss.sid_mids,format_func=format_mid_str,on_change=set_query,help='Match number from series in order played',key=mid_key) 
 
 		page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
 
 		# if in match view mode
-		if app_choice == 'match':
+		if app_choice == 'matches':
 			match_select()
 		ss.view = {app_choice:page_view}
 		
@@ -197,7 +198,7 @@ def view_players(title, info=None):
 
 def main():
 	mp = MultiPage()
-	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
+	mp.add_app('matches', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
 	mp.add_app('players',['matches','stats'], view_players, info='')
 	mp.run()
 
