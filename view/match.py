@@ -1108,9 +1108,14 @@ def main(con):
 			# st.subheader('spike log')
 
 			# grab actions with spike id
-			sl = actions_df[(actions_df['spike_id'] == spid)] 
+			sl = actions_df[(actions_df['spike_id'] == spid)].copy()
 			sl = sl.rename(columns={"time": "match_time", "spike_time": "cast", "spike_hit_time": "hit", "cast_dist": "dist"})
- 
+
+			sl['actor_team'] = sl['actor'].map(hero_team_map)
+
+			target_team = sdf[sdf['#']==spid]['team']
+			target_team = target_team.iloc[0]
+			sl['cell_color']  = sl['action_tags'].map(lambda x: 2 if 'Inspirations' in x else (3 if 'Teleport' in x else(4 if 'Phase\'' in x else (1 if 'Attack' in x else (0 if 'Heal' in x else 5)))))
 			# times and target for spike hp log
 			sp_target   = sdf.loc[spid-1,'target'] # spiketarget
 			sp_delta   = sdf['start_delta'][spid-1]
@@ -1171,7 +1176,7 @@ def main(con):
 			sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
 			sl['icon_path'] = 'powers/'+sl['icon']
 			sl['image'] = sl['icon_path'].apply(util.image_formatter)
-			sl_write = sl[['cast','actor','image','action','hit','dist']]   
+			sl_write = sl[['cast','actor','image','action','hit','dist','cell_color']]   
 			sl_write = sl_write.fillna('')
 
 			# color action markers by type
@@ -1242,6 +1247,8 @@ def main(con):
 			sl_gb.configure_columns(['cast','hit','dist'],width=40)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
+			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)
+			sl_gb.configure_columns('cell_color',hide=True)
 
 			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
 			sl_ag = AgGrid(
