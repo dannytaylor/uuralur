@@ -5,6 +5,7 @@ ss = st.session_state # global shorthand for this file
 
 import pandas as pd
 import tools.util as util
+import tools.render as render
 import view.match as match
 import view.players as players
 
@@ -26,37 +27,9 @@ if 'series' not in ss:
 	ss.series 		= pd.read_sql_query("SELECT * FROM Series", con)
 	ss.series['date'] = pd.to_datetime(ss.series['series_date'])
 	ss.series['date'] = ss.series['date'].dt.date
-if 'matches' not in ss:
+if 'match' not in ss:
 	ss.matches = pd.read_sql_query("SELECT * FROM Matches", con)
 if 'new_mid' not in ss: ss.new_mid = False
-
-def init_css(width):
-	st.markdown(f"""
-	<style>
-		.reportview-container .main .block-container{{
-			# min-width: """+str(width/2)+"""px;
-			max-width: """+str(width)+"""px;
-		}}
-		# {{
-		# }}
-		.font40 {
-		    font-size:40px !important;
-		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
-		    margin-top: 12px;
-		    margin-bottom: 28px;
-		}
-		.font20 {
-		    font-size:20px !important;
-		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
-		    margin-top: 6px;
-		    margin-bottom: 6px;
-		}
-	</style>
-	""", unsafe_allow_html=True,
-)
-
 
 class MultiPage:
 	def __init__(self):
@@ -92,7 +65,7 @@ class MultiPage:
 
 		# update session state (this also sets the default radio button selection as it shares the key!)
 		# ss[key] = query_app_choice if query_app_choice in self.app_names else self.app_names[0]
-		# if 'matches' in ss.view:
+		# if 'match' in ss.view:
 		# 	if 'sid_key' in ss and 'mid_key' in ss:
 		# 		ss[sid_key] = query_sid_choice if query_sid_choice in self.app_names else self.app_names[0]
 
@@ -110,11 +83,11 @@ class MultiPage:
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
 		app_exp = st.sidebar.expander('viewer', expanded=True)
-		filter_exp = st.sidebar.expander('series filters', expanded=False)
+		filter_exp = st.sidebar.empty()
 
 		# page selecter
 		if ss.new_mid:
-			ss['app_choice'] = 'matches'
+			ss['app_choice'] = 'match'
 			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
 			ss.new_mid = False
 		else:
@@ -124,12 +97,13 @@ class MultiPage:
 
 		# series list getter and filterer
 		def series_filters():
+			exp = filter_exp.expander('series filters', expanded=False)
 			series_filters = {}
 			dates = ss.series['date'].tolist()
-			series_filters['date_first'] = filter_exp.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1],on_change=clear_query)
-			series_filters['date_last']  = filter_exp.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1],on_change=clear_query)
-			series_filters['kickball']   = filter_exp.checkbox('kickball',	  value=True,help="Any kickball/community series",on_change=clear_query)
-			series_filters['scrims']     = filter_exp.checkbox('scrims', value=True,help="Any non-KB, typically set team versus team",on_change=clear_query)
+			series_filters['date_first'] = exp.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1],on_change=clear_query)
+			series_filters['date_last']  = exp.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1],on_change=clear_query)
+			series_filters['kickball']   = exp.checkbox('kickball',	  value=True,help="Any kickball/community series",on_change=clear_query)
+			series_filters['scrims']     = exp.checkbox('scrims', value=True,help="Any non-KB, typically set team versus team",on_change=clear_query)
 			
 			# apply filters and list sids
 			series_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]
@@ -141,7 +115,8 @@ class MultiPage:
 			series_ids = series_filtered['series_id'].to_list()
 			series_ids.reverse()
 			return series_ids
-		series_ids = series_filters()
+		if app_choice == 'match':
+			series_ids = series_filters()
 
 
 		def match_select():
@@ -175,7 +150,7 @@ class MultiPage:
 		page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
 
 		# if in match view mode
-		if app_choice == 'matches':
+		if app_choice == 'match':
 			match_select()
 		ss.view = {app_choice:page_view}
 		
@@ -198,8 +173,8 @@ def view_players(title, info=None):
 
 def main():
 	mp = MultiPage()
-	mp.add_app('matches', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
-	mp.add_app('players',['records','stats'], view_players, info='')
+	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
+	mp.add_app('records',['summary','player stats'], view_players, info='')
 	mp.run()
 
 
@@ -210,5 +185,5 @@ if __name__ == '__main__':
 		# layout="wide", # manual widths via body_width hack
 		initial_sidebar_state="expanded",
 	)
-	init_css(1440)
+	render.init_css(1440)
 	main()

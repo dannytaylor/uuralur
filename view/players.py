@@ -1,4 +1,4 @@
-import time, math, json, datetime, yaml, ast, statistics
+import os,time, math, json, datetime, yaml, ast, statistics
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -23,7 +23,7 @@ def main(con):
 	hero_df['player'] = hero_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
 
 
-	if ss.view['players'] == 'stats':
+	if ss.view['records'] == 'stats':
 		with st.sidebar.expander('player filters',expanded = True):
 			st.radio('role',['all','offence','support'],help='calculates otp and ohp values per role')
 			st.radio('match type',['all','scim','kb'])
@@ -32,9 +32,11 @@ def main(con):
 			st.multiselect('powersets',['etc','etc.'])
 		c1,c2,c3,c4,c5,c6 = st.columns([1,1,1,1,2,2])
 
-	elif ss.view['players'] == 'records':
+	elif ss.view['records'] == 'summary':
 
-		c1,c2,c3,c4,c5,c6 = st.columns([1,1,1,1,2,2])
+		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><p></p>""".format('overall stats'),True)
+		c1,c2,c3,c4,c5,c6 = st.columns([1,1,1,1,4,2])
+
 
 		# st.write(hero_df)
 
@@ -84,9 +86,13 @@ def main(con):
 			height=240,
 			margin={'t': 16,'b':0,'l':0,'r':0},
 		)
+
 		c5.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
 
-		match_linker = c6.empty()
+		pfp_header = c6.empty()
+		pfp = c6.empty()
+	
+		match_linker = st.sidebar.empty()
 
 		c1,c2,c3 = st.columns([4,3,3])
 		player_sel = None
@@ -131,9 +137,9 @@ def main(con):
 				if hrow:
 					hero_sel = hrow[0]['hero']
 
-			if not player_sel:
-				st.write('')
-				st.write('select player to list heroes played')
+		if not player_sel:
+			c2.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display characters'),True)
+			c3.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display matches played'),True)
 
 		with c3:
 			matches = ss.matches.copy()
@@ -152,16 +158,17 @@ def main(con):
 			matches_gb.configure_default_column(width=12)
 			matches_gb.configure_columns(['map'],width=24)
 			matches_gb.configure_columns(['series_id'],width=36)
-			matches_ag = AgGrid(
-				matches,
-				allow_unsafe_jscode=True,
-				gridOptions=matches_gb.build(),
-				update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load=True,
-				height = 800,
-				theme=table_theme
-			)
-			row = matches_ag['selected_rows']
+			if player_sel:
+				matches_ag = AgGrid(
+					matches,
+					allow_unsafe_jscode=True,
+					gridOptions=matches_gb.build(),
+					update_mode='SELECTION_CHANGED',
+					fit_columns_on_grid_load=True,
+					height = 800,
+					theme=table_theme
+				)
+				row = matches_ag['selected_rows']
 			sid,mid = None,None
 			if row:
 				# spike ID == selected
@@ -170,7 +177,6 @@ def main(con):
 
 			with match_linker.form('match linker'):
 				if sid and mid:
-					st.write()
 					def go_to_match():
 						ss.view = {'match':'summary'}
 						ss.sid = sid
@@ -183,9 +189,20 @@ def main(con):
 						params['s'] = sid
 						params['m'] = mid
 						st.experimental_set_query_params(**params)
-
-					st.form_submit_button(label="go to {} - {}".format(sid,mid), on_click=go_to_match)
+					st.form_submit_button(label="go to match {} - {}".format(sid,mid), on_click=go_to_match)
 				else:
-					st.form_submit_button(label="select a player from the left to list played matches below")
+					st.form_submit_button(label="select a match from the right")
+
+		# player profile pic
+		if player_sel:
+			pfp_path = os.path.abspath('assets/players')
+			pfp_files = [i for i in os.listdir(pfp_path)]
+			pfp_players = [i.split('.')[0] for i in pfp_files]
+			
+			pfp_header.markdown("""<p class="font20"" >{}</p>""".format(player_sel),True)
+			if player_sel in pfp_players:
+				image_path = pfp_path+'/'+[p for p in pfp_files if player_sel in p][0]
+				# img = util.resize_image(pfp_path+'/'+image_path)
+				pfp.image(util.resize_image(image_path,200)) 
 
 

@@ -153,7 +153,7 @@ def main(con):
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
 	header_str = sid_date +" · match "
-	if ss.view['matches'] != 'series':
+	if ss.view['match'] != 'series':
 		header_str += str(ss.mid)
 		header_str += ' · ' + ss.sid[7:].replace('_',' ')
 	with c1:
@@ -170,7 +170,7 @@ def main(con):
 
 
 	# START SUMMARY PAGE
-	if ss.view['matches'] == 'summary':
+	if ss.view['match'] == 'summary':
 
 		hdf = hero_df.copy()
 
@@ -288,7 +288,10 @@ def main(con):
 		)
 
 	# END SUMMARY PAGE
-	if ss.view['matches'] == 'support':
+
+
+	# START SUPPORT
+	if ss.view['match'] == 'support':
 
 		# support data setup
 		sup_df = hero_df[hero_df['support']==1].copy()
@@ -477,7 +480,7 @@ def main(con):
 		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
 		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
 		# sup_gb.configure_columns('hero',width=96)
-		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=64)
+		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=52)
 		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
 		sup_gb.configure_columns('at',cellRenderer=render.icon,width=28)
 		sup_gb.configure_columns(['on heal','alpha_heals','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
@@ -492,15 +495,10 @@ def main(con):
 			# height = 640,
 			theme=table_theme
 		)
-
-
-	# START SUPPORT
-
-
 	# END SUPPORT
 
 	# START DEFENCE
-	if ss.view['matches'] == 'defence':
+	if ss.view['match'] == 'defence':
 		c1,c2,c3,c4,c5 = st.columns([1,1,1,1,6])
 
 		hp_loss_st = c5.empty()
@@ -514,6 +512,7 @@ def main(con):
 		actions_df['is_heal'] = actions_df.apply(flag_heals,axis=1)
 
 		h_dmg_spike,h_dmg_surv,h_dmg_death = [],[],[]
+		dmgpersurv,dmgperdeath = [],[]
 		h_heals = []
 		for h,row in hero_df.iterrows():
 			dmg = sdf[sdf['target'] == h]['dmg'].sum()
@@ -524,8 +523,16 @@ def main(con):
 			h_dmg_surv.append(dmg_surv)
 			h_heals.append(actions_df[actions_df['target'] == h]['is_heal'].sum())
 
+			d_surv = dmg_surv/(max(row['targets'] - row['deaths'],1))
+			d_death = dmg_death/(max(row['deaths'],1))
+			dmgpersurv.append(d_surv)
+			dmgperdeath.append(d_death)
+
 		hero_df['dmg_spike'] = h_dmg_spike
 		hero_df['dmg_death'] = h_dmg_death
+		hero_df['dmg_surv'] = h_dmg_surv
+		hero_df['dmg_per_surv'] = dmgpersurv
+		hero_df['dmg_per_death'] = dmgperdeath
 		hero_df['dmg_surv'] = h_dmg_surv
 		hero_df['dmg_nonspike'] = hero_df['damage_taken'] - hero_df['dmg_spike']
 		hero_df['heals_taken'] = h_heals
@@ -562,7 +569,9 @@ def main(con):
 		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike']/1000
 		hero_df['dmg'] = hero_df['dmg'].map("{:0.1f}K".format)
 		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike'].map("{:0.1f}K".format)
-		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','heals_taken','avg phase','avg jaunt']].copy()
+		hero_df['dmg_per_surv'] = hero_df['dmg_per_surv'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
+		hero_df['dmg_per_death'] = hero_df['dmg_per_death'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
+		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','dmg_per_surv','dmg_per_death','heals_taken','avg phase','avg jaunt']].copy()
 		# hero_write = hero_write.fillna('')
 		# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 		hero_write['avg jaunt'] = hero_write['avg jaunt'].fillna('')
@@ -573,6 +582,7 @@ def main(con):
 		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
+		def_gb.configure_columns(['dmg_per_surv','dmg_per_death'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns('team',hide=True)
 		def_gb.configure_columns('hero',width=96)
 		def_gb.configure_columns('hero',cellStyle=render.team_color)
@@ -696,7 +706,7 @@ def main(con):
 	# END DEFENCE 
 
 	# START OFFENCE
-	if ss.view['matches'] == 'offence':
+	if ss.view['match'] == 'offence':
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
 
 		for t in [0,1]:
@@ -917,7 +927,7 @@ def main(con):
 
 
 	# START SPIKES
-	elif ss.view['matches'] == 'spikes':
+	elif ss.view['match'] == 'spikes':
 		
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,4])
 
@@ -1265,7 +1275,7 @@ def main(con):
 
 
 	# START LOGs
-	elif ss.view['matches'] == 'logs':
+	elif ss.view['match'] == 'logs':
 		
 		c1,c2,c3 = st.columns([2,1,7])
 		a_df = actions_df.copy()
@@ -1341,7 +1351,7 @@ def main(con):
 	# END LOGS
 
 	# START SERIES
-	elif ss.view['matches'] == 'series':
+	elif ss.view['match'] == 'series':
 		m_df = ss.matches[ss.matches['series_id']==ss.sid].copy()
 
 		m_write = m_df[['match_id','map','score0','score1']]
@@ -1359,8 +1369,8 @@ def main(con):
 
 		with c3:
 			with st.expander('filters',expanded=True):
-				name_toggle = st.radio('group by',['hero name','player name'])
-				data_aggr   = st.radio('show data by',['average per match','total for series'])
+				name_toggle = st.radio('group by',['hero name','player name'],index=1)
+				data_aggr   = st.radio('show data by',['average per match','total for series'],help='applies only to data which makes sense to sum/average')
 				support_toggle = st.radio('show ',['all','non-support','support'])
 
 		with c1:
@@ -1374,7 +1384,8 @@ def main(con):
 				ss.new_mid = True
 				st.experimental_set_query_params(**params)
 
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format('matches'),True)
+			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format('match'),True)
+			m_write = m_write.sort_values(by='match_id')
 			m_ag = AgGrid(
 				m_write,
 				allow_unsafe_jscode=True,

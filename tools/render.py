@@ -1,4 +1,5 @@
 from st_aggrid import JsCode
+import streamlit as st
 
 # functions for rendering styles and formatting in AgGrid
 # and color maps for graphs
@@ -91,3 +92,30 @@ heal_colours = {
 	"Spirit Ward":"#622461",
 	"Alkaloid":"#99e65f",
 }
+
+def init_css(width):
+	st.markdown(f"""
+	<style>
+		.reportview-container .main .block-container{{
+			# min-width: """+str(width/2)+"""px;
+			max-width: """+str(width)+"""px;
+		}}
+		# {{
+		# }}
+		.font40 {
+		    font-size:40px !important;
+		    font-weight: bold;
+		    font-family: 'Roboto', sans-serif;
+		    margin-top: 12px;
+		    margin-bottom: 28px;
+		}
+		.font20 {
+		    font-size:20px !important;
+		    font-weight: bold;
+		    font-family: 'Roboto', sans-serif;
+		    margin-top: 6px;
+		    margin-bottom: 6px;
+		}
+	</style>
+	""", unsafe_allow_html=True,
+)
