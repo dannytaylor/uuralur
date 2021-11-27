@@ -352,6 +352,20 @@ def reorderactions(actions):
 		a.aid = newaid
 		newaid += 1
 
+def heroactionstats(heroes,actions):
+	for a in actions:
+		if a.action == 'Respite':
+			heroes[a.hid].greens += 1
+		elif 'Phase' in a.tags:
+			heroes[a.hid].phases += 1
+		elif 'Teleport' in a.tags:
+			heroes[a.hid].jaunts += 1
+		elif 'Heal' in a.tags and 'Ally (Alive)' in a.target_type:
+			heroes[a.hid].heals += 1
+		elif 'Attack' in a.tags and 'Ally (Alive)' in a.target_type:
+			heroes[a.hid].attacks += 1
+
+
 # store all actions and hp
 def demo2data(lines,h,starttime):
 	time_ms = -starttime
@@ -445,6 +459,7 @@ def demo2data(lines,h,starttime):
 	hponaction(hp,actions) # calcs a target's HP at hit time (estimated if not hitscan)
 	phasehits(actions)
 	reorderactions(actions)
+	heroactionstats(h,actions) # sum some basic stats for database entry (so it doesn't have to calc'd in streamlit)
 
 	return actions,hp # not used
 
@@ -886,6 +901,14 @@ def parsematch(path): # primary demo parse function
 		for hid in heroes:
 			score[heroes[hid].team]   += heroes[hid].deaths
 			targets[heroes[hid].team] += heroes[hid].targets
+		for hid in heroes: # w/l record for database
+			if score[heroes[hid].team] == score[abs(heroes[hid].team-1)]:
+				heroes[hid].tie = 1
+			elif score[heroes[hid].team] >= score[abs(heroes[hid].team-1)]:
+				heroes[hid].win = 1
+			else:
+				heroes[hid].loss = 1
+
 		score.reverse()
 		targets.reverse()
 		if OVERRIDE and sid in overrides and mid in overrides[sid] and "SCORE" in overrides[sid][mid]:

@@ -15,8 +15,18 @@ class Hero:
 		self.targets = 0
 		self.support = None
 		self.damagetaken = 0
-		self.respites = 20 # assume re-buy and only greens
 		self.attackchains = {}
+
+		# sums for database
+		self.win = 0
+		self.loss = 0
+		self.tie = 0
+		
+		self.attacks = 0
+		self.heals = 0
+		self.greens = 0
+		self.phases = 0
+		self.jaunts = 0
 
 		self.attacktiming = []
 		self.healtiming = []
