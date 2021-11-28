@@ -202,5 +202,4 @@ def main():
 
 if __name__ == '__main__':
 	render.init_css(1440)
-	render.init_metadata()
 	main()
