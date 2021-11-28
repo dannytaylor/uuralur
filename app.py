@@ -15,13 +15,19 @@ import plotly.graph_objects as go
 
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
+st.set_page_config(
+	page_title='coh demos',
+	page_icon='🤖',
+	initial_sidebar_state="expanded",
+)
+
 # sqlite connections
 con = sqlite3.connect('demos.db')
 # cur = con.cursor()
 
 # global vars/config
-config = yaml.safe_load(open('data/config.yaml'))
-h2p    = json.loads(open('data/hero2player.json').read())
+# config = yaml.safe_load(open('data/config.yaml'))
+# h2p    = json.loads(open('data/hero2player.json').read())
 
 # setup series/match multiselect dataframes
 if 'series' not in ss:	
@@ -181,6 +187,7 @@ def view_match(title, info=None):
 def view_records(title, info=None):
 	players.main(con)
 
+# placeholder uploader
 def view_upload(title, info=None):
 	uploaded_file = st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
 	if uploaded_file is not None:
@@ -193,13 +200,6 @@ def main():
 	# mp.add_app('upload',[], view_upload, info='')
 	mp.run()
 
-
 if __name__ == '__main__':
-	st.set_page_config(
-		page_title='uuralur',
-		page_icon='🤖',
-		# layout="wide", # manual widths via body_width hack
-		initial_sidebar_state="expanded",
-	)
 	render.init_css(1440)
 	main()

@@ -25,7 +25,7 @@ table_theme = config['table_theme']
 
 
 @st.cache
-def init_df(sid,mid):
+def init_match_data(sid,mid):
 
 	match_row = ss.matches[(ss.matches['match_id']==mid)&(ss.matches['series_id']==sid)]
 	m_score  = [int(match_row.iloc[0]['score0']),int(match_row.iloc[0]['score1'])]
@@ -156,7 +156,7 @@ def main(con):
 
 	# match wide dataframes
 	# match info, relevant to all views
-	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_df(ss.sid,ss.mid)
+	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_match_data(ss.sid,ss.mid)
 	
 	hero_df = hero_df.copy()
 	actions_df = actions_df.copy()
@@ -165,12 +165,17 @@ def main(con):
 
 	# MATCH HEADSER
 	c1,c2 = st.columns([7,3])
+
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
-	header_str = sid_date +" · match "
+	header_str = sid_date
 	if ss.view['match'] != 'series':
-		header_str += str(ss.mid)
-		header_str += ' · ' + ss.sid[7:].replace('_',' ')
+		header_str +=  " · match "
+		header_str += str(ss.mid) + " · "
+		sid_str = ss.sid.split("_")[1:]
+		sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
+		header_str += " - ".join(sid_str)
+
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 	with c2:
@@ -261,13 +266,7 @@ def main(con):
 		c7.plotly_chart(score_fig,use_container_width=True,config={'displayModeBar': False})
 		c8.plotly_chart(spike_fig,use_container_width=True,config={'displayModeBar': False})
 
-
-
-
-		# hdf['team'] = hdf['team'].map(team_emoji_map)
-
 		# hdf = hdf.set_index(['hero'])
-		# st.dataframe(hdf.style.format(na_rep='-'),height=520)
 
 		hdf['atk tm'] = hdf['avg atk'].map("{:0.2f}".format)
 		hdf['atk tm'] = hdf['atk tm'].map(lambda x: '' if x == 'nan' else x)
