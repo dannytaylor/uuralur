@@ -100,6 +100,18 @@ heal_colours = {
 	"Alkaloid":"#99e65f",
 }
 
+def init_metadata():
+	st.markdown(f"""
+	<meta property="og:title" content="coh demos" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://demos.chli.dog" />
+	<meta property="og:image" content="https://camo.githubusercontent.com/51c2ffc5372bfb06b924ab63453a861116bdc5d4325c5025f0ca3c4f76e8ad8e/68747470733a2f2f692e696d6775722e636f6d2f4d737663635a472e706e67" />
+	<meta property="og:description" content="coh pvp match data" />
+	""", unsafe_allow_html=True,
+)
+
+
+
 def init_css(width):
 	st.markdown(f"""
 	<style>
