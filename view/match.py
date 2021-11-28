@@ -297,7 +297,7 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=sum_gb.build(),
 			fit_columns_on_grid_load=True,
-			height = 56*16,
+			height = 16*48+64,
 			theme = table_theme,
 		)
 
@@ -1232,7 +1232,11 @@ def main(con):
 
 			# add action markers to HP graph
 			# add white line as background color workaround
-			sp_fig.add_trace(go.Scatter(x=[-2,60],y= [4,4],fill='tozeroy', mode='none',fillcolor='white',
+
+			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
+			hp_range=[act_min,hit_max-sp_delta/1000]
+
+			sp_fig.add_trace(go.Scatter(x=[hp_range[0]-1,1+max(hp_range[1],max(sl['hit']))],y= [4,4],fill='tozeroy', mode='none',fillcolor='white',
 				),row=2, col=1)
 			sp_fig.add_trace(go.Scatter(
 				x=sl['cast'],
@@ -1256,24 +1260,18 @@ def main(con):
 				hovertemplate = "<b>hit time</b> <br>%{text}"
 			),row=2, col=1)
 
-			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
-			hp_range=[act_min,hit_max-sp_delta/1000]
-
 			sp_fig.update_layout(
 				height=314,
 				showlegend=False,
-				xaxis={'fixedrange':True,'range':hp_range},
+				xaxis={'range':hp_range},
 				margin={'t': 0,'b':40,'l':48,'r':0},
 				# plot_bgcolor='rgba(0,0,0,0)',
 			)
 			sp_fig.update_xaxes(title_text="spike time (s)", row=2, col=1, showgrid=False)
-			sp_fig.update_yaxes(visible=True, fixedrange=True, showgrid=True, title='hp',row=1, col=1)
+			sp_fig.update_yaxes(visible=True, fixedrange=True, showgrid=True, title='hp',range=[0,hp_y_max],row=1, col=1)
 			sp_fig.update_yaxes(visible=False, fixedrange=True, showgrid=False,range=[0,2],title='hit/cast',row=2, col=1)
 
-			sp_fig.update_yaxes(range=[0,hp_y_max], row=1, col=1)
-
 			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
-
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
 			sl_gb.configure_default_column(filterable=False)

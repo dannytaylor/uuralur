@@ -106,6 +106,7 @@ def init_css(width):
 		.reportview-container .main .block-container{{
 			# min-width: """+str(width/2)+"""px;
 			max-width: """+str(width)+"""px;
+			padding: 3rem 1rem 1rem;
 		}}
 		# {{
 		# }}
@@ -114,7 +115,7 @@ def init_css(width):
 		    font-weight: bold;
 		    font-family: 'Roboto', sans-serif;
 		    margin-top: 12px;
-		    margin-bottom: 28px;
+		    margin-bottom: 34px;
 		}
 		.font20 {
 		    font-size:20px !important;

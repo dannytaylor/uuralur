@@ -139,8 +139,8 @@ def main(con):
 					hero_sel = hrow[0]['hero']
 
 		if not player_sel:
-			c2.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display characters'),True)
-			c3.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display matches played'),True)
+			c2.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display <br>characters played.'),True)
+			c3.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#4d4d4d";><p class="font20"" >{}</p></div>""".format('select a player to display filtered matches.<br> go to match view using sidebar button.'),True)
 
 		with c3:
 			matches = ss.matches.copy()
