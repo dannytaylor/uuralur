@@ -128,7 +128,14 @@ def init_css(width):
 )
 
 team_name_map = {
-	"wd":"watchdogs",
+	"kb":"kickball",
+	"gb":"good boys",
 	"rng":"renegades",
-	"gb":"good boys"
+	"inc":"incursion",
+	"jh":"rare",
+	"brew":"brewery",
+	"mft":"misfits",
+	"lc":"laughing coffin",
+	"ps":"pspsps",
+	"wd":"watchdogs",
 }

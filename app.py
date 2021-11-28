@@ -82,7 +82,7 @@ class MultiPage:
 		sid_empty = st.sidebar.empty()
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
-		app_exp = st.sidebar.expander('viewer', expanded=True)
+		app_exp = st.sidebar.expander('viewer', expanded=False)
 		filter_exp = st.sidebar.empty()
 
 		# page selecter
@@ -134,7 +134,14 @@ class MultiPage:
 			else:
 				ss[sid_key] = series_ids[0]
 
-			ss.sid = sid_empty.selectbox("series",series_ids,on_change=set_query,help='In YYMMDD format with tags for either teams playing or KB',key=sid_key)
+			def format_sid_str(sid):
+				# sid_date = "20" + sid[0:2] + "/" + sid[2:4] + "/" + sid[4:6] + " "
+				sid_date = sid.split("_")[0] + " · "
+				sid_str = sid.split("_")[1:]
+				sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
+				return sid_date + " - ".join(sid_str)
+
+			ss.sid = sid_empty.selectbox("series",series_ids,on_change=set_query,format_func=format_sid_str,help='series dates in YYMMDD format',key=sid_key)
 
 
 			# match picker

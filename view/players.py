@@ -63,7 +63,7 @@ def main(con):
 		c1.metric('tot deaths (k)',round(hero_df['deaths'].sum()/1000,1))
 		c2.metric('tot spikes (k)',round(hero_df['targets'].sum()/1000,1))
 		c3.metric('tot damage (mil)',round(hero_df['damage_taken'].sum()/1000000,1))
-		c4.metric('attacks thown (mil)',round(hero_df['attacks'].sum()/1000000,1))
+		c4.metric('attacks thown (mil)',round(hero_df['attacks'].sum()/1000000,2))
 
 		c1.metric('heals cast (k)',round(hero_df['heals'].sum()/1000,1))
 		c2.metric('greens popped (k)',round(hero_df['greens'].sum()/1000,1))
@@ -83,8 +83,9 @@ def main(con):
 			))
 		map_fig.update_layout(
 			showlegend=False,
+			title_text='maps played', title_x=0.46,
 			height=240,
-			margin={'t': 16,'b':0,'l':0,'r':0},
+			margin={'t': 32,'b':0,'l':0,'r':0},
 		)
 
 		c5.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
@@ -204,5 +205,7 @@ def main(con):
 				image_path = pfp_path+'/'+[p for p in pfp_files if player_sel in p][0]
 				# img = util.resize_image(pfp_path+'/'+image_path)
 				pfp.image(util.resize_image(image_path,200)) 
+			else:
+				pfp.image(pfp_path + '/null.png') 
 
 

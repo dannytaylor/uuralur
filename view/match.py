@@ -1385,8 +1385,7 @@ def main(con):
 				support_toggle = st.radio('show ',['all','non-support','support'])
 
 		with c1:
-			# m_write.set_index('match_id')
-			# st.write(m_write.set_index('match_id'))
+
 			def set_query():
 				ss.mid = ss['radiochange']
 				params = st.experimental_get_query_params()
@@ -1406,13 +1405,6 @@ def main(con):
 				height = len(m_write)*48+64,
 				theme=table_theme
 			)
-
-			# row = m_ag['selected_rows']
-			# if row:
-			# 	ss.mid = row[0]['match_id']
-			# 	print(ss.mid)
-			# 	set_query()
-			# ss.mid = st.radio('test',[1,2,3],on_change=set_query,key='radiochange')
 
 		# get hero data for all matches
 		sqlq = util.str_sqlq('Heroes',ss.sid)
@@ -1456,9 +1448,8 @@ def main(con):
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
 		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
-		# mh_gb.configure_columns('score0',cellStyle=render.blu)
-		# mh_gb.configure_columns('score1',cellStyle=render.red)
-		# st.write(mh_write)
+		mh_gb.configure_selection('single', pre_selected_rows=None)
+
 		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 		mh_ag = AgGrid(
 			mh_write,
