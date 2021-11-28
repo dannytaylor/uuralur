@@ -8,7 +8,7 @@ import numpy as np
 # parse data structures
 import data.data as d
 import data.classes as c
-import database as db
+import tools.database as db
 # import data.override as override
 
 # load config settings and database
