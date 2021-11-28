@@ -8,6 +8,7 @@ import tools.util as util
 import tools.render as render
 import view.match as match
 import view.players as players
+import parse
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -16,7 +17,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
 # sqlite connections
 con = sqlite3.connect('demos.db')
-cur = con.cursor()
+# cur = con.cursor()
 
 # global vars/config
 config = yaml.safe_load(open('data/config.yaml'))
@@ -154,7 +155,10 @@ class MultiPage:
 				return str(mid) + " (" + mid_map + ")"
 			ss.mid = mid_empty.selectbox("matches",ss.sid_mids,format_func=format_mid_str,on_change=set_query,help='Match number from series in order played',key=mid_key) 
 
-		page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
+		if nav_names:
+			page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
+		else: 
+			page_view = None
 
 		# if in match view mode
 		if app_choice == 'match':
@@ -174,14 +178,19 @@ class MultiPage:
 def view_match(title, info=None):
 	match.main(con)
 
-def view_players(title, info=None):
+def view_records(title, info=None):
 	players.main(con)
 
+def view_upload(title, info=None):
+	uploaded_file = st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
+	if uploaded_file is not None:
+		bytes_data = uploaded_file.getvalue()
 
 def main():
 	mp = MultiPage()
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
-	mp.add_app('records',['summary','player stats'], view_players, info='')
+	mp.add_app('records',['summary','player stats'], view_records, info='')
+	# mp.add_app('upload',[], view_upload, info='')
 	mp.run()
 
 

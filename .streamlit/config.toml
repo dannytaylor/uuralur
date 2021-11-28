@@ -4,3 +4,4 @@ base="light"
 [server]
 port = 8501
 enableCORS = false
+maxUploadSize = 25

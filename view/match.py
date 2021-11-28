@@ -1,4 +1,4 @@
-import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics
+import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, sqlite3
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -16,30 +16,33 @@ from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 config = yaml.safe_load(open('data/config.yaml'))
 powers = json.loads(open('data/powers.json').read())
 
+# match wide vars
+team_emoji_map = {0:'🔵',1:'🔴','':''}
+kill_emoji_map = {None:'',1:'❌'}
+team_colour_map = {0:'dodgerblue',1:'tomato'}
+team_name_map = {0:'blu',1:'red'}
 table_theme = config['table_theme']
 
-def main(con):
-	# match info, relevant to all views
-	match_row = ss.matches[(ss.matches['match_id']==ss.mid)&(ss.matches['series_id']==ss.sid)]
+
+@st.cache
+def init_df(sid,mid):
+
+	match_row = ss.matches[(ss.matches['match_id']==mid)&(ss.matches['series_id']==sid)]
 	m_score  = [int(match_row.iloc[0]['score0']),int(match_row.iloc[0]['score1'])]
 	m_spikes = [int(match_row.iloc[0]['spikes0']),int(match_row.iloc[0]['spikes1'])]
 
-	# match wide dataframes
-	sqlq = util.str_sqlq('Heroes',ss.sid,ss.mid)
+	con = sqlite3.connect('demos.db')
+	sqlq = util.str_sqlq('Heroes',sid,mid)
 	hero_df = pd.read_sql_query(sqlq, con)
 	hero_df = hero_df.sort_values(by='team')
 	hero_list = hero_df['hero'].tolist()
 
-	sqlq = util.str_sqlq('Actions',ss.sid,ss.mid)
+	sqlq = util.str_sqlq('Actions',sid,mid)
 	actions_df = pd.read_sql_query(sqlq, con)
 	actions_df['time'] = pd.to_datetime(actions_df['time_ms'],unit='ms').dt.strftime('%M:%S.%f').str[:-4]
 	actions_df['time_m'] = actions_df['time_ms']/60000
 
-	# match wide vars
-	team_emoji_map = {0:'🔵',1:'🔴','':''}
-	kill_emoji_map = {None:'',1:'❌'}
-	team_colour_map = {0:'dodgerblue',1:'tomato'}
-	team_name_map = {0:'blu',1:'red'}
+
 
 	# hero info, setup heroname:player/team info for views
 	hero_team_map = {}
@@ -106,20 +109,24 @@ def main(con):
 	hero_df['atks'] = hattacks
 	hero_df['offtgt']  = hrogues
 
-	m_attacks = {}
-	m_attacks[0] = int(hero_df[hero_df['team'] == 0]['atks'].sum())
-	m_attacks[1] = int(hero_df[hero_df['team'] == 1]['atks'].sum())
-
-
 	hero_df['index'] = hero_df['hero']
 	hero_df = hero_df.set_index('index') 
 	
 	# get spike data for match
-	sqlq = util.str_sqlq('Spikes',ss.sid,ss.mid)
+	sqlq = util.str_sqlq('Spikes',sid,mid)
 	sdf = pd.read_sql_query(sqlq, con)
 	sdf = sdf.rename(columns={"spike_duration": "dur", "spike_id": "#","spike_hp_loss": "dmg","target_team": "team"})
 	sdf['time'] = pd.to_datetime(sdf['time_ms'],unit='ms').dt.strftime('%M:%S')
 	sdf['time_m'] = sdf['time_ms']/60000
+
+	# get hp data for later views
+	sqlq = util.str_sqlq('HP',sid,mid)
+	hp_df = pd.read_sql_query(sqlq, con)
+
+	m_attacks = {}
+	m_attacks[0] = int(hero_df[hero_df['team'] == 0]['atks'].sum())
+	m_attacks[1] = int(hero_df[hero_df['team'] == 1]['atks'].sum())
+
 	# sort spikes by teams
 	t_spikes = {}
 	t_kills = {}
@@ -131,6 +138,7 @@ def main(con):
 	t_dmg = {}
 	for t in [0,1]:
 		t_dmg[t] = hero_df[(hero_df['team'] == t)]['damage_taken'].sum()
+		
 	# calc hero timing by team for headers
 	ht,ht_mean,ht_med,ht_var = {},{},{},{}
 	for t in [0,1]:
@@ -142,11 +150,18 @@ def main(con):
 		ht_med[t] = statistics.median(ht[t])
 
 
-	# get hp data for later views
-	sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
-	hp_df = pd.read_sql_query(sqlq, con)
+	return hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list
 
+def main(con):
 
+	# match wide dataframes
+	# match info, relevant to all views
+	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_df(ss.sid,ss.mid)
+	
+	hero_df = hero_df.copy()
+	actions_df = actions_df.copy()
+	sdf = sdf.copy()
+	hp_df = hp_df.copy()
 
 	# MATCH HEADSER
 	c1,c2 = st.columns([7,3])
