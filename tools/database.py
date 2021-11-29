@@ -1,8 +1,15 @@
 import sqlite3 as sqldb
-# import duckdb as sqldb
 
+global con
 con = sqldb.connect('demos.db')
 cur = con.cursor()
+
+# reconnect to a new db file if specified in args at run
+def reconnect(file):
+	global con
+	con.close()
+	con = sqldb.connect(file)
+	cur = con.cursor()
 
 # functions to write to db
 def insertsql(table,items):

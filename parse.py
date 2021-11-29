@@ -4,6 +4,7 @@ import os, sys, time, math, argparse, datetime,statistics
 
 import yaml, json, re
 import numpy as np
+import sqlite3 as sqldb
 
 # parse data structures
 import data.data as d
@@ -977,8 +978,15 @@ def main():
 	argp.add_argument('-a','--all',		action="store",	dest = 'path', 		help='parse all series in path')
 	argp.add_argument('-s','--series',	action="store",	dest = 'seriespath',help='parse all matches in series folder')
 	argp.add_argument('-m','--match',	action="store",	dest = 'matchpath', help='parse a single match')
+	argp.add_argument('-d','--database',action="store",	dest = 'dbfile', help='specify the database file to write to')
 	args = argp.parse_args()
 	
+	# write to an alternative .db file if specified
+	if args.dbfile:
+		db.con.close()
+		db.con = sqldb.connect(args.dbfile)
+		db.cur = db.con.cursor()
+
 	# parse by command arg type, assumes correct user path inputs
 	if args.path:
 		parseall(os.path.abspath(args.path))

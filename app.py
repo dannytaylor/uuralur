@@ -1,4 +1,4 @@
-import os, sys, time, math, argparse, json, datetime, yaml, sqlite3
+import os, sys, time, math, argparse, json, yaml, sqlite3
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -6,6 +6,7 @@ ss = st.session_state # global shorthand for this file
 import pandas as pd
 import tools.util as util
 import tools.render as render
+import datetime
 
 import view.match as match
 import view.players as players
@@ -72,7 +73,7 @@ class MultiPage:
 		if 'm' in query_params and query_params['m'][0].isnumeric():
 			query_mid_choice = int(query_params['m'][0])  
 		else:
-		 	query_mid_choice = None
+			query_mid_choice = None
 
 		def set_query():
 			params = st.experimental_get_query_params()
@@ -170,7 +171,21 @@ def view_records(title, info=None):
 def view_upload(title, info=None):
 	uploaded_file = st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
 	if uploaded_file is not None:
+		f_date = str(datetime.date.today()).replace('-','')[2:]
+		f_sid = f_date + "_upload"
+		f_name = uploaded_file.name
 		bytes_data = uploaded_file.getvalue()
+		f_path = "publicdemos/" + f_sid +"/"
+		if not os.path.exists(f_path):
+			os.makedirs(f_path)
+		if not os.path.isfile(f_path + f_name):
+			f = open(f_path+f_name, "wb")
+			f.write(bytes_data)
+			f.close()
+			print("{} saved".format(uploaded_file))
+			os.system("parse.py -m {} -d publicdemos.db".format(f_path + f_name))
+		else:
+			print('file already written')
 
 def view_info(title, info=None):
 	view.info.main()
@@ -178,9 +193,9 @@ def view_info(title, info=None):
 def main():
 	mp = MultiPage()
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
-	mp.add_app('records',['summary','player stats'], view_records, info='')
-	# mp.add_app('upload',[], view_upload, info='')
+	mp.add_app('records',['summary','stats'], view_records, info='')
 	mp.add_app('info',[], view_info, info='')
+	# mp.add_app('upload',[], view_upload, info='')
 	mp.run()
 
 if __name__ == '__main__':

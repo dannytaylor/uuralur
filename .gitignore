@@ -141,3 +141,4 @@ tools/test.py
 data/overridesdump.json
 data/herodump*
 assets/
+publicdemos/
