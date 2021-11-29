@@ -171,10 +171,11 @@ def main(con):
 	header_str = sid_date
 	if ss.view['match'] != 'series':
 		header_str +=  " · match "
-		header_str += str(ss.mid) + " · "
-		sid_str = ss.sid.split("_")[1:]
-		sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
-		header_str += " - ".join(sid_str)
+		header_str += str(ss.mid)
+	header_str += " · "
+	sid_str = ss.sid.split("_")[1:]
+	sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
+	header_str += " - ".join(sid_str)
 
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
@@ -1379,6 +1380,10 @@ def main(con):
 
 		m_write = m_df[['match_id','map','score0','score1']]
 
+		nspike_dict = {}
+		nspike_dict[0] = dict(zip(m_df['match_id'],m_df['spikes0']))
+		nspike_dict[1] = dict(zip(m_df['match_id'],m_df['spikes1']))
+
 		m_gb = GridOptionsBuilder.from_dataframe(m_write)
 		m_gb.configure_default_column(width=16)
 		# m_gb.configure_grid_options(rowHeight=36)
@@ -1388,25 +1393,18 @@ def main(con):
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 
-		c1,c2,c3 = st.columns([2,6,2])
+		c1,c2,c3,c4 = st.columns([2,3,3,2])
 
-		with c3:
-			with st.expander('filters',expanded=True):
-				name_toggle = st.radio('group by',['hero name','player name'],index=1)
-				data_aggr   = st.radio('show data by',['average per match','total for series'],help='applies only to data which makes sense to sum/average')
-				support_toggle = st.radio('show ',['all','non-support','support'])
+		with c4:
+			st.write('filters')
+			name_toggle = st.radio('group by',['hero name','player name'],index=1)
+			data_aggr   = st.radio('show data by',['average per match','total for series'],help='applies only to data which makes sense to sum/average')
+			offence_toggle = st.checkbox('offence',value=True)
+			support_toggle = st.checkbox('support',value=True)
 
 		with c1:
 
-			def set_query():
-				ss.mid = ss['radiochange']
-				params = st.experimental_get_query_params()
-				params['s'] = ss.sid
-				params['m'] = ss.mid
-				ss.new_mid = True
-				st.experimental_set_query_params(**params)
-
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format('match'),True)
+			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format('matches'),True)
 			m_write = m_write.sort_values(by='match_id')
 			m_ag = AgGrid(
 				m_write,
@@ -1414,9 +1412,38 @@ def main(con):
 				gridOptions=m_gb.build(),
 				# update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load=True,
-				height = len(m_write)*48+64,
+				height = 320,
 				theme=table_theme
 			)
+
+		with c2:
+			series_fig =   make_subplots(specs=[[{"secondary_y": True}]])
+			series_fig.add_trace(
+				go.Bar(x=m_write['map'], y=m_write['score0'], name="blu",
+					), secondary_y=False
+			)
+			series_fig.add_trace(
+					go.Bar(x=m_write['map'], y=m_write['score1'], name="red",
+					), secondary_y=False
+			)
+
+			series_fig.update_layout(
+				showlegend=False,
+				height=320,
+				margin={'t': 48,'b':0,'l':48,'r':0},
+				# bargap=0.50,
+			)
+			st.plotly_chart(series_fig,use_container_width=True,config={'displayModeBar': False})
+
+		with c3:
+			st.write('data columns')
+			available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
+			default_sel = available_data.copy()
+			target_data = ['otp','on heal%','on_target','on_heal']
+			timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
+			available_data += target_data
+			available_data += timing_data
+			show_data = st.multiselect('select data for viewing',available_data,default=default_sel)
 
 		# get hero data for all matches
 		sqlq = util.str_sqlq('Heroes',ss.sid)
@@ -1430,37 +1457,94 @@ def main(con):
 
 
 		# initial toggle filters
-		if support_toggle == 'support':
+		if support_toggle and not offence_toggle:
 			mh_df = mh_df[mh_df['support']==1]
-		elif support_toggle == 'non-support':
+		elif not support_toggle and offence_toggle:
 			mh_df = mh_df[~(mh_df['support']==1)]
 
 		# setup player table
 		mh_write = mh_df.groupby('hero')[['match_id']].count().copy()
 		mh_write['player'] = mh_write.index
 		mh_write['#matches'] = mh_df.groupby('hero')[['match_id']].count()
+
+		# str lists to lists
+		mh_df['attack_timing']= mh_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
+		mh_df['heal_timing']  = mh_df['heal_timing'].map(lambda x: (ast.literal_eval(x)))
+		mh_df['phase_timing'] = mh_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
+		mh_df['jaunt_timing'] = mh_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
+
+		# on targets
+		mh_df['on_target'] = mh_df['attack_timing'].map(lambda x: len(x))
+		mh_df['on_heal'] = mh_df['heal_timing'].map(lambda x: len(x))
+		mh_df['on_target_possible'] = mh_df.apply(lambda x: nspike_dict[x['team']][x['match_id']] if x['support'] != 1 else 0, axis=1)
+		mh_df['on_heal_possible'] = mh_df.apply(lambda x: nspike_dict[abs(1-x['team'])][x['match_id']]-x['targets'] if x['support'] == 1 else 0, axis=1)
+
+		# group by player
+		mh_write['attack_timing']= mh_df.groupby('hero').agg({'attack_timing': 'sum'})
+		mh_write['heal_timing']  = mh_df.groupby('hero').agg({'heal_timing': 'sum'})
+		mh_write['phase_timing'] = mh_df.groupby('hero').agg({'phase_timing': 'sum'})
+		mh_write['jaunt_timing'] = mh_df.groupby('hero').agg({'jaunt_timing': 'sum'})
+
+		# convert ms to s
+		mh_write['attack_timing']= mh_write['attack_timing'].map(lambda x: [a/1000 for a in x])
+		mh_write['phase_timing'] = mh_write['phase_timing'].map(lambda x: [a/1000 for a in x])
+		mh_write['jaunt_timing'] = mh_write['jaunt_timing'].map(lambda x: [a/1000 for a in x])
+		mh_write['heal_timing']   = mh_write['heal_timing'].map(lambda x: [a/1000 for a in x])
+
+		# calc mean,median,vars
+		mh_write['attack mean']     = mh_write['attack_timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
+		mh_write['attack median']   = mh_write['attack_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
+		mh_write['attack variance'] = mh_write['attack_timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else 0)
+
+		mh_write['phase mean']   = mh_write['phase_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
+		mh_write['phase median'] = mh_write['phase_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
+		mh_write['jaunt mean']   = mh_write['jaunt_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
+		mh_write['jaunt median'] = mh_write['jaunt_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
+
+		mh_write['heal mean']     = mh_write['heal_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
+		mh_write['heal median']   = mh_write['heal_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
+		mh_write['heal variance'] = mh_write['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 1 else None)
+
+		# otps	
+		otp_cols = ['on_target','on_heal','on_target_possible','on_heal_possible']
+		mh_write[otp_cols] = mh_df.groupby('hero')[otp_cols].sum()
+		mh_write['otp'] = mh_write['on_target']/mh_write['on_target_possible']
+		mh_write['on heal%'] = mh_write['on_heal']/mh_write['on_heal_possible']
+
+		mh_write['otp'] = mh_write['otp'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%') else x)
+		mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%') else x)
+
+
 		# get data by mean or total
+		sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
 		if data_aggr == 'average per match':
-			mh_write[['deaths','targets','dmg']] = mh_df.groupby('hero')['deaths','targets','damage_taken'].mean()
+			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].mean()
 		else:
-			mh_write[['deaths','targets','dmg']] = mh_df.groupby('hero')['deaths','targets','damage_taken'].sum()
-		mh_write['dmg'] = mh_write['dmg'].map(lambda x: x/1000).map("{:0.1f}K".format)
+			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].sum()
+		mh_write['damage_taken'] = mh_write['damage_taken'].map(lambda x: x/1000).map("{:0.1f}K".format)
 		
 		# calc overall stats
 		mh_write['surv'] = 1-mh_write['deaths']/mh_write['targets'] 
 		mh_write['surv'] = mh_write['surv'].map("{:.0%}".format)
 		mh_write['surv'] = mh_write['surv'].map(lambda x: '' if x == 'nan%' else x)
 
+		mh_write = mh_write.fillna('')
+
 		if data_aggr == 'average per match':
 			mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
 			mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
 
-		mh_write = mh_write[['player','#matches','deaths','targets','surv','dmg']]
+		mh_write = mh_write[['player','#matches']+available_data]
+		hide_data = [d for d in available_data if d not in show_data]
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
 		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
-		mh_gb.configure_selection('single', pre_selected_rows=None)
+		mh_gb.configure_columns(['attacks','heals'],type='customNumericFormat',precision=0)
+		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
+		mh_gb.configure_columns(['on_target','on_heal'],type='customNumericFormat',precision=0)
+		mh_gb.configure_columns(hide_data,hide=True)
+
 
 		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 		mh_ag = AgGrid(
