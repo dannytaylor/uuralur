@@ -322,7 +322,7 @@ def phasehits(actions):
 	phases = [] # [hid,hittime]
 	for a in actions:
 		if "Phase" in a.tags:
-			phases.append([a.hid,a.time_ms])
+			phases.append([a.hid,a.hittime])
 	for a in actions:
 		phasecheck = [p for p in phases if (a.tid == p[0] and a.time_ms > p[1]+ config['phase_hit_delay'] and a.time_ms < p[1] + config['phase_hit_reset'])]
 		if phasecheck: a.tags.add("Phase Hit")
