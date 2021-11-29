@@ -18,7 +18,7 @@ fx     = json.loads(open('data/fx.json').read())
 playernames = json.loads(open('data/player_names.json').read())
 
 HERODUMP = True
-OVERRIDE = False
+OVERRIDE = True # allows overrides if match in override data
 
 hero_data = {}
 herodump = {}
@@ -481,13 +481,15 @@ def mergeintolargest(h1,h2,teams,remainders,maxteamsize):
 	return False,teams,remainders
 
 # apply team numbers to heroes
-def applyteamnumbers(heroes,teams):
+def applyteamnumbers(sid,mid,heroes,teams):
 	assignteam = 0
 	for h in teams[1]: # make sure first hero in demo is on team zero
 		if heroes[h].firstherofound:
 			assignteam = 1
 			break
-	# if TEAMSWAP: assignteam = abs(assignteam-1) # may not be required/manual tuning from demoparse data
+	if OVERRIDE and sid in overrides and mid in overrides[sid] and "TEAMSWAP" in overrides[sid][mid]: 
+		assignteam = abs(assignteam-1) # may not be required/manual tuning from demoparse data
+		print(mid)
 	for h in teams[assignteam]:
 		heroes[h].team = 0 
 	assignteam = abs(assignteam-1)
@@ -496,7 +498,7 @@ def applyteamnumbers(heroes,teams):
 	return
 
 # assigns teams
-def assignteams(heroes,actions):
+def assignteams(sid,mid,heroes,actions):
 	teams = []
 	maxteamsize = math.ceil(len(heroes)/2) # assumes max # difference of one player
 	oneteamfull = False
@@ -525,7 +527,7 @@ def assignteams(heroes,actions):
 			elif len(teams[1]) > len(teams[0]):
 				teams[0].add(remainder)
 		if len(teams) == 2:
-			applyteamnumbers(heroes,teams)
+			applyteamnumbers(sid,mid,heroes,teams)
 			return
 
 	# if can't finish team assignment by friendly only then look at attacks
@@ -892,7 +894,7 @@ def parsematch(path): # primary demo parse function
 		heroes = demo2heroes(lines)
 		starttime = matchstart(lines,heroes)
 		actions, hp = demo2data(lines,heroes,starttime)
-		assignteams(heroes,actions)
+		assignteams(sid,mid,heroes,actions) # pass sid and mid to allow teamswap override at runtime
 		spikes = spikeparse(heroes,actions,hp)
 		assignsupport(heroes,actions)
 		tagfatfingers(heroes,actions)
