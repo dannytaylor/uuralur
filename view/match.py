@@ -280,15 +280,15 @@ def main(con):
 		hdf['support'] = hdf['support'].fillna(0)
 		hdf = hdf.sort_values(['team','support'],ascending=[True,True])
 
-		# hdf = hdf.rename(columns={})
+		hdf = hdf.rename(columns={'on heal%':'onheal'})
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
-		# sum_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
 
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
-		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color)
+		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
+		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
 		sum_gb.configure_columns('at',cellRenderer=render.icon)
 		sum_gb.configure_columns(['team','support'],hide=True)
 
@@ -421,12 +421,16 @@ def main(con):
 		sup_heals['efficacy'] = sup_heals[(sup_heals['hp_max'] != 0)&(~sup_heals['action_tags'].str.contains('Absorb'))&(sup_heals['hit_hp'] != 0)]['efficacy']
 
 		sup_eff_fig = go.Figure()
+		
+		hmax = max(sup_df['heals'])
 		for h in sup_heroes:
+			hhero = sup_df.loc[h,'heals']
 			sup_eff_fig.add_trace(go.Box(
 				y=sup_heals[sup_heals['actor']==h]['efficacy'],
 				name=h,
 				boxpoints='outliers',
-				line_width=2,
+				opacity=0.8*hhero/hmax,
+				line_width=3*hhero/hmax,
 				boxmean=True,
 				marker=dict(
 					color=team_colour_map[hero_team_map[h]],
@@ -489,7 +493,7 @@ def main(con):
 
 
 		sup_write = sup_df[['hero','at','set2','team','support','on heal','on heal%','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals"]].copy()
-		sup_write = sup_write.rename(columns={"on heal%":"ot%","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
+		sup_write = sup_write.rename(columns={"avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
 
 		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
 		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
@@ -497,7 +501,7 @@ def main(con):
 		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=52)
 		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
 		sup_gb.configure_columns('at',cellRenderer=render.icon,width=28)
-		sup_gb.configure_columns(['on heal','alpha_heals','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
+		sup_gb.configure_columns(['on heal','alpha','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
 		sup_gb.configure_columns(['avg','median','variance'],type='customNumericFormat',precision=2)
 		sup_gb.configure_columns(['team','support','variance'],hide=True)
 
@@ -596,7 +600,7 @@ def main(con):
 		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
-		def_gb.configure_columns(['dmg_per_surv','dmg_per_death'],type='customNumericFormat',precision=0)
+		def_gb.configure_columns(['dmg_per_surv','dmg_per_death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns('team',hide=True)
 		def_gb.configure_columns('hero',width=96)
 		def_gb.configure_columns('hero',cellStyle=render.team_color)
@@ -809,7 +813,7 @@ def main(con):
 				gridOptions=of_gb.build(),
 				fit_columns_on_grid_load=True,
 				update_mode='SELECTION_CHANGED',
-				height = 860,
+				height = 800,
 				theme = table_theme,
 			)
 
@@ -932,7 +936,7 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=at_gb.build(),
 				fit_columns_on_grid_load=True,
-				height = 720,
+				height = 636,
 				theme=table_theme
 			)
 
@@ -1234,7 +1238,8 @@ def main(con):
 			# add white line as background color workaround
 
 			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
-			hp_range=[act_min,hit_max-sp_delta/1000]
+			hp_range=[act_min,hit_max]
+			print(hit_max)
 
 			sp_fig.add_trace(go.Scatter(x=[hp_range[0]-1,1+max(hp_range[1],max(sl['hit']))],y= [4,4],fill='tozeroy', mode='none',fillcolor='white',
 				),row=2, col=1)
