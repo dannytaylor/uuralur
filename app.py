@@ -89,16 +89,16 @@ class MultiPage:
 		sid_empty = st.sidebar.empty()
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
-		app_exp = st.sidebar.expander('viewer', expanded=False)
+		app_exp = st.sidebar.expander('page', expanded=False)
 		filter_exp = st.sidebar.empty()
 
 		# page selecter
 		if ss.new_mid:
 			ss['app_choice'] = 'match'
-			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
+			app_choice = app_exp.radio(" ", self.app_names,on_change=clear_query,key='app_choice')
 			ss.new_mid = False
-		else:
-			app_choice = app_exp.radio("viewer", self.app_names,on_change=clear_query,key='app_choice')
+		else: # for empty nav_lists
+			app_choice = app_exp.radio(" ", self.app_names,on_change=clear_query,key='app_choice')
 		nav_names = self.app_view[app_choice]
 		st_sidebar_title.title(app_choice)
 
