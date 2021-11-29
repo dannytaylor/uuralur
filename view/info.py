@@ -1,5 +1,7 @@
+import yaml
 import streamlit as st
 ss = st.session_state # global shorthand for this file
+config = yaml.safe_load(open('data/config.yaml'))
 
 
 
@@ -26,11 +28,12 @@ def main():
 
 	st.subheader('On target')
 	st.write("""
-		(not implemented yet) Only half on target credit is applied for the following cases:
+		Only half *on target* credit is given based on late timing of the first attack or heal on a target. 
+		The previous version used some additional parameters to timing, but these thresholds provide a similar results and allow for standardizing metrics across multiple datasets and aligning with the old *demoparse*.
 		""")
 	st.write("""
-		Attacks: If the first attack is cast more than 2 seconds from the spike start time
-		""")
+		Attacks: If the first attack is cast more than {} milliseconds from the spike start time.
+		""".format(str(config['otp_threshold'])))
 	st.write("""
-		Heals: If the first heal is cast more than 4 seconds from the spike start time
-		""")
+		Heals: If the first heal is cast more than {} milliseconds from the spike start time.
+		""".format(str(config['ohp_threshold'])))

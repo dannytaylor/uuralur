@@ -24,9 +24,9 @@ table_theme: "material"
 
 # otp partial credit vars
 otp_penalty: 0.5 # reduction to on_target count for first timing above the threshold
-otp_threshold: 1500 # time in ms first attack must be under to count as a full on target
+otp_threshold: 1700 # time in ms first attack must be under to count as a full on target
 ohp_penalty: 0.5 # same but for healing
-ohp_threshold: 3000 # time in ms first attack must be under to count as a full on target
+ohp_threshold: 2400 # time in ms first attack must be under to count as a full on target
 
 
 # FROM DEMOPARSE
