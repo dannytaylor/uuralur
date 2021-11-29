@@ -4,14 +4,16 @@ import streamlit as st
 ss = st.session_state # global shorthand for this file
 
 import pandas as pd
-from millify import millify
 import tools.util as util
 import tools.render as render
+from millify import millify
 
 import plotly.graph_objects as go
 import plotly.express as px
 
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
+
+
 config = yaml.safe_load(open('data/config.yaml'))
 
 table_theme = config['table_theme']
@@ -25,7 +27,7 @@ def main(con):
 	hero_df['player']  = hero_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
 	hero_df['sid_mid'] = hero_df['series_id'] + "_" + hero_df['match_id'].astype(str)
 
-	if ss.view['records'] == 'player stats':
+	if ss.view['records'] == 'stats':
 
 		# get hero data for all matches
 		mh_df = hero_df.copy()

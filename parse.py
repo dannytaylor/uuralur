@@ -490,7 +490,6 @@ def applyteamnumbers(sid,mid,heroes,teams):
 			break
 	if OVERRIDE and sid in overrides and mid in overrides[sid] and "TEAMSWAP" in overrides[sid][mid]: 
 		assignteam = abs(assignteam-1) # may not be required/manual tuning from demoparse data
-		print(mid)
 	for h in teams[assignteam]:
 		heroes[h].team = 0 
 	assignteam = abs(assignteam-1)
