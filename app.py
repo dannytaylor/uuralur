@@ -39,6 +39,7 @@ if 'series' not in ss:
 	ss.series['date'] = ss.series['date'].dt.date
 if 'match' not in ss:
 	ss.matches = pd.read_sql_query("SELECT * FROM Matches", con)
+	ss.matches['sid_mid'] = ss.matches['series_id'] + "_" + ss.matches['match_id'].astype(str)
 if 'new_mid' not in ss: ss.new_mid = False
 
 class MultiPage:
@@ -89,19 +90,20 @@ class MultiPage:
 			st.experimental_set_query_params()
 
 		# sidebar layout setup
+		app_exp = st.sidebar.empty()
 		sid_empty = st.sidebar.empty()
 		mid_empty = st.sidebar.empty()
 		nav_empty = st.sidebar.empty()
-		app_exp = st.sidebar.expander('page', expanded=False)
+		# app_exp = st.sidebar.expander('page', expanded=False)
 		filter_exp = st.sidebar.empty()
 
 		# page selecter
 		if ss.new_mid:
 			ss['app_choice'] = 'match'
-			app_choice = app_exp.radio(" ", self.app_names,on_change=clear_query,key='app_choice')
+			app_choice = app_exp.radio("page", self.app_names,on_change=clear_query,key='app_choice')
 			ss.new_mid = False
 		else: # for empty nav_lists
-			app_choice = app_exp.radio(" ", self.app_names,on_change=clear_query,key='app_choice')
+			app_choice = app_exp.radio("page", self.app_names,on_change=clear_query,key='app_choice')
 		nav_names = self.app_view[app_choice]
 		st_sidebar_title.title(app_choice)
 

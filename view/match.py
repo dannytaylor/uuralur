@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import tools.util as util
 import tools.render as render
+from millify import millify
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -205,7 +206,7 @@ def main(con):
 			c3.metric("Spikes Called"*t2,m_spikes[t],m_spikes[t]-m_spikes[t2])
 			c4.metric("Attacks Thrown"*t2,m_attacks[t],m_attacks[t]-m_attacks[t2])
 			c5.metric("Avg Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c6.metric("Dmg Taken (k)"*t2,round(t_dmg[t]/1000,1),round((t_dmg[t]-t_dmg[t2])/1000,1),delta_color="inverse")
+			c6.metric("Dmg Taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse")
 
 
 		score_fig = go.Figure()
@@ -571,9 +572,9 @@ def main(con):
 		for t in [0,1]:
 			t2 = abs(t-1)
 
-			c2.metric("dmg taken (k)"*t2,round(t_dmg[t]/1000,1),round((t_dmg[t]-t_dmg[t2])/1000,1),delta_color="inverse")
-			c3.metric("dmg/surv"*t2,round(t_dmg_surv[t]/1000,2),round((t_dmg_surv[t]-t_dmg_surv[t2])/1000,2),delta_color="inverse")
-			c4.metric("dmg/death"*t2,  round(t_dmg_death[t]/1000,2),round((t_dmg_death[t]-t_dmg_death[t2])/1000,2),delta_color="inverse")
+			c2.metric("dmg taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2])/1000,precision=1),delta_color="inverse")
+			c3.metric("dmg/surv"*t2,millify(t_dmg_surv[t],precision=1),millify((t_dmg_surv[t]-t_dmg_surv[t2])/1000,precision=2),delta_color="inverse")
+			c4.metric("dmg/death"*t2,  millify(t_dmg_death[t],precision=1),millify((t_dmg_death[t]-t_dmg_death[t2])/1000,precision=2),delta_color="inverse")
 
 
 		# hp loss data
@@ -1399,8 +1400,7 @@ def main(con):
 			st.write('filters')
 			name_toggle = st.radio('group by',['hero name','player name'],index=1)
 			data_aggr   = st.radio('show data by',['average per match','total for series'],help='applies only to data which makes sense to sum/average')
-			offence_toggle = st.checkbox('offence',value=True)
-			support_toggle = st.checkbox('support',value=True)
+			support_toggle = st.radio('role',['all','offence','support'])
 
 		with c1:
 
@@ -1429,7 +1429,7 @@ def main(con):
 
 			series_fig.update_layout(
 				showlegend=False,
-				height=320,
+				height=372,
 				margin={'t': 48,'b':0,'l':48,'r':0},
 				# bargap=0.50,
 			)
@@ -1438,7 +1438,7 @@ def main(con):
 		with c3:
 			st.write('data columns')
 			available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
-			default_sel = available_data.copy()
+			default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
 			target_data = ['otp','on heal%','on_target','on_heal']
 			timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
 			available_data += target_data
@@ -1457,9 +1457,9 @@ def main(con):
 
 
 		# initial toggle filters
-		if support_toggle and not offence_toggle:
+		if support_toggle == 'support':
 			mh_df = mh_df[mh_df['support']==1]
-		elif not support_toggle and offence_toggle:
+		elif support_toggle == 'offence':
 			mh_df = mh_df[~(mh_df['support']==1)]
 
 		# setup player table
@@ -1476,8 +1476,8 @@ def main(con):
 		# on targets
 		mh_df['on_target'] = mh_df['attack_timing'].map(lambda x: len(x))
 		mh_df['on_heal'] = mh_df['heal_timing'].map(lambda x: len(x))
-		mh_df['on_target_possible'] = mh_df.apply(lambda x: nspike_dict[x['team']][x['match_id']] if x['support'] != 1 else 0, axis=1)
-		mh_df['on_heal_possible'] = mh_df.apply(lambda x: nspike_dict[abs(1-x['team'])][x['match_id']]-x['targets'] if x['support'] == 1 else 0, axis=1)
+		mh_df['on_target_possible'] = mh_df.apply(lambda x: nspike_dict[x['team']][x['match_id']] if (x['support'] != 1 or support_toggle != 'all') else 0, axis=1)
+		mh_df['on_heal_possible'] = mh_df.apply(lambda x: nspike_dict[abs(1-x['team'])][x['match_id']]-x['targets'] if (x['support'] == 1 or support_toggle != 'all') else 0, axis=1)
 
 		# group by player
 		mh_write['attack_timing']= mh_df.groupby('hero').agg({'attack_timing': 'sum'})
@@ -1511,8 +1511,8 @@ def main(con):
 		mh_write['otp'] = mh_write['on_target']/mh_write['on_target_possible']
 		mh_write['on heal%'] = mh_write['on_heal']/mh_write['on_heal_possible']
 
-		mh_write['otp'] = mh_write['otp'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%') else x)
-		mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%') else x)
+		mh_write['otp'] = mh_write['otp'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
+		mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
 
 
 		# get data by mean or total
