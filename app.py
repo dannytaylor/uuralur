@@ -6,8 +6,11 @@ ss = st.session_state # global shorthand for this file
 import pandas as pd
 import tools.util as util
 import tools.render as render
+
 import view.match as match
 import view.players as players
+import view.info
+
 import parse
 
 import plotly.express as px
@@ -193,11 +196,15 @@ def view_upload(title, info=None):
 	if uploaded_file is not None:
 		bytes_data = uploaded_file.getvalue()
 
+def view_info(title, info=None):
+	view.info.main()
+
 def main():
 	mp = MultiPage()
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
 	mp.add_app('records',['summary','player stats'], view_records, info='')
 	# mp.add_app('upload',[], view_upload, info='')
+	mp.add_app('info',[], view_info, info='')
 	mp.run()
 
 if __name__ == '__main__':

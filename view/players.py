@@ -187,23 +187,23 @@ def main(con):
 				mid = row[0]['match_id']
 
 			if player_sel:
-				with match_linker.form('match linker'):
-					if sid and mid:
-						def go_to_match():
-							ss.view = {'match':'summary'}
-							ss.sid = sid
-							ss.mid = mid
-							ss.new_mid = True
+				# with match_linker.form('match linker'):
+				if sid and mid:
+					def go_to_match():
+						ss.view = {'match':'summary'}
+						ss.sid = sid
+						ss.mid = mid
+						ss.new_mid = True
 
-							ss['app_choice'] = 'players'
+						ss['app_choice'] = 'players'
 
-							params = st.experimental_get_query_params()
-							params['s'] = sid
-							params['m'] = mid
-							st.experimental_set_query_params(**params)
-						st.form_submit_button(label="go to match {} - {}".format(sid,mid), on_click=go_to_match)
-					else:
-						st.form_submit_button(label="select a match below")
+						params = st.experimental_get_query_params()
+						params['s'] = sid
+						params['m'] = mid
+						st.experimental_set_query_params(**params)
+					match_linker.button(label="go to match {} - {}".format(sid,mid), on_click=go_to_match)
+				else:
+					match_linker.button(label="select a match below")
 
 		# player profile pic
 		if player_sel:
