@@ -58,30 +58,30 @@ def init_match_data(sid,mid):
 	actions_df['team'] = actions_df['actor'].map(hero_team_map)
 
 	# hero stats on target and timing
-	hero_df['on_target']  = hero_df['attack_chains'].map(lambda x: sum(ast.literal_eval(x).values()))
-	hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
-	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
-	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
-	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x)
 	hero_df['timing']  = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
+	hero_df['on_target']  = hero_df['timing'].map(lambda x: len(x) - sum(config['otp_penalty'] for t in x if t > config['otp_threshold'])) 
 	hero_df['timing']  = hero_df['timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg atk'] = hero_df['timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
 	hero_df['med atk'] = hero_df['timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var atk'] = hero_df['timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else 0)
+	hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
+	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
+	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
+	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x) 
 
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
-	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: [a/1000 for a in x])
+	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: [a/1000 for a in x]) 
 	hero_df['avg phase']    = hero_df['phase_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg jaunt']    = hero_df['jaunt_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: ast.literal_eval(x))
+	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x)  - sum(config['ohp_penalty'] for t in x if t > config['ohp_threshold']))
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg heal']    = hero_df['heal_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 	hero_df['med heal']    = hero_df['heal_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 1 else None)
-	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x))
 	hero_df['on heal divisor'] = hero_df['team'].map(lambda x: m_spikes[abs(x-1)]) - hero_df['targets']
 	hero_df['on heal float']   = hero_df['on heal']/hero_df['on heal divisor']
 	hero_df['on heal%']    = hero_df['on heal float'].map("{:.0%}".format)
@@ -277,16 +277,14 @@ def main(con):
 		hdf['dmg tk'] = hdf['damage_taken']/1000
 		hdf['dmg tk'] = hdf['dmg tk'].map("{:0.1f}K".format)
 		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','dmg tk','otp','atks','atk tm','on heal%']]
+		hdf['support'] = hdf['support'].fillna(0)
+		hdf = hdf.sort_values(['team','support'],ascending=[True,True])
 
 		# hdf = hdf.rename(columns={})
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
 		# sum_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
-		# sum_gb.configure_columns(['targets','deaths','atks'],width=24)
-		# sum_gb.configure_columns(['dmg tk','otp','surv'],width=32)
-		# sum_gb.configure_columns(['otp','surv','atk t','heal t'],width=32)
-
 
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
@@ -1394,12 +1392,11 @@ def main(con):
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 
-		c1,c2,c3,c4 = st.columns([2,3,3,2])
+		c1,c2 = st.columns([3,7])
 
-		with c4:
-			st.write('filters')
-			name_toggle = st.radio('group by',['hero name','player name'],index=1)
-			data_aggr   = st.radio('show data by',['average per match','total for series'],help='applies only to data which makes sense to sum/average')
+		with st.sidebar.expander('data table settings',expanded=False):
+			name_toggle    = st.radio('group by',['player name','hero name'])
+			data_aggr      = st.radio('show data by',['total for series','average per match'],help='applies applicable data')
 			support_toggle = st.radio('role',['all','offence','support'])
 
 		with c1:
@@ -1412,38 +1409,38 @@ def main(con):
 				gridOptions=m_gb.build(),
 				# update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load=True,
-				height = 320,
+				height = 240,
 				theme=table_theme
 			)
 
 		with c2:
 			series_fig =   make_subplots(specs=[[{"secondary_y": True}]])
 			series_fig.add_trace(
-				go.Bar(x=m_write['map'], y=m_write['score0'], name="blu",
+				go.Bar(x=m_write['map'], y=m_write['score0'], name="blu", marker_color='dodgerblue',
 					), secondary_y=False
 			)
 			series_fig.add_trace(
-					go.Bar(x=m_write['map'], y=m_write['score1'], name="red",
+					go.Bar(x=m_write['map'], y=m_write['score1'], name="red",marker_color='tomato',
 					), secondary_y=False
 			)
 
 			series_fig.update_layout(
 				showlegend=False,
-				height=372,
-				margin={'t': 48,'b':0,'l':48,'r':0},
-				# bargap=0.50,
+				height=280,
+				margin={'t': 0,'b':0,'l':64,'r':0},
+				yaxis_title='score',
+				bargap=0.50,
 			)
 			st.plotly_chart(series_fig,use_container_width=True,config={'displayModeBar': False})
 
-		with c3:
-			st.write('data columns')
-			available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
-			default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
-			target_data = ['otp','on heal%','on_target','on_heal']
-			timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
-			available_data += target_data
-			available_data += timing_data
-			show_data = st.multiselect('select data for viewing',available_data,default=default_sel)
+		# st.write('data columns')
+		available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
+		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
+		target_data = ['otp','on heal%','on_target','on_heal']
+		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
+		available_data += target_data
+		available_data += timing_data
+		show_data = st.multiselect('data columns (settings in sidebar)',available_data,default=default_sel)
 
 		# get hero data for all matches
 		sqlq = util.str_sqlq('Heroes',ss.sid)
@@ -1474,8 +1471,8 @@ def main(con):
 		mh_df['jaunt_timing'] = mh_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
 
 		# on targets
-		mh_df['on_target'] = mh_df['attack_timing'].map(lambda x: len(x))
-		mh_df['on_heal'] = mh_df['heal_timing'].map(lambda x: len(x))
+		mh_df['on_target'] = mh_df['attack_timing'].map(lambda x: len(x) - sum(config['otp_penalty'] for t in x if t > config['otp_threshold']))
+		mh_df['on_heal'] = mh_df['heal_timing'].map(lambda     x: len(x) - sum(config['ohp_penalty'] for t in x if t > config['ohp_threshold']))
 		mh_df['on_target_possible'] = mh_df.apply(lambda x: nspike_dict[x['team']][x['match_id']] if (x['support'] != 1 or support_toggle != 'all') else 0, axis=1)
 		mh_df['on_heal_possible'] = mh_df.apply(lambda x: nspike_dict[abs(1-x['team'])][x['match_id']]-x['targets'] if (x['support'] == 1 or support_toggle != 'all') else 0, axis=1)
 

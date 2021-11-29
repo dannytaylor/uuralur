@@ -104,9 +104,9 @@ def init_css(width):
 	st.markdown(f"""
 	<style>
 		.reportview-container .main .block-container{{
-			# min-width: """+str(width/2)+"""px;
+			min-width: """+str(width)+"""px;
 			max-width: """+str(width)+"""px;
-			padding: 3rem 1rem 1rem;
+			padding: 2rem 1rem 1rem;
 		}}
 		# {{
 		# }}
@@ -139,4 +139,5 @@ team_name_map = {
 	"lc":"laughing coffin",
 	"ps":"pspsps",
 	"wd":"watchdogs",
+	"miswap":"misfits/wap",
 }

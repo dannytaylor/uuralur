@@ -39,13 +39,24 @@ def main(con):
 
 		with st.sidebar.form('filters'):
 			st.write('data filters')
-			support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
-			data_aggr   = st.radio('show data by',['overall','average per match'],help='applies only to data which makes sense to sum/average')
-			match_type  = st.radio('match type',['all','scrim','kb'])
-			win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for filtering')
-			at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
-			pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
+			data_aggr   = st.radio('show data by',['overall','average per match'],help='applies applicable data')
+			with st.expander('hero filters',expanded=False):
+				at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
+				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
+				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
+			with st.expander('match filters',expanded=False):
+				dates = ss.series['date'].tolist()
+				series_filters = {}
+				series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
+				series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
+				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
+			
+				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/community series is kb, any non-kb is a 'scrim'")
+				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for this filter')
+
 			st.form_submit_button(label="apply filters", help=None, on_click=None, args=None, kwargs=None)
+
+
 
 		nspike_dict = {}
 		nspike_dict[0] = dict(zip(ss.matches['sid_mid'],ss.matches['spikes0']))
@@ -84,6 +95,9 @@ def main(con):
 			else:
 				mh_df = mh_df[mh_df['loss'] == 1]
 
+		# date filters
+		mh_df = mh_df[mh_df['series_id'].isin(date_filtered)]
+
 		# at/pset filters
 		if at_filter:
 			mh_df = mh_df[mh_df['archetype'].isin(at_filter)]
@@ -99,7 +113,7 @@ def main(con):
 
 				# str lists to lists
 				mh_df['attack_timing']= mh_df.apply(lambda x: (ast.literal_eval(x['attack_timing']) if (x['support'] != 1 or support_toggle != 'all') else []), axis=1)
-				mh_df['heal_timing']  = mh_df.apply(lambda x: (ast.literal_eval(x['heal_timing'])   if (x['support'] == 1 or support_toggle != 'all') else []), axis=1) 
+				mh_df['heal_timing']  = mh_df.apply(lambda x: (ast.literal_eval(x['heal_timing'])   if (x['support'] == 1 or support_toggle != 'all') else []), axis=1)
 				mh_df['phase_timing'] = mh_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
 				mh_df['jaunt_timing'] = mh_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
 
@@ -122,9 +136,10 @@ def main(con):
 				mh_write['heal_timing']   = mh_write['heal_timing'].map(lambda x: [a/1000 for a in x])
 
 				# calc mean,median,vars
-				mh_write['attack mean']     = mh_write['attack_timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
+				# mh_write['attack mean']     = mh_write['attack_timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
+				mh_write['attack mean']     = mh_write['attack_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 				mh_write['attack median']   = mh_write['attack_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
-				mh_write['attack variance'] = mh_write['attack_timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else 0)
+				mh_write['attack variance'] = mh_write['attack_timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else None)
 
 				mh_write['phase mean']   = mh_write['phase_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
 				mh_write['phase median'] = mh_write['phase_timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
@@ -171,7 +186,7 @@ def main(con):
 				mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
 				mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 				mh_gb.configure_columns(['attacks','heals'],type='customNumericFormat',precision=0)
-				mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
+				mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
 				mh_gb.configure_columns(['on_target','on_heal'],type='customNumericFormat',precision=0)
 				mh_gb.configure_columns(hide_data,hide=True)
 
@@ -301,8 +316,10 @@ def main(con):
 					hero_sel = hrow[0]['hero']
 
 		if not player_sel:
-			c2.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display <br>characters played.'),True)
-			c3.markdown("""<div><br></div><div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display filtered matches.'),True)
+			c2.markdown("""<div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div>""",True)
+			c2.markdown("""<div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display <br>characters played.'),True)
+			c3.markdown("""<div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div>""",True)
+			c3.markdown("""<div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display filtered matches.'),True)
 
 		with c3:
 			matches = ss.matches.copy()
@@ -359,18 +376,20 @@ def main(con):
 					match_linker.button(label="select a match below")
 
 		# player profile pic
+		pfp_path = os.path.abspath('assets/players')
 		if player_sel:
-			pfp_path = os.path.abspath('assets/players')
 			pfp_files = [i for i in os.listdir(pfp_path)]
 			pfp_players = [i.split('.')[0] for i in pfp_files]
 			
-			pname_empty.markdown("""<p class="font20"" >{}</p>""".format(player_sel),True)
+			pname_empty.markdown("""<p class="font20""  style="display:inline;color:#4d4d4d";>{}</p>""".format(player_sel),True)
 			if player_sel in pfp_players:
 				image_path = pfp_path+'/'+[p for p in pfp_files if player_sel in p][0]
 				# img = util.resize_image(pfp_path+'/'+image_path)
 				pfp.image(util.resize_image(image_path,200)) 
 			else:
 				pfp.image(pfp_path + '/null.png') 
+		else:
+			pfp.image(pfp_path + '/null.png') 
 
 
 		pset_hero_df = hero_df.copy()
@@ -418,16 +437,16 @@ def main(con):
 				metrics[12] = len(ss.matches)
 				metrics[13] = len(hero_write)
 			metrics[21] = len(pset_hero_df.groupby('hero')[['match_id']].count())
-			metrics[22] = millify(pset_hero_df['deaths'].sum())
-			metrics[23] = millify(pset_hero_df['targets'].sum())
+			metrics[22] = millify(pset_hero_df['deaths'].sum(),precision=1)
+			metrics[23] = millify(pset_hero_df['targets'].sum(),precision=1)
 
-			metrics[31] = millify(pset_hero_df['damage_taken'].sum())
-			metrics[32] = millify(pset_hero_df['attacks'].sum())
-			metrics[33] = millify(pset_hero_df['heals'].sum())
+			metrics[31] = millify(pset_hero_df['damage_taken'].sum(),precision=1)
+			metrics[32] = millify(pset_hero_df['attacks'].sum(),precision=1)
+			metrics[33] = millify(pset_hero_df['heals'].sum(),precision=1)
 			
-			metrics[41] = millify(pset_hero_df['greens'].sum())
-			metrics[42] = millify(pset_hero_df['phases'].sum())
-			metrics[43] = millify(pset_hero_df['jaunts'].sum())
+			metrics[41] = millify(pset_hero_df['greens'].sum(),precision=1)
+			metrics[42] = millify(pset_hero_df['phases'].sum(),precision=1)
+			metrics[43] = millify(pset_hero_df['jaunts'].sum(),precision=1)
 
 			return metrics, pset_fig
 

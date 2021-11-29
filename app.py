@@ -74,12 +74,6 @@ class MultiPage:
 		else:
 		 	query_mid_choice = None
 
-		# update session state (this also sets the default radio button selection as it shares the key!)
-		# ss[key] = query_app_choice if query_app_choice in self.app_names else self.app_names[0]
-		# if 'match' in ss.view:
-		# 	if 'sid_key' in ss and 'mid_key' in ss:
-		# 		ss[sid_key] = query_sid_choice if query_sid_choice in self.app_names else self.app_names[0]
-
 		def set_query():
 			params = st.experimental_get_query_params()
 			if 'sid_key' in ss:
@@ -107,28 +101,8 @@ class MultiPage:
 		nav_names = self.app_view[app_choice]
 		st_sidebar_title.title(app_choice)
 
-		# series list getter and filterer
-		def series_filters():
-			exp = filter_exp.expander('series filters', expanded=False)
-			series_filters = {}
-			dates = ss.series['date'].tolist()
-			series_filters['date_first'] = exp.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1],on_change=clear_query)
-			series_filters['date_last']  = exp.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1],on_change=clear_query)
-			series_filters['kickball']   = exp.checkbox('kickball',	  value=True,help="Any kickball/community series",on_change=clear_query)
-			series_filters['scrims']     = exp.checkbox('scrims', value=True,help="Any non-KB, typically set team versus team",on_change=clear_query)
-			
-			# apply filters and list sids
-			series_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]
-			# filter series by series type
-			if not series_filters['kickball'] and series_filters['scrims']:
-				series_filtered = series_filtered[series_filtered['kb'] == 0]
-			if series_filters['kickball'] and not series_filters['scrims']:
-				series_filtered = series_filtered[series_filtered['kb'] == 1]
-			series_ids = series_filtered['series_id'].to_list()
-			series_ids.reverse()
-			return series_ids
-		if app_choice == 'match':
-			series_ids = series_filters()
+		series_ids = ss.series['series_id'].to_list()
+		series_ids.reverse()
 
 
 		def match_select():
