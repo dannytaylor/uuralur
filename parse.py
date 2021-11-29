@@ -20,6 +20,7 @@ playernames = json.loads(open('data/player_names.json').read())
 
 HERODUMP = True
 OVERRIDE = True # allows overrides if match in override data
+# TEAMSWAP is run first, before score adjustments
 
 hero_data = {}
 herodump = {}
@@ -542,7 +543,7 @@ def assignteams(sid,mid,heroes,actions):
 			teams = [t for t in teams if len(t)==maxteamsize]
 			teams.append(mergedteam)
 		if len(teams) == 2:
-			applyteamnumbers(heroes,teams)
+			applyteamnumbers(sid,mid,heroes,teams)
 			# for hid,h in heroes.items():
 			# 	print(h.name,h.team)
 			return

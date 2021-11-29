@@ -72,7 +72,7 @@ def main(con):
 		available_data += timing_data
 
 		with st.form('data selection'):
-			show_data = st.multiselect('show columns',available_data,default=default_sel)
+			show_data = st.multiselect('show columns (filters in sidebar)',available_data,default=default_sel)
 			st.form_submit_button('get data')
 
 		# toggles for viewing data by
@@ -160,6 +160,7 @@ def main(con):
 
 				mh_write['otp'] = mh_write['otp'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
 				mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
+				mh_write['on heal%'] = mh_write['on heal%'].map(lambda x: "0"+x if len(x) == 2 else x)
 
 
 				# get data by mean or total
@@ -190,6 +191,7 @@ def main(con):
 				mh_gb.configure_columns(['attacks','heals'],type='customNumericFormat',precision=0)
 				mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
 				mh_gb.configure_columns(['on_target','on_heal'],type='customNumericFormat',precision=0)
+
 				mh_gb.configure_columns(hide_data,hide=True)
 
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)

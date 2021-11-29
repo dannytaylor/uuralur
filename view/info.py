@@ -4,7 +4,6 @@ ss = st.session_state # global shorthand for this file
 config = yaml.safe_load(open('data/config.yaml'))
 
 
-
 def main():
 	st.caption('uuralur the mirror presides over the garden of [pvp] memories')
 	st.subheader('Foreword')
@@ -32,6 +31,11 @@ def main():
 	st.markdown("""
 		[old demoparse report](https://datastudio.google.com/u/1/reporting/dad5a39e-179a-49b4-ad64-a4f8ce89694e/page/hoC2B)  
 		[old demoparse git repo](https://github.com/pvp-bot/demoparse)
+		""")
+	st.write("""
+		Power data has been downloaded from CoD with some adjustments to work for this program. Some timing data may be wrong for weird edge-case powers.
+		URLs generated when selecting matches can be shared to link to specific match.
+		Heroes are mapped to players to the best of my knowledge. If you see a hero attributed to the wrong player I can fix it when I get a chance.
 		""")
 
 	st.subheader('Demo limitations')
