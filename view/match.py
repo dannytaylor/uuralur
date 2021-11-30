@@ -898,11 +898,11 @@ def main(con):
 			
 
 			# format labels with counts
-			at_df['label'] = at_df['label'] + "<br>" + at_df['count'].astype(str)
+			at_df['label'] = at_df['label'] + "<br>" + at_df['count'].astype(int).astype(str)
 			# format center total to OTP or blank
 			if len(hero_sel) == 1:
 				hero = hero_sel[0]
-				at_df.loc[at_df['id'] == 'Total', 'label'] = '<b>' + str(hero_df.loc[hero,'on_target']) + ' (' + hero_df.loc[hero,'otp'] + ')</b>'
+				at_df.loc[at_df['id'] == 'Total', 'label'] = '<b>' + str(int(hero_df.loc[hero,'on_target'])) + ' (' + hero_df.loc[hero,'otp'] + ')</b>'
 			else:
 				at_df.loc[at_df['id'] == 'Total', 'label'] = ''
 
