@@ -10,6 +10,7 @@ import datetime
 
 import view.match as match
 import view.players as players
+import view.upload as upload
 import view.info
 
 import parse
@@ -30,17 +31,21 @@ con = sqlite3.connect('demos.db')
 # cur = con.cursor()
 
 # global vars/config
-# config = yaml.safe_load(open('data/config.yaml'))
+config = yaml.safe_load(open('data/config.yaml'))
 # h2p    = json.loads(open('data/hero2player.json').read())
 
 # setup series/match multiselect dataframes
-if 'series' not in ss:	
+def init_series():
 	ss.series 		= pd.read_sql_query("SELECT * FROM Series", con)
 	ss.series['date'] = pd.to_datetime(ss.series['series_date'])
 	ss.series['date'] = ss.series['date'].dt.date
-if 'match' not in ss:
+def init_matches():
 	ss.matches = pd.read_sql_query("SELECT * FROM Matches", con)
 	ss.matches['sid_mid'] = ss.matches['series_id'] + "_" + ss.matches['match_id'].astype(str)
+if 'series' not in ss:	
+	init_series()
+if 'match' not in ss:
+	init_matches()
 if 'new_mid' not in ss: ss.new_mid = False
 
 class MultiPage:
@@ -102,7 +107,10 @@ class MultiPage:
 		nav_names = self.app_view[app_choice]
 		st_sidebar_title.title(app_choice)
 
-		series_ids = ss.series['series_id'].to_list()
+
+		series_ids = ss.series[~(ss.series['series_id'].str.contains('upload'))]['series_id'].to_list()
+		if query_sid_choice and 'upload' in query_sid_choice and len(ss.series[ss.series['series_id'] == query_sid_choice]) > 0:
+			series_ids.append(query_sid_choice)
 		series_ids.reverse()
 
 
@@ -117,8 +125,11 @@ class MultiPage:
 				elif query_mid_choice in sid_mids:
 					ss[mid_key] = query_mid_choice 
 				else: 
+					params = {'s':[query_sid_choice]}
+					st.experimental_set_query_params(**params)
 					ss[mid_key] = sid_mids[0]
 			else:
+				clear_query()
 				ss[sid_key] = series_ids[0]
 
 			def format_sid_str(sid):
@@ -167,25 +178,8 @@ def view_match(title, info=None):
 def view_records(title, info=None):
 	players.main(con)
 
-# placeholder uploader
 def view_upload(title, info=None):
-	uploaded_file = st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
-	if uploaded_file is not None:
-		f_date = str(datetime.date.today()).replace('-','')[2:]
-		f_sid = f_date + "_upload"
-		f_name = uploaded_file.name
-		bytes_data = uploaded_file.getvalue()
-		f_path = "publicdemos/" + f_sid +"/"
-		if not os.path.exists(f_path):
-			os.makedirs(f_path)
-		if not os.path.isfile(f_path + f_name):
-			f = open(f_path+f_name, "wb")
-			f.write(bytes_data)
-			f.close()
-			print("{} saved".format(uploaded_file))
-			os.system("parse.py -m {} -d publicdemos.db".format(f_path + f_name))
-		else:
-			print('file already written')
+	upload.main()
 
 def view_info(title, info=None):
 	view.info.main()
@@ -195,7 +189,7 @@ def main():
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
 	mp.add_app('records',['summary','stats'], view_records, info='')
 	mp.add_app('info',[], view_info, info='')
-	# mp.add_app('upload',[], view_upload, info='')
+	mp.add_app('upload',[], view_upload, info='')
 	mp.run()
 
 if __name__ == '__main__':

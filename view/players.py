@@ -23,6 +23,7 @@ table_theme = config['table_theme']
 def main(con):
 	sqlq = util.str_sqlq('Heroes')
 	hero_df = pd.read_sql_query(sqlq, con)
+	hero_df = hero_df[~(hero_df['series_id'].str.contains('upload'))]
 
 	hero_df['player']  = hero_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
 	hero_df['sid_mid'] = hero_df['series_id'] + "_" + hero_df['match_id'].astype(str)
@@ -47,7 +48,7 @@ def main(con):
 				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
 				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
 			with st.expander('match filters',expanded=False):
-				dates = ss.series['date'].tolist()
+				dates = ss.series[~(ss.series['series_id'].str.contains('upload'))]['date'].tolist()
 				series_filters = {}
 				series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
 				series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
@@ -68,8 +69,12 @@ def main(con):
 		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
 		target_data = ['otp','on heal%','on_target','on_heal']
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
+		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens']
+		dmg_data    = ['dmg/spike (est)']
 		available_data += target_data
 		available_data += timing_data
+		available_data += count_data
+		available_data += dmg_data
 
 		with st.form('data selection'):
 			show_data = st.multiselect('show columns (filters in sidebar)',available_data,default=default_sel)
@@ -88,9 +93,9 @@ def main(con):
 		# match type filters 
 		if match_type != 'all':
 			if match_type == 'kb':
-				mh_df = mh_df[mh_df['series_id'].str.contains('_kb_')]
+				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')]
 			else:
-				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb_'))]
+				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb'))]
 		if win_filter != 'all':
 			if win_filter == 'win':
 				mh_df = mh_df[mh_df['win'] == 1]
@@ -165,10 +170,13 @@ def main(con):
 
 				# get data by mean or total
 				sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
+				sum_or_avg += count_data
 				if data_aggr == 'average per match':
 					mh_write[sum_or_avg] = mh_df.groupby('player')[sum_or_avg].mean()
 				else:
 					mh_write[sum_or_avg] = mh_df.groupby('player')[sum_or_avg].sum()
+
+				mh_write['dmg/spike (est)'] = 0.8*mh_write['damage_taken']/mh_write['targets']
 				mh_write['damage_taken'] = mh_write['damage_taken'].map(lambda x: millify(x,precision=1))
 				
 				# calc overall stats
@@ -178,19 +186,18 @@ def main(con):
 
 				mh_write = mh_write.fillna('')
 
-				if data_aggr == 'average per match':
-					mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
-					mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
-
 				mh_write = mh_write[['player','#matches']+available_data].sort_values(by='#matches',ascending=False)
 				hide_data = [d for d in available_data if d not in show_data]
 				# mh_write = mh_df[['player','#matches','deaths','targets','surv','dmg','otp','avg t']]
 				mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 				mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
 				mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
-				mh_gb.configure_columns(['attacks','heals'],type='customNumericFormat',precision=0)
+				mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 				mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
-				mh_gb.configure_columns(['on_target','on_heal'],type='customNumericFormat',precision=0)
+				if data_aggr == 'average per match':
+					mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
+				else:
+					mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=0)
 
 				mh_gb.configure_columns(hide_data,hide=True)
 
@@ -200,7 +207,7 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=mh_gb.build(),
 				# update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load=True,
+				# fit_columns_on_grid_load=True,
 				height = 800,
 				theme=table_theme
 			)
@@ -350,7 +357,7 @@ def main(con):
 					gridOptions=matches_gb.build(),
 					update_mode='SELECTION_CHANGED',
 					fit_columns_on_grid_load=True,
-					height = 764,
+					height = 680,
 					theme=table_theme
 				)
 				row = matches_ag['selected_rows']
