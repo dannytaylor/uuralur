@@ -66,7 +66,12 @@ class MultiPage:
 		})
 
 	def sidebar(self):
-		st.sidebar.image('assets/sidebar_header.png')
+		# st.sidebar.image('assets/sidebar_header.png')
+		st.sidebar.markdown("""
+			<a href='/'>
+			<img src='https://raw.githubusercontent.com/dannytaylor/uuralur/bad1599d072cc570ff167e27afb23d960a7fda3f/assets/sidebar_header.png'>
+			</a><p/>
+			""",True)
 		st_sidebar_title = st.sidebar.empty()
 		# st keys
 		sid_key='sid_key'
@@ -191,8 +196,8 @@ def main():
 	mp = MultiPage()
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
 	mp.add_app('records',['summary','stats'], view_records, info='')
-	mp.add_app('info',[], view_info, info='')
 	mp.add_app('upload',[], view_upload, info='')
+	mp.add_app('info',[], view_info, info='')
 	mp.run()
 
 if __name__ == '__main__':
