@@ -104,7 +104,7 @@ def init_css(width):
 	st.markdown(f"""
 	<style>
 		.reportview-container .main .block-container{{
-			min-width: """+str(width-240)+"""px;
+			min-width: """+str(width)+"""px;
 			max-width: """+str(width)+"""px;
 			padding: 2rem 1rem 1rem;
 		}}

@@ -549,10 +549,10 @@ def main(con):
 		hero_df['dmg_spike'] = h_dmg_spike
 		hero_df['dmg_death'] = h_dmg_death
 		hero_df['dmg_surv'] = h_dmg_surv
-		hero_df['dmg_per_surv'] = dmgpersurv
-		hero_df['dmg_per_death'] = dmgperdeath
+		hero_df['dmg/surv'] = dmgpersurv
+		hero_df['dmg/death'] = dmgperdeath
 		hero_df['dmg_surv'] = h_dmg_surv
-		hero_df['dmg_nonspike'] = hero_df['damage_taken'] - hero_df['dmg_spike']
+		hero_df['nonspike_dmg'] = hero_df['damage_taken'] - hero_df['dmg_spike']
 		hero_df['heals_taken'] = h_heals
 
 
@@ -584,12 +584,12 @@ def main(con):
 		hp_df = pd.read_sql_query(sqlq, con)
 
 		hero_df['dmg'] = hero_df['damage_taken']/1000
-		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike']/1000
+		hero_df['nonspike_dmg'] = hero_df['nonspike_dmg']/1000
 		hero_df['dmg'] = hero_df['dmg'].map("{:0.1f}K".format)
-		hero_df['dmg_nonspike'] = hero_df['dmg_nonspike'].map("{:0.1f}K".format)
-		hero_df['dmg_per_surv'] = hero_df['dmg_per_surv'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
-		hero_df['dmg_per_death'] = hero_df['dmg_per_death'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
-		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','dmg_nonspike','dmg_per_surv','dmg_per_death','heals_taken','avg phase','avg jaunt']].copy()
+		hero_df['nonspike_dmg'] = hero_df['nonspike_dmg'].map("{:0.1f}K".format)
+		hero_df['dmg/surv'] = hero_df['dmg/surv'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
+		hero_df['dmg/death'] = hero_df['dmg/death'].map("{:0.0f}".format).map(lambda x: '' if x == '0' else x)
+		hero_write = hero_df[['team','hero','deaths','targets','surv','dmg','nonspike_dmg','dmg/surv','dmg/death','heals_taken','avg phase','avg jaunt']].copy()
 		# hero_write = hero_write.fillna('')
 		# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 		hero_write['avg jaunt'] = hero_write['avg jaunt'].fillna('')
@@ -600,7 +600,7 @@ def main(con):
 		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
-		def_gb.configure_columns(['dmg_per_surv','dmg_per_death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
+		def_gb.configure_columns(['dmg_per_surv','dmg/death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns('team',hide=True)
 		def_gb.configure_columns('hero',width=96)
 		def_gb.configure_columns('hero',cellStyle=render.team_color)
@@ -670,8 +670,9 @@ def main(con):
 					name=h,
 					text='death',
 					mode='markers',
-					marker_color='white',
-					marker=dict(size=8,line=dict(width=4,color='SlateBlue')),
+					marker_symbol = 'x',
+					marker_color='crimson',
+					marker=dict(size=16,line=dict(width=0,color='crimson')),
 				),row=1, col=1)
 
 				# greens by player
@@ -1443,8 +1444,12 @@ def main(con):
 		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
 		target_data = ['otp','on heal%','on_target','on_heal']
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
+		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens']
+		dmg_data    = ['dmg/spike (est)']
 		available_data += target_data
 		available_data += timing_data
+		available_data += count_data
+		available_data += dmg_data
 		show_data = st.multiselect('data columns (settings in sidebar)',available_data,default=default_sel)
 
 		# get hero data for all matches
@@ -1517,12 +1522,16 @@ def main(con):
 		mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
 
 
+
 		# get data by mean or total
 		sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
+		sum_or_avg += count_data
 		if data_aggr == 'average per match':
 			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].mean()
 		else:
 			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].sum()
+
+		mh_write['dmg/spike (est)'] = 0.8*mh_write['damage_taken']/mh_write['targets']
 		mh_write['damage_taken'] = mh_write['damage_taken'].map(lambda x: x/1000).map("{:0.1f}K".format)
 		
 		# calc overall stats
@@ -1542,9 +1551,9 @@ def main(con):
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
 		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
-		mh_gb.configure_columns(['attacks','heals'],type='customNumericFormat',precision=0)
+		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
-		mh_gb.configure_columns(['on_target','on_heal'],type='customNumericFormat',precision=0)
+		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(hide_data,hide=True)
 
 
@@ -1555,7 +1564,7 @@ def main(con):
 			gridOptions=mh_gb.build(),
 			# update_mode='SELECTION_CHANGED',
 			fit_columns_on_grid_load=True,
-			height = 800,
+			height = 680,
 			theme=table_theme
 		)
 
