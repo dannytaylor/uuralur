@@ -1452,10 +1452,8 @@ def main(con):
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
 		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens']
 		dmg_data    = ['dmg/spike (est)']
-		available_data += target_data
-		available_data += timing_data
-		available_data += count_data
-		available_data += dmg_data
+		record_data = ['win','loss','tie']
+		available_data += target_data + timing_data + count_data + dmg_data + record_data
 		show_data = st.multiselect('data columns (settings in sidebar)',available_data,default=default_sel)
 
 		# get hero data for all matches
@@ -1531,7 +1529,7 @@ def main(con):
 
 		# get data by mean or total
 		sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
-		sum_or_avg += count_data
+		sum_or_avg += count_data + record_data
 		if data_aggr == 'average per match':
 			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].mean()
 		else:
@@ -1547,9 +1545,9 @@ def main(con):
 
 		mh_write = mh_write.fillna('')
 
-		if data_aggr == 'average per match':
-			mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
-			mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
+		# if data_aggr == 'average per match':
+		# 	mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
+		# 	mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
 
 		mh_write = mh_write[['player','#matches']+available_data]
 		hide_data = [d for d in available_data if d not in show_data]
@@ -1561,7 +1559,9 @@ def main(con):
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
 		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(hide_data,hide=True)
-
+		if data_aggr == 'average per match':
+			mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
+			mh_gb.configure_columns(record_data,type='customNumericFormat',precision=2)
 
 		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 		mh_ag = AgGrid(

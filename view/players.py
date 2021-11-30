@@ -52,7 +52,6 @@ def main(con):
 				series_filters = {}
 				series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
 				series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
-				min_matches = st.number_input('minimum # matches',min_value=1,value=1)
 				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
 			
 				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/community series is kb, any non-kb is a 'scrim'")
@@ -72,10 +71,8 @@ def main(con):
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
 		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens']
 		dmg_data    = ['dmg/spike (est)']
-		available_data += target_data
-		available_data += timing_data
-		available_data += count_data
-		available_data += dmg_data
+		record_data = ['win','loss','tie']
+		available_data += target_data + timing_data + count_data + dmg_data + record_data
 
 		with st.form('data selection'):
 			show_data = st.multiselect('show columns (filters in sidebar)',available_data,default=default_sel)
@@ -119,7 +116,6 @@ def main(con):
 				mh_write = mh_df.groupby('player')[['match_id']].count().copy()
 				mh_write['player'] = mh_write.index
 				mh_write['#matches'] = mh_df.groupby('player')[['match_id']].count()
-				mh_write = mh_write[(mh_write['#matches'] > min_matches)]
 				if len(mh_write) == 0:
 					pass
 				else:
@@ -178,7 +174,7 @@ def main(con):
 
 					# get data by mean or total
 					sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
-					sum_or_avg += count_data
+					sum_or_avg += count_data + record_data
 					if data_aggr == 'average per match':
 						mh_write[sum_or_avg] = mh_df.groupby('player')[sum_or_avg].mean()
 					else:
@@ -198,14 +194,15 @@ def main(con):
 					hide_data = [d for d in available_data if d not in show_data]
 					# mh_write = mh_df[['player','#matches','deaths','targets','surv','dmg','otp','avg t']]
 					mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
-					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
+					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'})
 					mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 					mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 					mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
 					if data_aggr == 'average per match':
 						mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
+						mh_gb.configure_columns(record_data,type='customNumericFormat',precision=3)
 					else:
-						mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=0)
+						mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data+record_data,type='customNumericFormat',precision=0)
 
 					mh_gb.configure_columns(hide_data,hide=True)
 

@@ -106,7 +106,7 @@ def init_css(width):
 		.reportview-container .main .block-container{{
 			min-width: """+str(width)+"""px;
 			max-width: """+str(width)+"""px;
-			padding: 2rem 1rem 1rem;
+			padding: 3rem 1rem 1rem;
 		}}
 		# {{
 		# }}
