@@ -1,4 +1,4 @@
-import os,datetime,yaml,hashlib,fnmatch
+import os,datetime,yaml,hashlib
 import streamlit as st
 ss = st.session_state # global shorthand for this file
 import parse
@@ -59,7 +59,6 @@ def main():
 			parseflag = 'm' # parse as match if series exists in db
 			if not os.path.exists(f_path): # if new folder/series
 				os.makedirs(f_path)
-				parseflag = 's'
 			folder_size = len(os.listdir(f_path))# number of files in folder
 			if folder_size < config['daily_upload_limit']: # so storage can't get overrun
 				
@@ -102,7 +101,9 @@ def main():
 					print("{} saved".format(uploaded_file))
 					# os.system("parse.py -m {} -d publicdemos.db".format(f_path + f_name))
 					with st.spinner('attemping to read demo...'):
-						# try:
+						try:
+							if len(os.listdir(f_path)) == 0:
+								parseflag = 's' # parse for series entry if no uploads exist
 							if parseflag == 'm':
 								parsepath += f_name
 							parse.main(['-'+parseflag,parsepath])
@@ -110,11 +111,9 @@ def main():
 							st.success('Demo parsed successfully')
 							st.button('click here to view',on_click=go_to_match)
 							st.caption('(remember the link to access)')
-						# init_series()
-						# init_matches()
-						# except:
-							# st.error('Problem reading demo file.')
-							# os.remove(f_path+f_name)
+						except:
+							st.error('Problem reading demo file.')
+							os.remove(f_path+f_name) # delete the demo if it couldn't be read
 
 			else:
 				st.error('Uploads over limit for the day. Try again later.')
