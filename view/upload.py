@@ -1,4 +1,4 @@
-import os,datetime,yaml,hashlib
+import os,datetime,yaml,hashlib,time
 import streamlit as st
 ss = st.session_state # global shorthand for this file
 import parse
@@ -100,17 +100,17 @@ def main():
 					f.close()
 					print("{} saved".format(uploaded_file))
 					with st.spinner('attemping to read demo...'):
-						try:
+						# try:
 							parsepath += f_name
 							print(sid,parsepath)
-							os.system("parse.py -m {} -i {}".format(parsepath,sid))
+							os.system("python parse.py -m {} -i {}".format(parsepath,sid))
 							time.sleep(1) 
 							# parse.main(['-m',parsepath,'-i',sid])
 
 							st.success('Demo parsed successfully')
 							st.button('click here to view',on_click=go_to_match)
 							st.caption('(remember the link to access)')
-						except:
+						# except:
 							st.error('Problem reading demo file.')
 							os.remove(f_path+f_name) # delete the demo if it couldn't be read
 
