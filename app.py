@@ -66,7 +66,7 @@ class MultiPage:
 		})
 
 	def sidebar(self):
-
+		st.sidebar.image('assets/sidebar_header.png')
 		st_sidebar_title = st.sidebar.empty()
 		# st keys
 		sid_key='sid_key'

@@ -5,6 +5,7 @@ config = yaml.safe_load(open('data/config.yaml'))
 
 
 def main():
+	st.image('assets/info_header.png')
 	st.caption('uuralur the mirror presides over the garden of [pvp] memories')
 	st.subheader('Foreword')
 	st.write("""
