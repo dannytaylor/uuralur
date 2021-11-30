@@ -978,6 +978,7 @@ def cmdlineparse(args):
 	argp.add_argument('-s','--series',	action="store",	dest = 'seriespath',help='parse all matches in series folder')
 	argp.add_argument('-m','--match',	action="store",	dest = 'matchpath', help='parse a single match')
 	argp.add_argument('-d','--database',action="store",	dest = 'dbfile',    help='specify the database file to write to')
+	argp.add_argument('-i','--initseries',action="store", dest = 'initseries',    help='creates a blank Series table entry for db uploads')
 	args = argp.parse_args(args)
 
 	return args,argp
@@ -985,12 +986,13 @@ def cmdlineparse(args):
 def main(args=None):
 	# parse command line arguments
 	args,argp = cmdlineparse(args)
-	
+
 	# write to an alternative .db file if specified
 	if args.dbfile:
 		db.con.close()
 		db.con = sqldb.connect(args.dbfile)
 		db.cur = db.con.cursor()
+
 
 	# parse by command arg type, assumes correct user path inputs
 	if args.path:
@@ -1002,6 +1004,11 @@ def main(args=None):
 	else: # no input or wrong args
 		argp.print_help()
 		return
+
+	# init empty series entry for when only parsing a match
+	if args.initseries:
+		db.initseries(args.initseries)
+		
 
 	if HERODUMP:
 		herodump_undefined = {}

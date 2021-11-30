@@ -132,6 +132,7 @@ dmypy.json
 demos.db
 *.db
 *.db-journal
+*.bak
 demos/
 testdemos/
 streamlit/assets/

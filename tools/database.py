@@ -140,6 +140,12 @@ def demo2db(mid,sid,hp,actions,spikes,heroes):
 		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.healtiming),str(h.phasetiming),str(h.jaunttiming),h.firstattacks,h.alphaheals,h.win,h.loss,h.tie,h.attacks,h.heals,h.greens,h.phases,h.jaunts])
 	# con.commit()
 
+def initseries(sid):
+	deletesql("Series",sid) # delete db data if already existing prior to rewriting
+	con.commit()
+	seriesdate = "20" + "-".join([sid[0:2],sid[2:4],sid[4:6]])
+	insertsql("Series",[sid,seriesdate,0,None,None,0,0,0])
+
 # if reparsing an existing db entry, delete and redo
 def cleardemoentries(mid,sid):
 	deletesql("Matches",sid,mid)

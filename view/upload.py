@@ -99,14 +99,13 @@ def main():
 					f.write(bytes_data)
 					f.close()
 					print("{} saved".format(uploaded_file))
-					# os.system("parse.py -m {} -d publicdemos.db".format(f_path + f_name))
 					with st.spinner('attemping to read demo...'):
 						try:
-							if len(os.listdir(f_path)) == 0:
-								parseflag = 's' # parse for series entry if no uploads exist
-							if parseflag == 'm':
-								parsepath += f_name
-							parse.main(['-'+parseflag,parsepath])
+							parsepath += f_name
+							print(sid,parsepath)
+							os.system("parse.py -m {} -i {}".format(parsepath,sid))
+							time.sleep(1) 
+							# parse.main(['-m',parsepath,'-i',sid])
 
 							st.success('Demo parsed successfully')
 							st.button('click here to view',on_click=go_to_match)
