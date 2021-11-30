@@ -1,6 +1,6 @@
 import sqlite3 as sqldb
 
-con = sqldb.connect('demos.db')
+con = sqldb.connect('demos.db', check_same_thread=False)
 cur = con.cursor()
 
 # functions to write to db

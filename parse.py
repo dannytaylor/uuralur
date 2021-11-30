@@ -972,14 +972,19 @@ def parseall(path): # parse collection (i.e. folder full of series)
 		parseseries(os.path.join(path, s))
 	return
 		
-def main():
-	# parse command line arguments
+def cmdlineparse(args):
 	argp = argparse.ArgumentParser(description='Parse .cohdemos to a database file.')
 	argp.add_argument('-a','--all',		action="store",	dest = 'path', 		help='parse all series in path')
 	argp.add_argument('-s','--series',	action="store",	dest = 'seriespath',help='parse all matches in series folder')
 	argp.add_argument('-m','--match',	action="store",	dest = 'matchpath', help='parse a single match')
-	argp.add_argument('-d','--database',action="store",	dest = 'dbfile', help='specify the database file to write to')
-	args = argp.parse_args()
+	argp.add_argument('-d','--database',action="store",	dest = 'dbfile',    help='specify the database file to write to')
+	args = argp.parse_args(args)
+
+	return args,argp
+
+def main(args=None):
+	# parse command line arguments
+	args,argp = cmdlineparse(args)
 	
 	# write to an alternative .db file if specified
 	if args.dbfile:
@@ -1012,7 +1017,7 @@ def main():
 			json.dump(herodump_undefined,f,indent=4,sort_keys=True)
 	
 	db.con.commit()
-	db.con.close()
+	return
 
 
 if __name__ == '__main__':
