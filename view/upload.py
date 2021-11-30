@@ -24,7 +24,7 @@ def main():
 
 		Uploads are not visible from the sidebar navigator and are only accessible from the link generated from parsing here (so remember the link).
 		Uploaded matches are not included in *records* stats.
-		Uploaded matches and their links may be deleted at some point. 
+		Uploaded matches and their links may be deleted or overwritten at some point. 
 		Matches uploaded may be added to the main database at a later date.
 
 		All uploads from the same date are shared within the same series.
@@ -102,7 +102,7 @@ def main():
 					print("{} saved".format(uploaded_file))
 					# os.system("parse.py -m {} -d publicdemos.db".format(f_path + f_name))
 					with st.spinner('attemping to read demo...'):
-						try:
+						# try:
 							if parseflag == 'm':
 								parsepath += f_name
 							parse.main(['-'+parseflag,parsepath])
@@ -112,9 +112,9 @@ def main():
 							st.caption('(remember the link to access)')
 						# init_series()
 						# init_matches()
-						except:
-							st.error('Problem reading demo file.')
-							os.remove(f_path+f_name)
+						# except:
+							# st.error('Problem reading demo file.')
+							# os.remove(f_path+f_name)
 
 			else:
 				st.error('Uploads over limit for the day. Try again later.')
