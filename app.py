@@ -109,8 +109,11 @@ class MultiPage:
 
 
 		series_ids = ss.series[~(ss.series['series_id'].str.contains('upload'))]['series_id'].to_list()
-		if query_sid_choice and 'upload' in query_sid_choice and len(ss.series[ss.series['series_id'] == query_sid_choice]) > 0:
-			series_ids.append(query_sid_choice)
+		if query_sid_choice and 'upload' in query_sid_choice:
+			init_series()
+			init_matches()
+			if len(ss.series[ss.series['series_id'] == query_sid_choice]) > 0:
+				series_ids.append(query_sid_choice)
 		series_ids.reverse()
 
 
