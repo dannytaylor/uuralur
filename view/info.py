@@ -61,10 +61,9 @@ def main():
 		""")
 	# st.subheader('On target')
 	st.write("""
-		Only half *on target* credit is given based on late timing of the first attack or heal ({} and {} respectively) on a target. 
-		The previous version used some additional parameters to timing, but these thresholds provide a similar results and allow for standardizing metrics across multiple datasets and aligning with the old *demoparse*.
-		These values result in very close matches to the overall stats from the old parser across all matches.
-		""".format(str(config['otp_threshold']),str(config['ohp_threshold'])))
+		Only half *on target* credit is given based on late timing of the first attack or heal on a target (relative to the spike start). 
+		Calculations were adjusted to align with results from the old demoparse OTP calculations.
+		""")
 
 	# st.subheader('Definitions')
 	# st.write("*Phase hit* - when a heal/attack is **cast** shortly after a phase power **finishes** activating.")
