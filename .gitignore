@@ -135,11 +135,11 @@ demos.db
 *.bak
 demos/
 testdemos/
-streamlit/assets/
 tools/data/fx/
 tools/data/cod_json/
 tools/test.py
 data/overridesdump.json
 data/herodump*
-assets/
+assets/icons
+assets/players
 publicdemos/
