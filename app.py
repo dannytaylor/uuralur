@@ -105,7 +105,7 @@ class MultiPage:
 		else: # for empty nav_lists
 			app_choice = app_exp.radio("page", self.app_names,on_change=clear_query,key='app_choice')
 		nav_names = self.app_view[app_choice]
-		st_sidebar_title.title(app_choice)
+		# st_sidebar_title.title(app_choice)
 
 
 		series_ids = ss.series[~(ss.series['series_id'].str.contains('upload'))]['series_id'].to_list()
