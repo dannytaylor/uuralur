@@ -70,11 +70,17 @@ def init_match_data(sid,mid):
 	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x) 
 
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
+	hero_df['n_phases']     = hero_df['phase_timing'].map(lambda x: len(x))
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: [a/1000 for a in x]) 
 	hero_df['avg phase']    = hero_df['phase_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
+	hero_df['avg phase']    = hero_df['avg phase'].map("{:0.2f}".format).astype(str) + " (" + hero_df['n_phases'].astype(str) + ")"
+	hero_df['avg phase']    = hero_df['avg phase'].map(lambda x: '' if 'nan' in x else x)
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
+	hero_df['n_jaunts']     = hero_df['jaunt_timing'].map(lambda x: len(x))
 	hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg jaunt']    = hero_df['jaunt_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
+	hero_df['avg jaunt']    = hero_df['avg jaunt'].map("{:0.2f}".format).astype(str) + " (" + hero_df['n_jaunts'].astype(str) + ")"
+	hero_df['avg jaunt']    = hero_df['avg jaunt'].map(lambda x: '' if 'nan' in x else x)
 
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: ast.literal_eval(x))
 	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x)  - sum(config['ohp_penalty'] for t in x if t > config['ohp_threshold']))
@@ -599,7 +605,7 @@ def main(con):
 		# type=["numericColumn","numberColumnFilter"], )
 		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
-		def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
+		# def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
 		def_gb.configure_columns(['dmg_per_surv','dmg/death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns('team',hide=True)
 		def_gb.configure_columns('hero',width=96)
