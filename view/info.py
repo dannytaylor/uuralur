@@ -28,7 +28,7 @@ def main():
 	st.write("""
 		The intent with a new system was to make the data output from the demos more managable to use on a larger scale and in aggregate such as in this program. 
 		The match viewer here is targeting parity with the old report system, plus some benefits from having more flexibility with the data and being able to have all matches in one place.
-		This site is a testing project with pieces put together as I learn about them, so it's not the most optimized or well written, but also it's probably not getting changed much.
+		This site is a testing project with pieces put together as I learn about them generally without revisiting other pieces, so it's not the most optimized or clearly written, but also it's probably not getting changed much.
 		""")
 	st.markdown("""
 		[old demoparse report](https://datastudio.google.com/u/1/reporting/dad5a39e-179a-49b4-ad64-a4f8ce89694e/page/hoC2B)  
@@ -58,6 +58,7 @@ def main():
 		If a debuff is the first attack on a spike (EF, envenom), then it is the midpoint of the first 4 attacks within 2 seconds.
 		Average (mean) attack timing is measured by absolute value (so a < 0 timing attack will not necessarily bring the average down).
 		All other mean calculations (heal, phase, jaunt) do not use an absolute value calculation.
+		Note that this means these timings will appear slightly better than the old system in most situations.
 		Median is probabably a better metric for general viewing in most cases.
 		""")
 	# st.subheader('On target')
