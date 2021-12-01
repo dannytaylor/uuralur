@@ -796,6 +796,7 @@ def main(con):
 				margin = dict(t=24, l=0, r=32, b=0),
 				showlegend=False,
 				yaxis_title='first atk timing (s)',
+				xaxis={'fixedrange':True},
 				yaxis={'range': [-2 ,5]},
 				)
 			st.plotly_chart(at_fig,use_container_width=True, config={'displayModeBar': False})
