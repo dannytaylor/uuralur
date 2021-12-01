@@ -101,15 +101,17 @@ heal_colours = {
 }
 
 def init_css(width):
-	st.markdown(f"""
-	<style>
-		.reportview-container .main .block-container{{
-			min-width: """+str(width)+"""px;
-			max-width: """+str(width)+"""px;
-			padding: 3rem 1rem 1rem;
-		}}
-		# {{
-		# }}
+	css_str = f"""
+		<style>
+			.reportview-container .main .block-container{{
+				padding: 3rem 1rem 1rem;
+		"""
+	if not st.session_state.mobile:
+		css_str += f"""
+				min-width: """+str(width-200)+"""px;
+				max-width: """+str(width)+"""px;
+			"""
+	css_str += """}}{{}}
 		.font40 {
 		    font-size:40px !important;
 		    font-weight: bold;
@@ -124,9 +126,9 @@ def init_css(width):
 		    margin-top: 6px;
 		    margin-bottom: 6px;
 		}
-	</style>
-	""", unsafe_allow_html=True,
-)
+		</style>
+		"""
+	st.markdown(css_str,unsafe_allow_html=True)
 
 team_name_map = {
 	"kb":"kickball",

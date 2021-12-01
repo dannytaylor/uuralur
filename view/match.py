@@ -291,9 +291,8 @@ def main(con):
 
 		hdf = hdf.rename(columns={'on heal%':'onheal'})
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
-		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
+		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
-
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
@@ -305,7 +304,7 @@ def main(con):
 			hdf,
 			allow_unsafe_jscode=True,
 			gridOptions=sum_gb.build(),
-			fit_columns_on_grid_load=True,
+			fit_columns_on_grid_load= not ss.mobile,
 			height = 16*48+64,
 			theme = table_theme,
 		)
@@ -453,6 +452,8 @@ def main(con):
 
 		c1,c2,c3,c4 = st.columns(4)
 		row_height = 440
+		if ss.mobile: 
+			row_height = 240
 		h_margins = dict(t=32, l=16, r=16, b=0)
 		with c1:
 			sup_timing_fig.update_layout(
@@ -505,7 +506,7 @@ def main(con):
 		sup_write = sup_write.rename(columns={"avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
 
 		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
-		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'})
+		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		# sup_gb.configure_columns('hero',width=96)
 		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=52)
 		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
@@ -518,7 +519,7 @@ def main(con):
 			sup_write,
 			allow_unsafe_jscode=True,
 			gridOptions=sup_gb.build(),
-			fit_columns_on_grid_load=True,
+			fit_columns_on_grid_load= not ss.mobile,
 			# height = 640,
 			theme=table_theme
 		)
@@ -606,7 +607,7 @@ def main(con):
 		
 		def_gb = GridOptionsBuilder.from_dataframe(hero_write)
 		# type=["numericColumn","numberColumnFilter"], )
-		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'})
+		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'},suppressMovable=True)
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		# def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
 		def_gb.configure_columns(['dmg_per_surv','dmg/death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
@@ -619,7 +620,7 @@ def main(con):
 			hero_write,
 			allow_unsafe_jscode=True,
 			gridOptions=def_gb.build(),
-			fit_columns_on_grid_load=True,
+			fit_columns_on_grid_load= not ss.mobile,
 			update_mode='SELECTION_CHANGED',
 			height = 840,
 			theme=table_theme
@@ -790,7 +791,7 @@ def main(con):
 				)
 
 			at_fig.update_layout(
-				height=360,
+				height=360 if not ss.mobile else 280,
 				width=400,
 				margin = dict(t=24, l=0, r=32, b=0),
 				showlegend=False,
@@ -808,7 +809,8 @@ def main(con):
 
 			# aggrid options for offence table
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
-			of_gb.configure_default_column(filterable=False,width=32)
+			of_gb.configure_default_column(filterable=False,width=32,suppressMovable=True)
+			of_gb.configure_grid_options(autoHeight=True)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
 			of_gb.configure_columns(['ontgt','atks','offtgt','first'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60)
@@ -821,9 +823,9 @@ def main(con):
 				hero_write,
 				allow_unsafe_jscode=True,
 				gridOptions=of_gb.build(),
-				fit_columns_on_grid_load=True,
+				fit_columns_on_grid_load= not ss.mobile,
 				update_mode='SELECTION_CHANGED',
-				height = 800,
+				height = 636 if not ss.mobile else 320,
 				theme = table_theme,
 			)
 
@@ -921,7 +923,7 @@ def main(con):
 
 			ac_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=360)
+				height=360 if not ss.mobile else 280)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
 
 			## debugging table
@@ -937,6 +939,7 @@ def main(con):
 			at_write = at_write[['icons','chain','count']]
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
+			at_gb.configure_default_column(suppressMovable=True)
 			at_gb.configure_columns('icons',cellRenderer=render.icon,width=36)
 			at_gb.configure_columns('count',width=16)
 			at_gb.configure_columns('chain',width=48)
@@ -945,8 +948,8 @@ def main(con):
 				at_write,
 				allow_unsafe_jscode=True,
 				gridOptions=at_gb.build(),
-				fit_columns_on_grid_load=True,
-				height = 636,
+				fit_columns_on_grid_load= not ss.mobile,
+				height = 636 if not ss.mobile else 320,
 				theme=table_theme
 			)
 
@@ -1033,7 +1036,7 @@ def main(con):
 				margin={'t': 0,'b':0,'l':52,'r':0},
 				plot_bgcolor='rgba(0,0,0,0)',
 			)
-			st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
+			if not ss.mobile: st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
 
 		c1,c2 = st.columns(2)
@@ -1110,7 +1113,7 @@ def main(con):
 			sf_write = sf[['#','time','team','kill','target','dur','attacks','attackers','dmg']]
 			sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
 			sf_gb = GridOptionsBuilder.from_dataframe(sf_write)
-			sf_gb.configure_default_column(filterable=False)
+			sf_gb.configure_default_column(filterable=False,suppressMovable=True)
 			sf_gb.configure_columns(['#','team','kill'],width=18)
 			sf_gb.configure_columns(['atks','atkr'],width=60)
 			sf_gb.configure_columns(['time','dur','dmg'],width=54)
@@ -1127,8 +1130,8 @@ def main(con):
 				gridOptions=sf_gb.build(),
 				# data_return_mode="filtered_and_sorted",
 				update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load=True,
-				height = 560,
+				fit_columns_on_grid_load= not ss.mobile,
+				height = 560 if not ss.mobile else 280,
 				theme=table_theme
 			)
 
@@ -1288,7 +1291,7 @@ def main(con):
 			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
-			sl_gb.configure_default_column(filterable=False)
+			sl_gb.configure_default_column(filterable=False,suppressMovable=True)
 			sl_gb.configure_columns(['actor','action'],width=84)
 			sl_gb.configure_columns(['cast','hit','dist'],width=40)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
@@ -1302,7 +1305,7 @@ def main(con):
 				sl_write,
 				allow_unsafe_jscode=True,
 				gridOptions=sl_gb.build(),
-				fit_columns_on_grid_load=True,
+				fit_columns_on_grid_load= not ss.mobile,
 				height = 560,
 				theme=table_theme
 			)
@@ -1311,7 +1314,7 @@ def main(con):
 
 
 
-	# START LOGs
+	# START LOGS
 	elif ss.view['match'] == 'logs':
 		
 		c1,c2,c3 = st.columns([2,1,7])
@@ -1369,6 +1372,7 @@ def main(con):
 			actions_write['target'] = actions_write['target'].fillna('')
 
 			al_gb = GridOptionsBuilder.from_dataframe(actions_write)
+			al_gb.configure_default_column(width=84,suppressMovable=True)
 			al_gb.configure_columns(['actor','target','action'],width=84)
 			al_gb.configure_columns(['cast','image'],width=48)
 			al_gb.configure_columns(['team','target_team'],hide=True)
@@ -1381,7 +1385,7 @@ def main(con):
 				actions_write,
 				allow_unsafe_jscode=True,
 				gridOptions=al_gb.build(),
-				fit_columns_on_grid_load=True,
+				fit_columns_on_grid_load= not ss.mobile,
 				height = 1024,
 				theme=table_theme
 			)
@@ -1422,7 +1426,7 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=m_gb.build(),
 				# update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load=True,
+				fit_columns_on_grid_load= not ss.mobile,
 				height = 240,
 				theme=table_theme
 			)
@@ -1440,7 +1444,7 @@ def main(con):
 
 			series_fig.update_layout(
 				showlegend=False,
-				height=280,
+				height=240 if not ss.mobile else 120,
 				margin={'t': 0,'b':0,'l':64,'r':0},
 				yaxis_title='score',
 				bargap=0.50,
@@ -1555,7 +1559,7 @@ def main(con):
 		hide_data = [d for d in available_data if d not in show_data]
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
-		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False)
+		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
 		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
@@ -1571,8 +1575,8 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=mh_gb.build(),
 			# update_mode='SELECTION_CHANGED',
-			fit_columns_on_grid_load=True,
-			height = 680,
+			fit_columns_on_grid_load= not ss.mobile,
+			height = 680 if not ss.mobile else 320,
 			theme=table_theme
 		)
 

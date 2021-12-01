@@ -47,6 +47,8 @@ if 'series' not in ss:
 if 'match' not in ss:
 	init_matches()
 if 'new_mid' not in ss: ss.new_mid = False
+if 'mobile'  not in ss: 
+	ss['mobile']  = False
 
 class MultiPage:
 	def __init__(self):
@@ -181,6 +183,11 @@ class MultiPage:
 		# run the selected app
 		app = self.apps[self.app_names.index(viewer)]
 		app['function'](app['title'], *app['args'], **app['kwargs'])
+
+		with st.sidebar.expander('settings',expanded=False):
+			def toggle_mobile():
+				ss.mobile = not ss.mobile
+			st.checkbox('mobile view',key='mobile',help='this site is not designed with mobile in mind, but this toggle will make it viewable at least')
 
 def view_match(title, info=None):
 	match.main(con)

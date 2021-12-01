@@ -54,9 +54,11 @@ def main(con):
 
 	hero_df = get_hero_df()
 
+	table_height = 680 if not ss.mobile else 320
+
 	if ss.view['records'] == 'stats':
 
-		c1,c2 = st.empty(),st.empty() # clear graphs when switching views
+		c1,c2 = st.empty(),st.empty() # clear graphs rendering when switching views
 
 		# get hero data for all matches
 		mh_df = hero_df.copy()
@@ -228,7 +230,7 @@ def main(con):
 					# mh_write = mh_df[['player','#matches','deaths','targets','surv','dmg','otp','avg t']]
 				
 					mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
-					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'})
+					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 					mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 					mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 					mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
@@ -246,8 +248,8 @@ def main(con):
 						allow_unsafe_jscode=True,
 						gridOptions=mh_gb.build(),
 						# update_mode='SELECTION_CHANGED',
-						# fit_columns_on_grid_load=True,
-						height = 800,
+						# fit_columns_on_grid_load= not ss.mobile,
+						height = 800 if not ss.mobile else 320,
 						theme=table_theme
 					)
 		except:
@@ -273,7 +275,7 @@ def main(con):
 		hero_write = hero_write[['player','#matches','win','loss','tie']]
 
 		hero_gb = GridOptionsBuilder.from_dataframe(hero_write)
-		hero_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'})
+		hero_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		hero_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 		hero_gb.configure_columns(['win','loss','tie'],hide=True)
 		hero_gb.configure_selection('single', pre_selected_rows=None)
@@ -319,8 +321,8 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=hero_gb.build(),
 				update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load=True,
-				height = 680,
+				fit_columns_on_grid_load= not ss.mobile,
+				height = table_height,
 				theme=table_theme
 			)
 
@@ -346,7 +348,7 @@ def main(con):
 
 				p_heroes_gb = GridOptionsBuilder.from_dataframe(p_heroes)
 				p_heroes_gb.configure_selection('single', pre_selected_rows=None)
-				p_heroes_gb.configure_default_column(filterable=False,width=64)
+				p_heroes_gb.configure_default_column(filterable=False,width=64,suppressMovable=True)
 
 				p_heroes_gb.configure_columns('archetype',cellRenderer=render.icon,width=32)
 				p_heroes_gb.configure_columns('#',width=32)
@@ -355,9 +357,9 @@ def main(con):
 					p_heroes,
 					allow_unsafe_jscode=True,
 					gridOptions=p_heroes_gb.build(),
-					fit_columns_on_grid_load=True,
+					fit_columns_on_grid_load= not ss.mobile,
 					update_mode='SELECTION_CHANGED',
-					height = 680,
+					height = table_height,
 					theme=table_theme
 				)
 
@@ -386,7 +388,7 @@ def main(con):
 
 			matches_gb = GridOptionsBuilder.from_dataframe(matches)
 			matches_gb.configure_selection('single', pre_selected_rows=None)
-			matches_gb.configure_default_column(width=12)
+			matches_gb.configure_default_column(width=12,suppressMovable=True)
 			matches_gb.configure_columns(['map'],width=24)
 			matches_gb.configure_columns(['series_id'],width=36)
 			if player_sel:
@@ -395,8 +397,8 @@ def main(con):
 					allow_unsafe_jscode=True,
 					gridOptions=matches_gb.build(),
 					update_mode='SELECTION_CHANGED',
-					fit_columns_on_grid_load=True,
-					height = 680,
+					fit_columns_on_grid_load= not ss.mobile,
+					height = table_height,
 					theme=table_theme
 				)
 				row = matches_ag['selected_rows']
@@ -520,7 +522,8 @@ def main(con):
 		c43.metric('# jaunts',metrics[43])
 
 		pset_fig_empty.plotly_chart(pset_fig,use_container_width=True,config={'displayModeBar': False})
-		map_fig_empty.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
+		if not ss.mobile:
+			map_fig_empty.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
 
 
 
