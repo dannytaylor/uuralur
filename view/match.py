@@ -1,4 +1,4 @@
-import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, sqlite3
+import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, sqlite3, random
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -26,7 +26,7 @@ table_theme = config['table_theme']
 
 
 @st.cache
-def init_match_data(sid,mid):
+def init_match_data(sid,mid,upload):
 
 	match_row = ss.matches[(ss.matches['match_id']==mid)&(ss.matches['series_id']==sid)]
 	m_score  = [int(match_row.iloc[0]['score0']),int(match_row.iloc[0]['score1'])]
@@ -163,6 +163,9 @@ def main(con):
 
 	# match wide dataframes
 	# match info, relevant to all views
+	upload = None
+	if 'upload' in sid:
+		upload = random.random() # to prevent using cached match data incase public demos get overwritten somehow
 	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_match_data(ss.sid,ss.mid)
 	
 	hero_df = hero_df.copy()
