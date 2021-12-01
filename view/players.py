@@ -301,8 +301,11 @@ def main(con):
 		pset_fig_empty = c5.empty()
 		path_options = ['archetype','set 1','set 2']
 		pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
-		
+		if not pset_path:
+			pset_path = path_options		
+
 		# map pie
+		c6.write('')
 		map_fig_empty = c6.empty()
 		
 
@@ -463,7 +466,7 @@ def main(con):
 		map_fig.update_layout(
 			showlegend=False,
 			height=240,
-			margin={'t': 0,'b':0,'l':0,'r':0},
+			margin={'t': 0,'b':44,'l':0,'r':0},
 		)
 
 
@@ -473,13 +476,14 @@ def main(con):
 			pset_hero_df['set 1'] = pset_hero_df['set1'].astype(str)
 			pset_hero_df['set 2'] = pset_hero_df['set2'].astype(str)
 			pset_hero_df['total'] = ''
+
 			pset_fig = px.sunburst(
 					pset_hero_df,
 					path=pset_path,
 				)
 			pset_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=280)
+				height=220)
 
 			metrics = {}
 			
