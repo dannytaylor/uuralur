@@ -1246,7 +1246,6 @@ def main(con):
 
 			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
 			hp_range=[act_min,hit_max]
-			print(hit_max)
 
 			sp_fig.add_trace(go.Scatter(x=[hp_range[0]-1,1+max(hp_range[1],max(sl['hit']))],y= [4,4],fill='tozeroy', mode='none',fillcolor='white',
 				),row=2, col=1)
