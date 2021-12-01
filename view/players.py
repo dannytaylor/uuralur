@@ -22,7 +22,7 @@ table_theme = config['table_theme']
 @st.cache
 def init_filter_lists(mh_df):
 	at_list = mh_df['archetype'].unique().tolist()
-	pset_list = pd.unique(mh_df[['set 1', 'set 2']].values.ravel('K')).tolist()
+	pset_list = pd.unique(mh_df[['set1', 'set2']].values.ravel('K')).tolist()
 	hero_list = mh_df['hero'].unique().tolist()
 	pset_list.remove(None)
 	at_list.sort()
