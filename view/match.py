@@ -164,9 +164,9 @@ def main(con):
 	# match wide dataframes
 	# match info, relevant to all views
 	upload = None
-	if 'upload' in sid:
+	if 'upload' in ss.sid:
 		upload = random.random() # to prevent using cached match data incase public demos get overwritten somehow
-	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_match_data(ss.sid,ss.mid)
+	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_match_data(ss.sid,ss.mid,upload)
 	
 	hero_df = hero_df.copy()
 	actions_df = actions_df.copy()
