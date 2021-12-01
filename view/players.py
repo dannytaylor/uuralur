@@ -22,7 +22,7 @@ table_theme = config['table_theme']
 @st.cache
 def init_filter_lists(mh_df):
 	at_list = mh_df['archetype'].unique().tolist()
-	pset_list = pd.unique(mh_df[['set1', 'set2']].values.ravel('K')).tolist()
+	pset_list = pd.unique(mh_df[['set 1', 'set 2']].values.ravel('K')).tolist()
 	hero_list = mh_df['hero'].unique().tolist()
 	pset_list.remove(None)
 	at_list.sort()
@@ -299,6 +299,8 @@ def main(con):
 
 		# at breakdown
 		pset_fig_empty = c5.empty()
+		path_options = ['archetype','set 1','set 2']
+		pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
 		
 		# map pie
 		map_fig_empty = c6.empty()
@@ -473,11 +475,11 @@ def main(con):
 			pset_hero_df['total'] = ''
 			pset_fig = px.sunburst(
 					pset_hero_df,
-					path=['archetype','set 1','set 2'],
+					path=pset_path,
 				)
 			pset_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=332)
+				height=280)
 
 			metrics = {}
 			
