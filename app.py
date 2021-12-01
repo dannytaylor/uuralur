@@ -119,6 +119,7 @@ class MultiPage:
 			init_matches()
 			if len(ss.series[ss.series['series_id'] == query_sid_choice]) > 0:
 				series_ids.append(query_sid_choice)
+		series_ids.sort()
 		series_ids.reverse()
 
 
@@ -146,6 +147,7 @@ class MultiPage:
 				sid_str = sid.split("_")[1:]
 				sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
 				return sid_date + " - ".join(sid_str)
+
 
 			ss.sid = sid_empty.selectbox("series",series_ids,on_change=set_query,format_func=format_sid_str,help='series dates in YYMMDD format',key=sid_key)
 
