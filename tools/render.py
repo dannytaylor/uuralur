@@ -133,11 +133,21 @@ team_name_map = {
 	"gb":"good boys",
 	"rng":"renegades",
 	"inc":"incursion",
-	"jh":"rare",
 	"brew":"brewery",
 	"mft":"misfits",
 	"lc":"laughing coffin",
 	"ps":"pspsps",
 	"wd":"watchdogs",
 	"miswap":"misfits/wap",
+	"ggz":"gossipy guyz",
+	"cum":"constantly under managed",
+	"wap":"war against peace",
+
+	# "jh":"jh", # one match that has been renamed to correct
+	"rare":"rare",
+	"vori":"vori",
+	"four":"four",
+	"elk":"elk",
+	"pug":"pug",
+	"putos":"putos",
 }

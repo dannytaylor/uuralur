@@ -28,6 +28,7 @@ def main():
 	st.write("""
 		The intent with a new system was to make the data output from the demos more managable to use on a larger scale and in aggregate such as in this program. 
 		The match viewer here is targeting parity with the old report system, plus some benefits from having more flexibility with the data and being able to have all matches in one place.
+		This site is a testing project with pieces put together as I learn about them, so it's not the most optimized or well written, but also it's probably not getting changed much.
 		""")
 	st.markdown("""
 		[old demoparse report](https://datastudio.google.com/u/1/reporting/dad5a39e-179a-49b4-ad64-a4f8ce89694e/page/hoC2B)  

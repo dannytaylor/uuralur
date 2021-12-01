@@ -19,51 +19,79 @@ config = yaml.safe_load(open('data/config.yaml'))
 table_theme = config['table_theme']
 
 
+@st.cache
+def init_filter_lists(mh_df):
+	at_list = mh_df['archetype'].unique().tolist()
+	pset_list = pd.unique(mh_df[['set1', 'set2']].values.ravel('K')).tolist()
+	hero_list = mh_df['hero'].unique().tolist()
+	pset_list.remove(None)
+	at_list.sort()
+	pset_list.sort()
+	hero_list.sort()
+
+	team_list = list(render.team_name_map.keys())
+	team_list.remove('kb')
+	team_list.sort()
+
+	dates = ss.series[~(ss.series['series_id'].str.contains('upload'))]['date'].tolist()
+
+	nspike_dict = {}
+	nspike_dict[0] = dict(zip(ss.matches['sid_mid'],ss.matches['spikes0']))
+	nspike_dict[1] = dict(zip(ss.matches['sid_mid'],ss.matches['spikes1']))
+
+
+	return at_list,pset_list,hero_list,team_list,dates,nspike_dict
 
 def main(con):
-	sqlq = util.str_sqlq('Heroes')
-	hero_df = pd.read_sql_query(sqlq, con)
-	hero_df = hero_df[~(hero_df['series_id'].str.contains('upload'))]
+	
+	def get_hero_df():
+		sqlq = util.str_sqlq('Heroes')
+		hero_df = pd.read_sql_query(sqlq, con)
+		hero_df = hero_df[~(hero_df['series_id'].str.contains('upload'))]
+		hero_df['player']  = hero_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
+		hero_df['sid_mid'] = hero_df['series_id'] + "_" + hero_df['match_id'].astype(str)
+		return hero_df
 
-	hero_df['player']  = hero_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
-	hero_df['sid_mid'] = hero_df['series_id'] + "_" + hero_df['match_id'].astype(str)
+	hero_df = get_hero_df()
 
 	if ss.view['records'] == 'stats':
 
+		c1,c2 = st.empty(),st.empty() # clear graphs when switching views
+
 		# get hero data for all matches
 		mh_df = hero_df.copy()
-		at_list = mh_df['archetype'].unique().tolist()
 
 		# set ats and psets for filters
-		pset_list = pd.unique(mh_df[['set1', 'set2']].values.ravel('K')).tolist()
-		pset_list.remove(None)
-		at_list.sort()
-		pset_list.sort()
+		at_list,pset_list,hero_list,team_list,dates,nspike_dict = init_filter_lists(mh_df)
 
+		# data filters
 		with st.sidebar.form('filters'):
 			st.write('data filters')
 			data_aggr   = st.radio('show data by',['overall','average per match'],help='applies applicable data')
 			with st.expander('hero filters',expanded=False):
+				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
 				at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
 				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
-				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
+				hero_filter = st.multiselect('hero name',  hero_list, default=None, help='all if none selected')
 			with st.expander('match filters',expanded=False):
-				dates = ss.series[~(ss.series['series_id'].str.contains('upload'))]['date'].tolist()
-				series_filters = {}
-				series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
-				series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
-				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
-			
 				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/community series is kb, any non-kb is a 'scrim'")
 				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for this filter')
+				def team_name_map(team):
+					if team in render.team_name_map:
+						return render.team_name_map[team]
+					else:
+						return team
+				team_filter   = st.multiselect('team name',team_list,format_func=team_name_map, default=None, help='all if none selected')
+				series_filters = {}
+				# series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
+				# series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
+				series_filters['date_first'] = st.select_slider('date filters',options=dates,value=dates[0])
+				series_filters['date_last']  = st.select_slider('', options=dates,value=dates[-1])
+				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
+			
 
 			st.form_submit_button(label="apply filters", help=None, on_click=None, args=None, kwargs=None)
 
-
-
-		nspike_dict = {}
-		nspike_dict[0] = dict(zip(ss.matches['sid_mid'],ss.matches['spikes0']))
-		nspike_dict[1] = dict(zip(ss.matches['sid_mid'],ss.matches['spikes1']))
 
 		available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
 		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
@@ -103,24 +131,29 @@ def main(con):
 		# date filters
 		mh_df = mh_df[mh_df['series_id'].isin(date_filtered)]
 
-		# at/pset filters
+		# hero filters
 		if at_filter:
 			mh_df = mh_df[mh_df['archetype'].isin(at_filter)]
 		if pset_filter:
 			mh_df = mh_df[(mh_df['set1'].isin(pset_filter))|(mh_df['set2'].isin(pset_filter))]
+		if hero_filter:
+			mh_df = mh_df[mh_df['hero'].isin(hero_filter)]
+		if team_filter:
+			base = r'^{}'
+			expr = '(?=.*{})'
+			mh_df = mh_df[mh_df['series_id'].str.contains(''.join(expr.format(t) for t in team_filter))]
 
 
 		try:
-			with st.spinner('loading data'):
+			with st.spinner('calculating data...'):
 				# setup player table
 				mh_write = mh_df.groupby('player')[['match_id']].count().copy()
 				mh_write['player'] = mh_write.index
 				mh_write['#matches'] = mh_df.groupby('player')[['match_id']].count()
 				if len(mh_write) == 0:
+					st.write('no data for these filters')
 					pass
 				else:
-
-
 					# str lists to lists
 					mh_df['attack_timing']= mh_df.apply(lambda x: (ast.literal_eval(x['attack_timing']) if (x['support'] != 1 or support_toggle != 'all') else []), axis=1)
 					mh_df['heal_timing']  = mh_df.apply(lambda x: (ast.literal_eval(x['heal_timing'])   if (x['support'] == 1 or support_toggle != 'all') else []), axis=1)
@@ -193,6 +226,7 @@ def main(con):
 					mh_write = mh_write[['player','#matches']+available_data].sort_values(by='#matches',ascending=False)
 					hide_data = [d for d in available_data if d not in show_data]
 					# mh_write = mh_df[['player','#matches','deaths','targets','surv','dmg','otp','avg t']]
+				
 					mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'})
 					mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
@@ -206,16 +240,16 @@ def main(con):
 
 					mh_gb.configure_columns(hide_data,hide=True)
 
-				# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
-				mh_ag = AgGrid(
-					mh_write,
-					allow_unsafe_jscode=True,
-					gridOptions=mh_gb.build(),
-					# update_mode='SELECTION_CHANGED',
-					# fit_columns_on_grid_load=True,
-					height = 800,
-					theme=table_theme
-				)
+					# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
+					mh_ag = AgGrid(
+						mh_write,
+						allow_unsafe_jscode=True,
+						gridOptions=mh_gb.build(),
+						# update_mode='SELECTION_CHANGED',
+						# fit_columns_on_grid_load=True,
+						height = 800,
+						theme=table_theme
+					)
 		except:
 			st.write('no data for these filters')
 
