@@ -22,6 +22,7 @@ repeat_cd_factor: 3 # fraction of power's recharge time to use as a repeated pow
 # for streamlit
 table_theme: "material"
 daily_upload_limit: 20
+header_color: "#e0e0e0"
 
 # otp partial credit vars
 otp_penalty: 0.5 # reduction to on_target count for first timing above the threshold
