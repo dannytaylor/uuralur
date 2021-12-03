@@ -1435,12 +1435,13 @@ def main(con):
 
 		with c2:
 			series_fig =   make_subplots(specs=[[{"secondary_y": True}]])
+			m_write['x'] =   m_write['match_id'].astype(str) + " (" + m_write['map'] +  ")"
 			series_fig.add_trace(
-				go.Bar(x=m_write['map'], y=m_write['score0'], name="blu", marker_color='dodgerblue',
+				go.Bar(x=m_write['x'], y=m_write['score0'], name="blu", marker_color='dodgerblue',
 					), secondary_y=False
 			)
 			series_fig.add_trace(
-					go.Bar(x=m_write['map'], y=m_write['score1'], name="red",marker_color='tomato',
+					go.Bar(x=m_write['x'], y=m_write['score1'], name="red",marker_color='tomato',
 					), secondary_y=False
 			)
 
