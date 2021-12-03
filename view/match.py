@@ -174,7 +174,7 @@ def main(con):
 	hp_df = hp_df.copy()
 
 	# MATCH HEADSER
-	c1,c2 = st.columns([7,3])
+	c1,c2 = st.columns([8,2])
 
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
@@ -190,7 +190,7 @@ def main(con):
 	with c1:
 		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 	with c2:
-		score_str = """<p style="text-align: right;">"""
+		score_str = """<p style="text-align: left;">"""
 		score_str += """<span class="font40" style="color:#666";>{}</span>""".format('score: ')
 		score_str += """<span class="font40" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
 		score_str += """<span class="font40" style="color:#666";>{}</span>""".format(' - ')
@@ -925,7 +925,7 @@ def main(con):
 
 			ac_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=360 if not ss.mobile else 280)
+				height=416 if not ss.mobile else 280)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
 
 			## debugging table
@@ -938,13 +938,15 @@ def main(con):
 			at_write = at_write[at_write['chain'] != 'Total']
 			# chain to icons
 			at_write['icons'] = at_write['chain'].map(lambda x: ' '.join([util.image_formatter('powers/' + powers[a]['icon']) for a in x.split(" → ")]))
-			at_write = at_write[['icons','chain','count']]
+			at_write = at_write[['count','icons','chain']]
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(suppressMovable=True)
 			at_gb.configure_columns('icons',cellRenderer=render.icon,width=36)
 			at_gb.configure_columns('count',width=16)
 			at_gb.configure_columns('chain',width=48)
+			at_gb.configure_grid_options(headerHeight=0)
+
 
 			sl_ag = AgGrid(
 				at_write,
@@ -1409,6 +1411,8 @@ def main(con):
 		m_gb.configure_columns('map',width=48)
 		m_gb.configure_columns('score0',cellStyle=render.blu)
 		m_gb.configure_columns('score1',cellStyle=render.red)
+		m_gb.configure_grid_options(headerHeight=0)
+
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 

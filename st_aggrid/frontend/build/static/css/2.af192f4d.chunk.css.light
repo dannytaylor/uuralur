@@ -2,7 +2,7 @@
 /*# sourceMappingURL=2.af192f4d.chunk.css.map */
 
 .ag-theme-material {
-/*
+/* dark mode colors
     --ag-foreground-color: #fafafa;
     --ag-secondary-foreground-color: #fafafa;
     --ag-header-foreground-color: #e0e0e0;
@@ -13,6 +13,14 @@
     --ag-selected-row-background-color: #323232;
     --ag-header-cell-hover-background-color: #262730;
 */
+
+    --ag-background-color: transparent;
+    --ag-header-background-color: transparent;
+    --ag-border-color: rgba(128,128,128,0.15);
+    --ag-row-hover-color: rgba(128,128,128,0.075);
+    --ag-selected-row-background-color: rgba(128,128,128,0.15);
+    --ag-header-cell-hover-background-color: transparent;
+
 
     --ag-range-selection-border-color: transparent;
     

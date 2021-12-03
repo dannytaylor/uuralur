@@ -113,18 +113,17 @@ def init_css(width):
 			"""
 	css_str += """}}{{}}
 		.font40 {
-		    font-size:40px !important;
+		    font-size:36px !important;
 		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
+		    font-family: 'Helvetica Neue', sans-serif;
 		    margin-top: 12px;
-		    margin-bottom: 34px;
+		    margin-bottom: 48px;
 		}
 		.font20 {
 		    font-size:20px !important;
 		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
-		    margin-top: 6px;
-		    margin-bottom: 6px;
+		    font-family: 'Helvetica Neue', sans-serif;
+		    margin: 0.5rem;
 		}
 		</style>
 		"""
