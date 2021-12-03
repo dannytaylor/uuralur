@@ -293,6 +293,7 @@ def main(con):
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
+		sum_gb.configure_columns(['hero'],pinned='left')
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
@@ -508,7 +509,7 @@ def main(con):
 		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
 		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		# sup_gb.configure_columns('hero',width=96)
-		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=52)
+		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=52,pinned='left')
 		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
 		sup_gb.configure_columns('at',cellRenderer=render.icon,width=28)
 		sup_gb.configure_columns(['on heal','alpha','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
@@ -612,7 +613,7 @@ def main(con):
 		# def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
 		def_gb.configure_columns(['dmg_per_surv','dmg/death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns('team',hide=True)
-		def_gb.configure_columns('hero',width=96)
+		def_gb.configure_columns('hero',width=96,pinned='left')
 		def_gb.configure_columns('hero',cellStyle=render.team_color)
 
 
@@ -814,7 +815,7 @@ def main(con):
 			of_gb.configure_grid_options(autoHeight=True)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
 			of_gb.configure_columns(['ontgt','atks','offtgt','first'],filterable=False,type='customNumericFormat',precision=0)
-			of_gb.configure_columns('hero',width=60)
+			of_gb.configure_columns('hero',width=60,pinned='left')
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
 			of_gb.configure_columns(['tgts','deaths','team'],hide=True)
 
@@ -1561,7 +1562,7 @@ def main(con):
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
-		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
+		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'},pinned='left')
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
 		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
@@ -1576,7 +1577,7 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=mh_gb.build(),
 			# update_mode='SELECTION_CHANGED',
-			fit_columns_on_grid_load= not ss.mobile,
+			# fit_columns_on_grid_load= not ss.mobile,
 			height = 680 if not ss.mobile else 320,
 			theme=table_theme
 		)
