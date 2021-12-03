@@ -320,7 +320,7 @@ def main(con):
 		hero_sel = None
 		with c1:
 
-			st.markdown("""<p class="font20"" >{}</p>""".format('players'),True)
+			st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
 				
 			hero_ag = AgGrid(
 				hero_write,
@@ -338,7 +338,7 @@ def main(con):
 
 		with c2:
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('heroes'),True)
+				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp heroes'),True)
 				ph_df = hero_df[hero_df['player']==player_sel].copy()
 
 				# get latest at/set combo from dataframe
@@ -384,7 +384,7 @@ def main(con):
 		with c3:
 			matches = ss.matches.copy()
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('matches'),True)
+				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp matches'),True)
 				h_matches = hero_df[hero_df['player']==player_sel].copy()
 				if hero_sel: h_matches = h_matches[h_matches['hero']==hero_sel]
 				h_matches['sid_mid'] = h_matches['series_id'] + h_matches['match_id'].astype(str)

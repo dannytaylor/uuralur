@@ -188,13 +188,16 @@ def main(con):
 	header_str += " - ".join(sid_str)
 
 	with c1:
-		st.markdown("""<p class="font40"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
+		st.markdown("""<p class="fontheader"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
+		
+		st.write('') #spacing hack
+		st.write('')
 	with c2:
 		score_str = """<p style="text-align: left;">"""
-		score_str += """<span class="font40" style="color:#666";>{}</span>""".format('score: ')
-		score_str += """<span class="font40" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
-		score_str += """<span class="font40" style="color:#666";>{}</span>""".format(' - ')
-		score_str += """<span class="font40" style="color:tomato";>{}</span>""".format(str(m_score[1]))
+		score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
+		score_str += """<span class="fontheader" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
+		score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format(' - ')
+		score_str += """<span class="fontheader" style="color:tomato";>{}</span>""".format(str(m_score[1]))
 		score_str += """</p>"""
 		st.markdown(score_str,True)
 

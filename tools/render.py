@@ -104,7 +104,7 @@ def init_css(width):
 	css_str = f"""
 		<style>
 			.reportview-container .main .block-container{{
-				padding: 3rem 1rem 1rem;
+				padding: 1rem 1rem 1rem;
 		"""
 	if not st.session_state.mobile:
 		css_str += f"""
@@ -118,6 +118,12 @@ def init_css(width):
 		    font-family: 'Helvetica Neue', sans-serif;
 		    margin-top: 12px;
 		    margin-bottom: 48px;
+		}
+
+		.fontheader {
+		    font-size:36px !important;
+		    font-weight: bold;
+		    font-family: 'Helvetica Neue', sans-serif;
 		}
 		.font20 {
 		    font-size:20px !important;
