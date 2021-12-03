@@ -24,27 +24,27 @@ function(params) {
 # render cell text color from team
 team_color = JsCode("""
 function(params) {
-	if(params.data.team == "0") {return {"color":"dodgerblue",};} 
-	else return {"color":"tomato",};
+	if(params.data.team == "0") {return {"color":"#1946cf",};} 
+	else return {"color":"#d60000",};
 }
 """)
 
 target_team_color = JsCode("""
 function(params) {
-	if(params.data.target_team == "0") {return {"color":"dodgerblue",};} 
-	else return {"color":"tomato",};
+	if(params.data.target_team == "0") {return {"color":"#1946cf",};} 
+	else return {"color":"#d60000",};
 }
 """)
 
 blu = JsCode("""
 function(params) {
-	return {"color":"dodgerblue"};
+	return {"color":"#1946cf"};
 }
 """)
 
 red = JsCode("""
 function(params) {
-	return {"color":"tomato"};
+	return {"color":"#d60000"};
 }
 """)
 
