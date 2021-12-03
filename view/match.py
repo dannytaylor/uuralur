@@ -925,7 +925,7 @@ def main(con):
 
 			ac_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=416 if not ss.mobile else 280)
+				height=360 if not ss.mobile else 280)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
 
 			## debugging table
@@ -942,10 +942,10 @@ def main(con):
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(suppressMovable=True)
-			at_gb.configure_columns('icons',cellRenderer=render.icon,width=36)
-			at_gb.configure_columns('count',width=16)
-			at_gb.configure_columns('chain',width=48)
-			at_gb.configure_grid_options(headerHeight=0)
+			at_gb.configure_columns('icons',cellRenderer=render.icon,width=40)
+			at_gb.configure_columns('count',width=20)
+			at_gb.configure_columns('chain',width=45)
+			# at_gb.configure_grid_options(headerHeight=0)
 
 
 			sl_ag = AgGrid(
