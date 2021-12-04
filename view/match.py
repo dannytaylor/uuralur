@@ -323,7 +323,7 @@ def main(con):
 		sup_df = hero_df[hero_df['support']==1].copy()
 		sup_heroes  = sup_df['hero'].tolist()
 		sup_actions = actions_df[(actions_df['actor'].isin(sup_heroes))]
-		sup_heals   = sup_actions[(sup_actions['actor'].isin(sup_heroes))&(sup_actions['action_tags'].str.contains('Heal'))&(sup_actions['action_target_type']=='Ally (Alive)')].copy()
+		sup_heals   = sup_actions[(sup_actions['actor'].isin(sup_heroes))&(sup_actions['action_tags'].str.contains('Heal'))&(sup_actions['action_target_type']=='Ally (Alive)')&(sup_actions['action']!='Spirit Ward')].copy()
 
 		# filter out powers for displaying extras
 		sup_extras  = sup_actions.loc[~sup_actions.index.isin(sup_heals.index)]
@@ -382,7 +382,8 @@ def main(con):
 			h  = row['actor']
 			if hp not in h_heal_powers[h]:
 				h_heal_powers[h][hp] = 0
-			h_heal_powers[h][hp] += 1
+			if hp != 'Spirit Ward':
+				h_heal_powers[h][hp] += 1
 
 
 		for a, row in sup_extras.iterrows():
@@ -415,7 +416,7 @@ def main(con):
 		for h,hp in h_extra_powers.items():
 			hp = {k: v for k, v in sorted(hp.items(), key=lambda item: item[1],reverse=True)} # sort dict by value
 			cs = 'teal'
-			if hero_team_map[h] == 1: cs = 'burg'
+			if hero_team_map[h] == 1: cs = 'burg' # colorscale
 			sup_extras_fig.add_trace(go.Bar(
 				y=list(hp.values()),
 				x=[h]*len(hp),
@@ -485,7 +486,7 @@ def main(con):
 
 		with c3:
 			sup_eff_fig.update_layout(
-				title_text='hit efficacy',
+				title_text='hit efficacy (rough est.)',
 				height=row_height,
 				margin = h_margins,
 				showlegend=False,
@@ -517,7 +518,7 @@ def main(con):
 		sup_gb.configure_columns('at',cellRenderer=render.icon,width=28)
 		sup_gb.configure_columns(['on heal','alpha','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
 		sup_gb.configure_columns(['avg','median','variance'],type='customNumericFormat',precision=2)
-		sup_gb.configure_columns(['team','support','variance'],hide=True)
+		sup_gb.configure_columns(['team','support','variance','ffs'],hide=True)
 
 		sup_ag = AgGrid(
 			sup_write,
