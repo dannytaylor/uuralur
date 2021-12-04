@@ -57,6 +57,38 @@ function(params) {
 }
 """)
 
+# bg opacities from param
+deaths_bg = JsCode("""
+function(params) {
+	var c = "rgba(229, 57, 53,"+params.data.deaths_opacity+")";
+	return {"background-color":c,};
+}
+""")
+targets_bg = JsCode("""
+function(params) {
+	var c = "rgba(251, 192, 45,"+params.data.targets_opacity+")";
+	return {"background-color":c,};
+}
+""")
+surv_bg = JsCode("""
+function(params) {
+	var c = "rgba(0, 137, 123,"+params.data.surv_opacity+")";
+	return {"background-color":c,};
+}
+""")
+otp_bg = JsCode("""
+function(params) {
+	var c = "rgba(67, 160, 71,"+params.data.otp_opacity+")";
+	return {"background-color":c,};
+}
+""")
+onheal_bg = JsCode("""
+function(params) {
+	var c = "rgba(67, 160, 71,"+params.data.onheal_opacity+")";
+	return {"background-color":c,};
+}
+""")
+
 # not used currently
 spike_list = JsCode("""
 function(params) {

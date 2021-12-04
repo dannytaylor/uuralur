@@ -280,7 +280,14 @@ def main(con):
 		c7.plotly_chart(score_fig,use_container_width=True,config={'displayModeBar': False})
 		c8.plotly_chart(spike_fig,use_container_width=True,config={'displayModeBar': False})
 
-		# hdf = hdf.set_index(['hero'])
+
+		# computed opacities for styling
+		hdf['deaths_opacity'] = 0.2*(hdf['deaths']/max(hdf['deaths']))**1.5
+		hdf['targets_opacity'] = 0.2*(hdf['targets']/max(hdf['targets']))**1.5
+		hdf['otp_opacity'] = 0.2*hdf['otp_float']**3
+		hdf['onheal_opacity'] = 0.5*hdf['on heal float']**2.5
+		hdf['surv_opacity'] = 0.1*hdf['surv_float']**2
+		opacities = ['deaths_opacity','targets_opacity','otp_opacity','onheal_opacity','surv_opacity']
 
 		hdf['atk tm'] = hdf['avg atk'].map("{:0.2f}".format)
 		hdf['atk tm'] = hdf['atk tm'].map(lambda x: '' if x == 'nan' else x)
@@ -288,11 +295,11 @@ def main(con):
 		hdf['heal t'] = hdf['heal t'].map(lambda x: '' if x == 'nan' else x)
 		hdf['dmg tk'] = hdf['damage_taken']/1000
 		hdf['dmg tk'] = hdf['dmg tk'].map("{:0.1f}K".format)
-		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','dmg tk','otp','atks','atk tm','on heal%']]
+		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','otp','on heal%','atks','atk tm']+opacities]
 		hdf['support'] = hdf['support'].fillna(0)
 		hdf = hdf.sort_values(['team','support'],ascending=[True,True])
-
 		hdf = hdf.rename(columns={'on heal%':'onheal'})
+
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
@@ -301,8 +308,13 @@ def main(con):
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
 		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
-		sum_gb.configure_columns('at',cellRenderer=render.icon)
-		sum_gb.configure_columns(['team','support'],hide=True)
+		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)
+		sum_gb.configure_columns(['targets'],cellStyle=render.targets_bg)
+		sum_gb.configure_columns(['surv'],cellStyle=render.surv_bg)
+		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
+		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg)
+		sum_gb.configure_columns(['at'],cellRenderer=render.icon)
+		sum_gb.configure_columns(['team','support']+opacities,hide=True)
 
 		sum_ag = AgGrid(
 			hdf,

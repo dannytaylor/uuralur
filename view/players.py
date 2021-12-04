@@ -241,6 +241,7 @@ def main(con):
 						mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data+record_data,type='customNumericFormat',precision=0)
 
 					mh_gb.configure_columns(hide_data,hide=True)
+					mh_gb.configure_selection('single', pre_selected_rows=None)
 
 					# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 					mh_ag = AgGrid(
