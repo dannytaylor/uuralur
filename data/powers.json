@@ -1501,6 +1501,37 @@
         ],
         "type": "Click"
     },
+    "Assassin's Smash": {
+        "activation_fx": [],
+        "archetypes": [
+            "melee"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/ASSASSINSROCKSLIDE_ATTACK.FX",
+            "POWERS/STONEFX/ASSASSINSROCKSLIDE_ATTACK.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1166,
+        "frames_before_hit": 500,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/EARTHWEAPONHIT.FX",
+            "POWERS/STONEFX/EARTHWEAPONHIT.FX"
+        ],
+        "icon": "stonemelee_assassinate.png",
+        "powersets": [
+            "Stone Melee"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 15000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Assassin's Staff": {
         "activation_fx": [],
         "archetypes": [
@@ -2076,6 +2107,32 @@
             "Foe (Alive)"
         ],
         "type": "Click"
+    },
+    "Beryl Crystals": {
+        "activation_fx": [
+            "CUSTOMIZEABLEPOWERS/EARTHCONTROL/MINERALARMOR.FX",
+            "CUSTOMIZEABLEPOWERS/STONEFX/MINERALARMOR.FX"
+        ],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [],
+        "effect_area": "SingleTarget",
+        "frames_attack": 733,
+        "frames_before_hit": 533,
+        "hit_fx": [],
+        "icon": "earthmanip_beryl.png",
+        "powersets": [
+            "Earth Manipulation"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 4000,
+        "tags": [],
+        "target_type": "Self",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Toggle"
     },
     "Beta Decay": {
         "activation_fx": [
@@ -3408,6 +3465,7 @@
             "Claws",
             "Dark Melee",
             "Dual Blades",
+            "Earth Manipulation",
             "Electrical Melee",
             "Electricity Assault",
             "Electricity Manipulation",
@@ -8049,6 +8107,37 @@
         ],
         "type": "Click"
     },
+    "Encase": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/SHATTER.FX",
+            "POWERS/STONEFX/SHATTER.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1000,
+        "frames_before_hit": 733,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/SHATTER_HIT.FX",
+            "POWERS/STONEFX/SHATTER_HIT.FX"
+        ],
+        "icon": "seismicblast_shatter.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 4000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Enchant Demon": {
         "activation_fx": [],
         "archetypes": [
@@ -8651,6 +8740,37 @@
             "Foe (Alive)"
         ],
         "type": "Toggle"
+    },
+    "Entomb": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/ENTOMB.FX",
+            "POWERS/STONEFX/ENTOMB.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 2066,
+        "frames_before_hit": 1166,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/ENTOMB_HIT.FX",
+            "POWERS/STONEFX/ENTOMB_HIT.FX"
+        ],
+        "icon": "seismicblast_entomb.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 11000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
     },
     "Entropic Aura": {
         "activation_fx": [
@@ -10756,6 +10876,35 @@
         ],
         "type": "Click"
     },
+    "Fracture": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/FAULT.FX",
+            "POWERS/STONEFX/FAULT.FX"
+        ],
+        "effect_area": "AoE",
+        "frames_attack": 1000,
+        "frames_before_hit": 633,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/EARTHWEAPONHITROOT.FX",
+            "POWERS/STONEFX/EARTHWEAPONHITROOT.FX"
+        ],
+        "icon": "earthmanip_fracture.png",
+        "powersets": [
+            "Earth Manipulation"
+        ],
+        "projectile_speed": 90.0,
+        "recharge_time": 90000,
+        "tags": [],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Frag Grenade": {
         "activation_fx": [
             "V_COV/POWERS/ARACHNOSSOLDIER/WOLFSPIDER_MACHINEGUN.FX"
@@ -11566,6 +11715,31 @@
             "Self"
         ],
         "type": "Auto"
+    },
+    "Geode": {
+        "activation_fx": [],
+        "archetypes": [
+            "melee"
+        ],
+        "attack_fx": [],
+        "effect_area": "SingleTarget",
+        "frames_attack": 66,
+        "frames_before_hit": 33,
+        "hit_fx": [],
+        "icon": "stonearmor_geode.png",
+        "powersets": [
+            "Stone Armor"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 180000,
+        "tags": [
+            "Heal"
+        ],
+        "target_type": "Self",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Toggle"
     },
     "Geyser": {
         "activation_fx": [],
@@ -13029,6 +13203,7 @@
             "POWERS/STONEFX/HEAVYEARTHWEAPONACTIVATE.FX"
         ],
         "archetypes": [
+            "blaster",
             "dominator",
             "melee"
         ],
@@ -13037,15 +13212,16 @@
             "POWERS/STONEFX/WEAPONWHOOSH2.FX"
         ],
         "effect_area": "SingleTarget",
-        "frames_attack": 1633,
+        "frames_attack": 1333,
         "frames_before_hit": 800,
         "hit_fx": [
             "POWERS/EARTHCONTROL/GREATERSTONEHANDSHIT.FX",
             "POWERS/STONEFX/GREATERSTONEHANDSHIT.FX"
         ],
-        "icon": "stonemelee_heavymallet.png",
+        "icon": "earthmanip_heavymallet.png",
         "powersets": [
             "Earth Assault",
+            "Earth Manipulation",
             "Stone Melee"
         ],
         "projectile_speed": 3.4028234663852886e+38,
@@ -13208,6 +13384,7 @@
             "Radiation Armor",
             "Regeneration",
             "Shield Defense",
+            "Stone Armor",
             "Super Reflexes",
             "Willpower"
         ],
@@ -16556,6 +16733,32 @@
         ],
         "type": "Toggle"
     },
+    "Meteor": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/METEOR.FX",
+            "POWERS/STONEFX/METEOR.FX"
+        ],
+        "effect_area": "Location",
+        "frames_attack": 2566,
+        "frames_before_hit": 500,
+        "hit_fx": [],
+        "icon": "seismicblast_meteor.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 170000,
+        "tags": [],
+        "target_type": "Location",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Click"
+    },
     "Midnight Grasp": {
         "activation_fx": [
             "CUSTOMIZEABLEPOWERS/DARKNESSCONTROL/DARKNESSCONTROL_TWOHAND_ACTIVATION.FX"
@@ -16897,6 +17100,34 @@
             "Foe (Alive)"
         ],
         "type": "Click"
+    },
+    "Mud Bath": {
+        "activation_fx": [
+            "POWERS/EARTHCONTROL/CLAYSTONEARMOR.FX",
+            "POWERS/STONEFX/CLAYSTONEARMOR.FX"
+        ],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [],
+        "effect_area": "AoE",
+        "frames_attack": 2033,
+        "frames_before_hit": 933,
+        "hit_fx": [],
+        "icon": "earthmanip_mudbath.png",
+        "powersets": [
+            "Earth Manipulation"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 4000,
+        "tags": [
+            "Heal"
+        ],
+        "target_type": "Self",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Toggle"
     },
     "Mud Pots": {
         "activation_fx": [
@@ -18494,6 +18725,7 @@
             "Savage Melee",
             "Spines",
             "Staff Fighting",
+            "Stone Melee",
             "Street Justice",
             "Widow Teamwork"
         ],
@@ -21573,6 +21805,37 @@
         ],
         "type": "Toggle"
     },
+    "Rock Shards": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/ROCKSHARDS.FX",
+            "POWERS/STONEFX/ROCKSHARDS.FX"
+        ],
+        "effect_area": "Cone",
+        "frames_attack": 1066,
+        "frames_before_hit": 1000,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/ROCKSHARDS_HIT.FX",
+            "POWERS/STONEFX/ROCKSHARDS_HIT.FX"
+        ],
+        "icon": "seismicblast_rockshards.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 8000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Rooted": {
         "activation_fx": [],
         "archetypes": [
@@ -21688,13 +21951,14 @@
         "frames_attack": 1066,
         "frames_before_hit": 766,
         "hit_fx": [],
-        "icon": "earthgrasp_saltpillars.png",
+        "icon": "earthmanip_saltcrystals.png",
         "powersets": [
             "Earth Control",
+            "Earth Manipulation",
             "Earth Mastery"
         ],
         "projectile_speed": 3.4028234663852886e+38,
-        "recharge_time": 90000,
+        "recharge_time": 20000,
         "tags": [
             "Epic"
         ],
@@ -21987,6 +22251,92 @@
         ],
         "type": "Click"
     },
+    "Seismic Force": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/AIM.FX",
+            "POWERS/STONEFX/AIM.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1166,
+        "frames_before_hit": 500,
+        "hit_fx": [],
+        "icon": "seismicblast_aim.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 90000,
+        "tags": [],
+        "target_type": "Self",
+        "targets_affected": [
+            "Self"
+        ],
+        "type": "Click"
+    },
+    "Seismic Mallet": {
+        "activation_fx": [
+            "POWERS/EARTHCONTROL/HEAVYEARTHWEAPONACTIVATE.FX",
+            "POWERS/STONEFX/HEAVYEARTHWEAPONACTIVATE.FX"
+        ],
+        "archetypes": [
+            "melee"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/WEAPONWHOOSH2.FX",
+            "POWERS/STONEFX/WEAPONWHOOSH2.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1633,
+        "frames_before_hit": 800,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/GREATERSTONEHANDSHIT.FX",
+            "POWERS/STONEFX/GREATERSTONEHANDSHIT.FX"
+        ],
+        "icon": "stonemelee_heavymallet.png",
+        "powersets": [
+            "Stone Melee"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 16000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
+    "Seismic Shockwaves": {
+        "activation_fx": [
+            "POWERS/EARTHCONTROL/SEISMICSHOCKWAVES.FX",
+            "POWERS/STONEFX/SEISMICSHOCKWAVES.FX"
+        ],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [],
+        "effect_area": "AoE",
+        "frames_attack": 3100,
+        "frames_before_hit": 1066,
+        "hit_fx": [],
+        "icon": "seismic_power.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 0,
+        "tags": [],
+        "target_type": "Self",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Auto"
+    },
     "Seismic Smash": {
         "activation_fx": [],
         "archetypes": [
@@ -22013,9 +22363,10 @@
             "POWERS/EARTHCONTROL/EARTHWEAPONHIT.FX",
             "POWERS/STONEFX/EARTHWEAPONHIT.FX"
         ],
-        "icon": "stonemelee_seismicsmash.png",
+        "icon": "earthmanip_seismicsmash.png",
         "powersets": [
             "Earth Assault",
+            "Earth Manipulation",
             "Stone Mastery",
             "Stone Melee"
         ],
@@ -22487,20 +22838,25 @@
             "warshade"
         ],
         "attack_fx": [
+            "POWERS/EARTHCONTROL/ENCASE.FX",
             "POWERS/MEDIEVALWEAPONS/MACECLOBBERWAVE.FX",
-            "POWERS/MEDIEVALWEAPONS/WARMACESWING.FX"
+            "POWERS/MEDIEVALWEAPONS/WARMACESWING.FX",
+            "POWERS/STONEFX/ENCASE.FX"
         ],
         "effect_area": "Cone",
         "frames_attack": 2000,
         "frames_before_hit": 900,
         "hit_fx": [
+            "POWERS/EARTHCONTROL/ENCASE_HIT.FX",
             "POWERS/MEDIEVALWEAPONS/MACEHITGRAND.FX",
+            "POWERS/STONEFX/ENCASE_HIT.FX",
             "V_COV/POWERS/PATRON/MACEMASTERY/MACEMASTERY_SHATTERARMOR.FX"
         ],
         "icon": "banespider_crowdcontrol.png",
         "powersets": [
             "Bane Spider Soldier",
             "Mace Mastery",
+            "Seismic Blast",
             "War Mace"
         ],
         "projectile_speed": 3.4028234663852886e+38,
@@ -24849,6 +25205,37 @@
         ],
         "type": "Auto"
     },
+    "Stalagmite": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/STALAGMITESTOMP.FX",
+            "POWERS/STONEFX/STALAGMITESTOMP.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1000,
+        "frames_before_hit": 733,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/STALAGMITEATTACKHIT.FX",
+            "POWERS/STONEFX/STALAGMITEATTACKHIT.FX"
+        ],
+        "icon": "seismicblast_stalagmite.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 8000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Stalagmites": {
         "activation_fx": [],
         "archetypes": [
@@ -25340,12 +25727,13 @@
             "POWERS/STONEFX/GRASPINGEARTHHANDS.FX"
         ],
         "effect_area": "SingleTarget",
-        "frames_attack": 1933,
+        "frames_attack": 1233,
         "frames_before_hit": 833,
         "hit_fx": [],
-        "icon": "earthgrasp_stoneprison.png",
+        "icon": "earthmanip_stoneprison.png",
         "powersets": [
             "Earth Control",
+            "Earth Manipulation",
             "Earth Mastery"
         ],
         "projectile_speed": 3.4028234663852886e+38,
@@ -28013,6 +28401,37 @@
         ],
         "type": "Click"
     },
+    "Tombstone": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/TOMBSTONE.FX",
+            "POWERS/STONEFX/TOMBSTONE.FX"
+        ],
+        "effect_area": "SingleTarget",
+        "frames_attack": 1666,
+        "frames_before_hit": 800,
+        "hit_fx": [
+            "POWERS/EARTHCONTROL/TOMBSTONE_HIT.FX",
+            "POWERS/STONEFX/TOMBSTONE_HIT.FX"
+        ],
+        "icon": "seismicblast_snipe.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 3.4028234663852886e+38,
+        "recharge_time": 12000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
+        ],
+        "type": "Click"
+    },
     "Tornado/Water Spout": {
         "activation_fx": [],
         "archetypes": [
@@ -28468,25 +28887,29 @@
     "Tremor": {
         "activation_fx": [],
         "archetypes": [
+            "blaster",
             "dominator",
             "melee"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/TREMOR.FX",
             "POWERS/EARTHCONTROL/TREMORFAST.FX",
+            "POWERS/EARTHCONTROL/TREMOR_FAST.FX",
             "POWERS/STONEFX/TREMOR.FX",
-            "POWERS/STONEFX/TREMORFAST.FX"
+            "POWERS/STONEFX/TREMORFAST.FX",
+            "POWERS/STONEFX/TREMOR_FAST.FX"
         ],
         "effect_area": "AoE",
-        "frames_attack": 3300,
-        "frames_before_hit": 2300,
+        "frames_attack": 2533,
+        "frames_before_hit": 1766,
         "hit_fx": [
             "POWERS/EARTHCONTROL/EARTHWEAPONHIT2.FX",
             "POWERS/STONEFX/EARTHWEAPONHIT2.FX"
         ],
-        "icon": "stonemelee_tremor.png",
+        "icon": "earthmanip_tremor.png",
         "powersets": [
             "Earth Assault",
+            "Earth Manipulation",
             "Stone Melee"
         ],
         "projectile_speed": 3.4028234663852886e+38,
@@ -28940,6 +29363,34 @@
         "target_type": "Own Pet (Alive)",
         "targets_affected": [
             "Own Pet (Alive)"
+        ],
+        "type": "Click"
+    },
+    "Upthrust": {
+        "activation_fx": [],
+        "archetypes": [
+            "blaster"
+        ],
+        "attack_fx": [
+            "POWERS/EARTHCONTROL/UPTHRUST.FX",
+            "POWERS/STONEFX/UPTHRUST.FX"
+        ],
+        "effect_area": "AoE",
+        "frames_attack": 1200,
+        "frames_before_hit": 1200,
+        "hit_fx": [],
+        "icon": "seismicblast_upthrust.png",
+        "powersets": [
+            "Seismic Blast"
+        ],
+        "projectile_speed": 45.0,
+        "recharge_time": 16000,
+        "tags": [
+            "Attack"
+        ],
+        "target_type": "Foe (Alive)",
+        "targets_affected": [
+            "Foe (Alive)"
         ],
         "type": "Click"
     },
@@ -30388,6 +30839,7 @@
             "Darkness Manipulation",
             "Devices",
             "Dual Pistols",
+            "Earth Manipulation",
             "Electrical Blast",
             "Electricity Manipulation",
             "Energy Blast",
@@ -30402,6 +30854,7 @@
             "Plant Manipulation",
             "Psychic Blast",
             "Radiation Blast",
+            "Seismic Blast",
             "Sonic Attack",
             "Sonic Manipulation",
             "Tactical Arrow",
@@ -30625,11 +31078,13 @@
                 "Ice Blast",
                 "Psychic Blast",
                 "Radiation Blast",
+                "Seismic Blast",
                 "Sonic Attack",
                 "Water Blast"
             ],
             "secondary_category": [
                 "Darkness Manipulation",
+                "Earth Manipulation",
                 "Electricity Manipulation",
                 "Energy Manipulation",
                 "Fire Manipulation",
@@ -30816,6 +31271,7 @@
                 "Radiation Melee",
                 "Savage Melee",
                 "Staff Fighting",
+                "Stone Melee",
                 "Titan Weapons",
                 "War Mace",
                 "Battle Axe",
@@ -30878,7 +31334,8 @@
                 "Radiation Melee",
                 "Savage Melee",
                 "Spines",
-                "Staff Fighting"
+                "Staff Fighting",
+                "Stone Melee"
             ],
             "secondary_category": [
                 "Bio Armor",
@@ -30892,6 +31349,7 @@
                 "Radiation Armor",
                 "Regeneration",
                 "Shield Defense",
+                "Stone Armor",
                 "Super Reflexes",
                 "Willpower",
                 "Bio Armor",
@@ -30929,6 +31387,7 @@
                 "Radiation Armor",
                 "Regeneration",
                 "Shield Defense",
+                "Stone Armor",
                 "Super Reflexes",
                 "Willpower"
             ]
@@ -31107,6 +31566,9 @@
         "Earth Control": [
             "controller",
             "dominator"
+        ],
+        "Earth Manipulation": [
+            "blaster"
         ],
         "Earth Mastery": [],
         "Electric Armor": [
@@ -31481,6 +31943,9 @@
         ],
         "Savage Melee": [
             "melee"
+        ],
+        "Seismic Blast": [
+            "blaster"
         ],
         "Shield Defense": [
             "melee"

@@ -307,11 +307,12 @@ def add_primary_secondary(powers):
 			for pc in pcfiles:
 				with open(pcfolder+pc) as f2:
 					pc_data = json.load(f2)
-					if pc_data['archetypes'] and at_data['name'] == pc_data['archetypes'][0]:
-						if primary == pc_data['name'].lower():
-							powers['powercategories'][archetype]['primary_category'] += pc_data['powerset_display_names']
-						if secondary == pc_data['name'].lower():
-							powers['powercategories'][archetype]['secondary_category'] += pc_data['powerset_display_names']
+					if 'archetypes' in pc_data and pc_data['archetypes']:
+						if at_data['name'] == pc_data['archetypes'][0]:
+							if primary == pc_data['name'].lower():
+								powers['powercategories'][archetype]['primary_category'] += pc_data['powerset_display_names']
+							if secondary == pc_data['name'].lower():
+								powers['powercategories'][archetype]['secondary_category'] += pc_data['powerset_display_names']
 
 
 
