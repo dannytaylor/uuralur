@@ -286,7 +286,7 @@ def main(con):
 		hdf['targets_opacity'] = 0.2*(hdf['targets']/max(hdf['targets']))**1.5
 		hdf['otp_opacity'] = 0.2*hdf['otp_float']**3
 		hdf['onheal_opacity'] = 0.5*hdf['on heal float']**2.5
-		hdf['surv_opacity'] = 0.1*hdf['surv_float']**2
+		hdf['surv_opacity'] = 0.1*hdf['surv_float']**1.5
 		opacities = ['deaths_opacity','targets_opacity','otp_opacity','onheal_opacity','surv_opacity']
 
 		hdf['atk tm'] = hdf['avg atk'].map("{:0.2f}".format)

@@ -61,31 +61,31 @@ function(params) {
 deaths_bg = JsCode("""
 function(params) {
 	var c = "rgba(229, 57, 53,"+params.data.deaths_opacity+")";
-	return {"background-color":c,};
+	return {"background-color":c,"text-align": "center"};
 }
 """)
 targets_bg = JsCode("""
 function(params) {
 	var c = "rgba(251, 192, 45,"+params.data.targets_opacity+")";
-	return {"background-color":c,};
+	return {"background-color":c,'text-align': 'center'};
 }
 """)
 surv_bg = JsCode("""
 function(params) {
 	var c = "rgba(0, 137, 123,"+params.data.surv_opacity+")";
-	return {"background-color":c,};
+	return {"background-color":c,'text-align': 'center'};
 }
 """)
 otp_bg = JsCode("""
 function(params) {
 	var c = "rgba(67, 160, 71,"+params.data.otp_opacity+")";
-	return {"background-color":c,};
+	return {"background-color":c,'text-align': 'center'};
 }
 """)
 onheal_bg = JsCode("""
 function(params) {
 	var c = "rgba(67, 160, 71,"+params.data.onheal_opacity+")";
-	return {"background-color":c,};
+	return {"background-color":c,'text-align': 'center'};
 }
 """)
 
