@@ -280,7 +280,7 @@ def main(con):
 		hero_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 		hero_gb.configure_columns(['win','loss','tie'],hide=True)
 		hero_gb.configure_selection('single', pre_selected_rows=None)
-		hero_gb.configure_grid_options(headerHeight=0)
+		# hero_gb.configure_grid_options(headerHeight=10)
 
 		# init layout for player_sel
 		c11 = c2.empty()
@@ -360,7 +360,7 @@ def main(con):
 				p_heroes_gb.configure_columns('archetype',cellRenderer=render.icon,width=32)
 				p_heroes_gb.configure_columns('#',width=32)
 
-				p_heroes_gb.configure_grid_options(headerHeight=0)
+				# p_heroes_gb.configure_grid_options(headerHeight=0)
 
 				p_hero_ag = AgGrid(
 					p_heroes,
@@ -400,7 +400,7 @@ def main(con):
 			matches_gb.configure_default_column(width=12,suppressMovable=True)
 			matches_gb.configure_columns(['map'],width=24)
 			matches_gb.configure_columns(['series_id'],width=36)
-			matches_gb.configure_grid_options(headerHeight=0)
+			# matches_gb.configure_grid_options(headerHeight=0)
 			if player_sel:
 				matches_ag = AgGrid(
 					matches,
