@@ -82,21 +82,26 @@ function(params) {
 	return {"background-color":c,'text-align': 'center'};
 }
 """)
+ontgt_bg = JsCode("""
+function(params) {
+	var c = "rgba(124, 179, 66,"+params.data.ontgt_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""")
 onheal_bg = JsCode("""
 function(params) {
 	var c = "rgba(67, 160, 71,"+params.data.onheal_opacity+")";
 	return {"background-color":c,'text-align': 'center'};
 }
-""")
-
-# not used currently
-spike_list = JsCode("""
+""") # percent on heal
+onhealn_bg = JsCode("""
 function(params) {
-	if(params.data.kill == "1") {
-		return {"backgroundColor":"rgba(255, 127, 80, 0.1)", "color":text_color};
-	}
+	var c = "rgba(124, 179, 66,"+params.data.onhealn_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
 }
-""")
+""") # count on heal
+
+
 
 # heal, atk, green, jaunt, phase, other/death
 spike_action_color = JsCode("""
