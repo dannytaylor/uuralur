@@ -98,7 +98,7 @@ def init_match_data(sid,mid,upload):
 	hero_df['surv'] = hero_df['surv'].map(lambda x: '' if x == 'nan%' else x)
 
 	hero_df['set1'] = hero_df['set1'].map(lambda x: '-' if x == None else x)
-	hero_df['icon_path'] = hero_df['archetype'].map(lambda x: "archetypes/"+x.replace('/','.')+'.png')
+	hero_df['icon_path'] = hero_df['archetype'].map(lambda x: "archetypes/warshade.png" if x == None else "archetypes/"+x.replace('/','.')+'.png') # placeholder if none
 	hero_df['at'] = hero_df['icon_path'].apply(util.image_formatter)
 
 	# computed opacities for styling
@@ -1366,7 +1366,7 @@ def main(con):
 
 		with c1:
 			# st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
-			with st.expander('filters',expanded=True):
+			with st.expander('filters',expanded=False):
 				with st.form('log filters'):
 					# list filters
 					# time bounds

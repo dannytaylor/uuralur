@@ -7711,7 +7711,7 @@
             "Plant Manipulation"
         ]
     },
-        "CrueI Existence": {
+    "CrueI Existence": {
         "archetype": "blaster",
         "sets": [
             "Fire Blast",
@@ -7738,5 +7738,57 @@
             "Fire Blast",
             "Plant Manipulation"
         ]
+    },
+    "Hushflow": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Maneskin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Maximum S": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Meth": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Slippy When Wet": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Want Some Kin?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "lemon skunk": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+     "Wrekkah": {
+        "archetype": "defender/corruptor"
     }
 }
