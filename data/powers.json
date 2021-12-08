@@ -8110,7 +8110,8 @@
     "Encase": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/SHATTER.FX",
@@ -8744,7 +8745,8 @@
     "Entomb": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/ENTOMB.FX",
@@ -16736,7 +16738,8 @@
     "Meteor": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/METEOR.FX",
@@ -21808,7 +21811,8 @@
     "Rock Shards": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/ROCKSHARDS.FX",
@@ -22254,7 +22258,8 @@
     "Seismic Force": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/AIM.FX",
@@ -22317,7 +22322,8 @@
             "POWERS/STONEFX/SEISMICSHOCKWAVES.FX"
         ],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [],
         "effect_area": "AoE",
@@ -25208,7 +25214,8 @@
     "Stalagmite": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/STALAGMITESTOMP.FX",
@@ -28404,7 +28411,8 @@
     "Tombstone": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/TOMBSTONE.FX",
@@ -29369,7 +29377,8 @@
     "Upthrust": {
         "activation_fx": [],
         "archetypes": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "attack_fx": [
             "POWERS/EARTHCONTROL/UPTHRUST.FX",
@@ -30910,6 +30919,7 @@
             "Psychic Blast",
             "Radiation Blast",
             "Radiation Emission",
+            "Seismic Blast",
             "Sonic Attack",
             "Sonic Resonance",
             "Storm Summoning",
@@ -31145,6 +31155,7 @@
                 "Ice Blast",
                 "Psychic Blast",
                 "Radiation Blast",
+                "Seismic Blast",
                 "Sonic Attacks",
                 "Water Blast",
                 "Archery",
@@ -31158,6 +31169,7 @@
                 "Ice Blast",
                 "Psychic Blast",
                 "Radiation Blast",
+                "Seismic Blast",
                 "Sonic Attack",
                 "Water Blast"
             ],
@@ -31945,7 +31957,8 @@
             "melee"
         ],
         "Seismic Blast": [
-            "blaster"
+            "blaster",
+            "defender/corruptor"
         ],
         "Shield Defense": [
             "melee"
