@@ -550,7 +550,7 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=sup_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
-			# height = 640,
+			height = len(sup_df)*48+64,
 			theme=table_theme
 		)
 	# END SUPPORT
@@ -657,7 +657,7 @@ def main(con):
 			gridOptions=def_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
 			update_mode='SELECTION_CHANGED',
-			height = 840,
+			height = 16*48+64,
 			theme=table_theme
 		)
 
@@ -871,7 +871,7 @@ def main(con):
 				gridOptions=of_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				update_mode='SELECTION_CHANGED',
-				height = 636 if not ss.mobile else 320,
+				height = len(hero_write)*48+64 if not ss.mobile else 320,
 				theme = table_theme,
 			)
 
@@ -1432,7 +1432,8 @@ def main(con):
 						allow_unsafe_jscode=True,
 						fit_columns_on_grid_load= not ss.mobile,
 						gridOptions=count_gb.build(),
-						theme=table_theme
+						theme=table_theme,
+						height = len(count_df)*48+64,
 					)
 
 			# apply filters
