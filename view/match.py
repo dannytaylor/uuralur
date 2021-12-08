@@ -220,7 +220,7 @@ def main(con):
 
 		hdf = hero_df.copy()
 
-		c1,c2,c3,c4,c5,c6,c7,c8 = st.columns([1,1,1,1,1,1,2.5,1.5])
+		c1,c2,c3,c4,c5,c7,c8 = st.columns([1,1,1,1,1,3,2])
 		# summary header
 		for t in [0,1]:
 			t2 = abs(t-1)
@@ -229,8 +229,8 @@ def main(con):
 			c2.metric("Score"*t2,m_score[t],m_score[t]-m_score[t2])
 			c3.metric("Spikes Called"*t2,m_spikes[t],m_spikes[t]-m_spikes[t2])
 			c4.metric("Attacks Thrown"*t2,m_attacks[t],m_attacks[t]-m_attacks[t2])
-			c5.metric("Avg Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c6.metric("Dmg Taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse")
+			# c6.metric("Avg Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
+			c5.metric("Dmg Taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse")
 
 
 		score_fig = go.Figure()
@@ -276,7 +276,7 @@ def main(con):
 			showlegend=False,
 			height=220,
 			margin={'t': 0,'b':0,'l':0,'r':0},
-			yaxis={'title':'score','fixedrange':True,'range':[0,max(m_score[0],m_score[1])]},
+			yaxis={'title':'score','fixedrange':True,'range':[0,1+max(m_score[0],m_score[1])]},
 			xaxis={'visible':True,'fixedrange':True,'range':[0,10],'title':'match time (m)'},
 		)
 		spike_fig.update_layout(
@@ -773,6 +773,13 @@ def main(con):
 	if ss.view['match'] == 'offence':
 		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
 
+		# split to only heroes with attack chains
+		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
+
+		ontgt = {}
+		for i in [0,1]:
+			ontgt[i] = hdf[hdf['team']==i]['on_target'].sum()/m_spikes[i]
+
 		for t in [0,1]:
 			t2 = abs(t-1)
 			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
@@ -781,9 +788,8 @@ def main(con):
 			c3.metric("Attacks Thrown"*t2,m_attacks[t],m_attacks[t]-m_attacks[t2])
 			c4.metric("Mean Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
 			c5.metric("Median Timing"*t2,round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse')
+			c6.metric("Avg On Tgt"*t2,round(ontgt[t],1),round(ontgt[t]-ontgt[t2],2))
 
-		# split to only heroes with attack chains
-		hero_df = hero_df[(hero_df['attack_chains'] != "{}")]
 
 		with c7:
 			hero_sel_st = st.empty()
@@ -794,7 +800,7 @@ def main(con):
 			# box plot for attack timing
 			at_fig = make_subplots(rows=1,cols=2,column_widths=[0.7, 0.3],horizontal_spacing=0.05, shared_yaxes=True)
 			total_timing = {0:[],1:[]}
-			for h, row in hero_df.iterrows():
+			for h, row in hdf.iterrows():
 				total_timing[row['team']] += row['timing']
 				at_fig.add_trace(go.Box(
 					y=row['timing'],
@@ -838,7 +844,7 @@ def main(con):
 
 			
 			# slice DF to new df for offence
-			hero_write = hero_df[['team','hero','targets','deaths','otp','on_target','avg atk','med atk','var atk','atks','offtgt','first_attacks']+opacities]
+			hero_write = hdf[['team','hero','targets','deaths','otp','on_target','avg atk','med atk','var atk','atks','offtgt','first_attacks']+opacities]
 			hero_write = hero_write.rename(columns={"targets":'tgtd',"on_target": "ontgt", "avg atk": "avg","med atk": "med","var atk": "var","first_attacks":'first'})
 			hero_write = hero_write.sort_values(by='team')
 			# hero_write['team'] = hero_write['team'].map(team_emoji_map)
@@ -1157,9 +1163,9 @@ def main(con):
 			sf_gb = GridOptionsBuilder.from_dataframe(sf_write)
 			sf_gb.configure_default_column(filterable=False,suppressMovable=True)
 			sf_gb.configure_columns(['#','team','kill'],width=18)
-			sf_gb.configure_columns(['atks','atkr'],width=60)
-			sf_gb.configure_columns(['time','dur','dmg'],width=54)
-			sf_gb.configure_columns(['target'],width=100,cellStyle=render.team_color)
+			sf_gb.configure_columns(['atks','atkr','time'],width=60)
+			sf_gb.configure_columns(['dur','dmg'],width=54)
+			sf_gb.configure_columns(['target'],width=92,cellStyle=render.team_color)
 			sf_gb.configure_selection('single', pre_selected_rows=[0])
 			sf_gb.configure_columns('dur',filterable=True)
 			sf_gb.configure_columns('dmg',type='customNumericFormat',precision=0)
@@ -1280,12 +1286,12 @@ def main(con):
 					acolours.append('GreenYellow')
 				elif 'Attack' in tags:
 					acolours.append('crimson')
+				elif 'Phase' in tags:
+					acolours.append('DeepSkyBlue')
 				elif 'Heal' in tags:
 					acolours.append('limegreen')
 				elif 'Teleport' in tags:
 					acolours.append('gold')
-				elif 'Phase' in tags:
-					acolours.append('DeepSkyBlue')
 				else:
 					acolours.append('Grey')
 
@@ -1295,11 +1301,26 @@ def main(con):
 			hp_y_max = max(sp_hp_df['hp'].max(),sp_hp_df['hp_loss'].max(),2000)
 			hp_range=[act_min,hit_max]
 
+			y_cast,y_hit = 1.6,0.6
 			sp_fig.add_trace(go.Scatter(x=[hp_range[0]-1,1+max(hp_range[1],max(sl['hit']))],y= [4,4],fill='tozeroy', mode='none',fillcolor='white',
 				),row=2, col=1)
+
+			## line between cast and hit but looks kinda ugly
+			# i = 0
+			# for a,row in sl.iterrows():
+			# 	sp_fig.add_trace(go.Scatter(
+			# 		x=[row['cast'],row['hit']],
+			# 		y=[y_cast,y_hit],
+			# 		name='',
+			# 		mode='lines',
+			# 		line=dict(color=acolours[i], width=2),
+			# 		opacity=0.15,
+			# 	),row=2, col=1)
+			# 	i += 1
+
 			sp_fig.add_trace(go.Scatter(
 				x=sl['cast'],
-				y=[1.6]*len(sl['cast']),
+				y=[y_cast]*len(sl['cast']),
 				name='',
 				text=sl['actor']+"<br>"+sl['action'],
 				marker_color=acolours,
@@ -1309,7 +1330,7 @@ def main(con):
 			),row=2, col=1)
 			sp_fig.add_trace(go.Scatter(
 				x=sl['hit'],
-				y=[0.6]*len(sl['cast']),
+				y=[y_hit]*len(sl['cast']),
 				name='',
 				text=sl['actor']+"<br>"+sl['action'],
 				marker_color=acolours,
