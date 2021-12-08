@@ -7788,7 +7788,11 @@
             "Nature Affinity"
         ]
     },
-     "Wrekkah": {
-        "archetype": "defender/corruptor"
+    "Wrekkah": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
     }
 }
