@@ -1,4 +1,4 @@
-import os,datetime,yaml,hashlib,time
+import os,datetime,yaml,hashlib,time,re
 import streamlit as st
 ss = st.session_state # global shorthand for this file
 import parse
@@ -36,14 +36,27 @@ def main():
 		Contact Xhiggy if you'd like to add a large amount of demos to the site.
 		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.)
 
+		If you'd like to separate your uploads from others at the same time enter a 1-2 character suffix below (and use the same code for subsequent uploads for the series),
+		otherwise leave blank. May temporarily disable match viewing while demo is parsing (~10 seconds). Refresh page if this error occurs.
+
 		""")
 
-	upload_st = st.empty()
-	uploaded_file = upload_st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None)
+	c1,c2=st.columns([9,1])
+	upload_st = c1.empty()
+	upload_sf = c2.empty()
+	
+	uploaded_file = upload_st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False)
+	upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
+	upload_suffix = re.sub(r'\W+', '', upload_suffix)
+
+
 	if uploaded_file is not None:
+		upload_sf.empty()
 		# format date for folder name
 		f_date = str(datetime.date.today()).replace('-','')[2:]
-		f_sid = f_date + "_upload"
+		if upload_suffix:
+			upload_suffix = "_"+upload_suffix
+		f_sid = f_date + "_upload"+upload_suffix
 
 		# f_name = uploaded_file.name
 		bytes_data = uploaded_file.getvalue()
