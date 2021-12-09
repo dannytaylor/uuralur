@@ -26,10 +26,10 @@
   "1": {"SCORE": [0,1]}
  },
  "200924_rare_vori": {
-  "1": {"SCORE": [0,1]},
-  "2": {"SCORE": [0,1]},
-  "3": {"SCORE": [0,1]},
-  "4": {"SCORE": [0,1]},
+  "1": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "2": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "3": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "4": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
   "5": {"SCORE": [0,1]}
  },
  "200925_vori_mft": {
@@ -68,9 +68,18 @@
   "6": {"TEAMSWAP": 1}
  },
  "200930_rare_rng": {
-  "1": {"TEAMSWAP": 1},
-  "2": {"TEAMSWAP": 1},
-  "3": {"TEAMSWAP": 1}
+  "1": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        },
+  "2": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        },
+  "3": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        }
  },
  "201001_mft_brew": {
   "1": {"TEAMSWAP": 1},
@@ -117,9 +126,9 @@
   "4": {"SCORE": [1,0]}
  },
  "201007_rare_gb": {
-  "1": {"SCORE": [1,0]},
-  "2": {"TEAMSWAP": 1},
-  "3": {"TEAMSWAP": 1},
+  "1": {"SCORE": [1,0],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "2": {"TEAMSWAP": 1,"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "3": {"TEAMSWAP": 1,"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
   "4": {"TEAMSWAP": 1},
   "5": {"TEAMSWAP": 1}
  },

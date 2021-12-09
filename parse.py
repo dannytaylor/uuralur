@@ -52,7 +52,7 @@ def demo2lines(demo):
 	return lines,demomap
 
 # returns player names and ids from demo
-def demo2heroes(lines):
+def demo2heroes(lines,sid,mid):
 	heroes = {}
 	npcs = []
 	for i in range(min(30000,len(lines))): # should find all heroes by 30k lines
@@ -72,6 +72,12 @@ def demo2heroes(lines):
 						heroes[hid].firstherofound = True # for team ordering later
 		if len(heroes) >= 16:
 			break
+
+	if OVERRIDE and sid in overrides and mid in overrides[sid] and "HERONAME" in overrides[sid][mid]:
+		for hid,h in heroes.items():
+			if h.name in overrides[sid][mid]['HERONAME']:
+				h.name = overrides[sid][mid]['HERONAME'][h.name]
+
 
 	# assign player names to hero names
 	for hid,h in heroes.items():
@@ -892,7 +898,7 @@ def parsematch(path): # primary demo parse function
 	# PARSE LOGIC
 	with open(path,'r') as demofile:
 		lines,demomap = demo2lines(demofile)		
-		heroes = demo2heroes(lines)
+		heroes = demo2heroes(lines,sid,mid)
 		starttime = matchstart(lines,heroes)
 		actions, hp = demo2data(lines,heroes,starttime)
 		assignteams(sid,mid,heroes,actions) # pass sid and mid to allow teamswap override at runtime
