@@ -1573,6 +1573,7 @@ def main(con):
 		table_title = 'heroes'
 		if name_toggle == 'player name':
 			table_title = 'players'
+			mh_df['player_name'] = mh_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
 			mh_df['hero'] = mh_df['player_name']
 
 
