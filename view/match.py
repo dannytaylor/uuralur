@@ -1438,7 +1438,7 @@ def main(con):
 
 			# apply filters
 			if not a_filtertoggle:
-				a_df = a_df.loc[(a_df['action_type'] != 'Toggle')&(a_df['action_target_type'] != 'Self')]
+				a_df = a_df.loc[~((a_df['action_type'] == 'Toggle')&(a_df['action_target_type'] == 'Self'))]
 			if not a_spikes:
 				a_df = a_df.loc[(~a_df['spike_id'].notnull())]
 			if not a_nonspikes:
