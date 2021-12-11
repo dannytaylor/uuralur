@@ -1355,8 +1355,8 @@ def main(con):
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
 			sl_gb.configure_default_column(filterable=False,suppressMovable=True)
-			sl_gb.configure_columns(['actor','action'],width=84)
-			sl_gb.configure_columns(['cast','hit','dist'],width=40)
+			sl_gb.configure_columns(['actor','action'],width=80)
+			sl_gb.configure_columns(['cast','hit','dist'],width=44)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
 			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)

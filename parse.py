@@ -830,6 +830,7 @@ def spikeparse(heroes,actions,hitpoints):
 		newspike = c.Spike(si)
 		spikestart = 9999999999 # arbitrarily large number
 		spikeend   = 0
+		spikedeathtime   = None
 		spikeactors = {}
 		firsthit = spikestart
 		for a in sa:
@@ -843,6 +844,7 @@ def spikeparse(heroes,actions,hitpoints):
 				newspike.targetteam = heroes[a.tid].team
 			if a.action == "Death":
 				newspike.kill = 1
+				spikedeathtime = a.time_ms
 			if a.hid not in spikeactors: 
 				spikeactors[a.hid] = 1
 		# once timing has been determined assign relative time for each action
@@ -857,6 +859,8 @@ def spikeparse(heroes,actions,hitpoints):
 		# duration and hploss use absolute time to calculation
 		# spikestart is recalculated based on certain params
 		newspike.duration = spikeend - spikestart
+		if spikedeathtime: 
+			newspike.duration = spikedeathtime - spikestart
 		newspike.end = spikeend
 		newspike.start = spikestart 
 		newspike.hitwindow	  = spikeend - firsthit
