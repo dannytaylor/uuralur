@@ -7794,5 +7794,40 @@
             "Seismic Blast",
             "Nature Affinity"
         ]
+    },
+    "CoHCrypt0COIN": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Time Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Not Another wannabe": {
+        "archetype": "sentinel",
+        "sets": [
+            "Radiation Blast",
+            "Ninjitsu"
+        ]
+    },
+    "Queenut": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "jim likes dinosaurs5": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Lykarin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Pain Domination",
+            "Ice Blast"
+        ]
     }
 }
