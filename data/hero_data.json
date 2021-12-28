@@ -7829,5 +7829,67 @@
             "Pain Domination",
             "Ice Blast"
         ]
+    },
+    "Been to Wrecks base?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Havana": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Pain Domination"
+        ]
+    },
+    "Janie Claus": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Lobster Disrespect": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Long Legged Larry": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Cold Domination",
+            "Ice Blast"
+        ]
+    },
+    "Pyroquinn": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Sinnoh": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "WrecktumPics": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Luanaku": {
+        "archetype": "defender/corruptor"
+    },
+    "Lymphocyte": {
+        "archetype": "defender/corruptor"
     }
 }
