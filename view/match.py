@@ -297,9 +297,11 @@ def main(con):
 		hdf['atk tm'] = hdf['atk tm'].map(lambda x: '' if x == 'nan' else x)
 		hdf['heal t'] = hdf['avg heal'].map("{:0.2f}".format)
 		hdf['heal t'] = hdf['heal t'].map(lambda x: '' if x == 'nan' else x)
+		hdf['atks'] = hdf['atks'].map(lambda x: '' if x == 0 else x)
+		hdf['heals'] = hdf['heals'].map(lambda x: '' if x == 0 else x)
 		hdf['dmg tk'] = hdf['damage_taken']/1000
 		hdf['dmg tk'] = hdf['dmg tk'].map("{:0.1f}K".format)
-		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','otp','on heal%','atks','atk tm']+opacities]
+		hdf = hdf[['team','hero','support','at','set1','set2','deaths','targets','surv','otp','on heal%','atks','heals']+opacities]
 		hdf['support'] = hdf['support'].fillna(0)
 		hdf = hdf.sort_values(['team','support'],ascending=[True,True])
 		hdf = hdf.rename(columns={'on heal%':'onheal'})
