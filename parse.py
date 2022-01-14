@@ -931,7 +931,7 @@ def parsematch(path): # primary demo parse function
 			score[1]+= overrides[sid][mid]['SCORE'][1]
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
 
-	print('score:     ', score)
+	print('score:     ', score,demomap)
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
 	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],targets[0],targets[1]])
