@@ -194,4 +194,5 @@ team_name_map = {
 	"elk":"elk",
 	"pug":"pug",
 	"putos":"putos",
+	"taco":"taco",
 }

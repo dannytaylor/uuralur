@@ -7891,5 +7891,89 @@
     },
     "Lymphocyte": {
         "archetype": "defender/corruptor"
+    },
+    "Janie too": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "NoLongerB": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "PopsicleTreat": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Slipstone": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Toh Heals": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Pain Domination"
+        ]
+    },
+    "Absquatulate": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Aguido Taukaboutit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Force Field",
+            "Ice Blast"
+        ]
+    },
+    "Dr Meaner": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Hardcore Hustle": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Scatcramento": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Wrecktums": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "cali4nia b0ne": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
     }
 }

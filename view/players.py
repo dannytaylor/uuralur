@@ -121,9 +121,9 @@ def main(con):
 		# match type filters 
 		if match_type != 'all':
 			if match_type == 'kb':
-				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')]
+				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco')]
 			else:
-				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb'))]
+				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco'))]
 		if win_filter != 'all':
 			if win_filter == 'win':
 				mh_df = mh_df[mh_df['win'] == 1]
