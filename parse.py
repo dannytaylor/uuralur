@@ -118,7 +118,7 @@ def matchstart(lines,h):
 					return time_ms
 
 def countdeath(h,time_ms):
-	if time_ms > config['death_cooldown'] + h.lastdeath: # at least 5 sec from last death to prevent double counts
+	if time_ms > config['death_cooldown'] + h.lastdeath: # at least x sec from last death to prevent double counts
 		h.deaths += 1
 		h.lastdeath = time_ms
 		return True
