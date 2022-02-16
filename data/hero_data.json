@@ -7975,5 +7975,148 @@
             "Kinetics",
             "Fire Blast"
         ]
+    },
+    "Cowboy Like Me": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Curls": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "EL Cacahuate": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Fall Back": {
+        "archetype": "dominator",
+        "sets": [
+            "Mind Control",
+            "Energy Assault"
+        ]        
+    },
+    "Frozen Turd": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Miami Ice": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Mizeron": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Martial Combat"
+        ]
+    },
+    "PeaNFT": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Tu Madre": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "ghostmatter": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Lunaken": {
+        "archetype": "defender/corruptor"
+    },
+"Frozentreats": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Patagoneano": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "bad bollywoo": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "bone zone": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "dubai bye": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "hokey pokey": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "miso gynist": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "phone home": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "pupperoni": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Psychic Blast"
+        ]
+    },
+    "ysigd": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
     }
 }
