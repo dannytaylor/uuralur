@@ -8202,5 +8202,60 @@
             "Ice Blast",
             "Nature Affinity"
         ]
+    },
+    "Heuchera": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Hisuian": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Rikketa": {
+        "archetype": "blaster",
+        "sets": [
+            "Martial Combat",
+            "Fire Blast"
+        ]
+    },
+    "Shanghai Butterfly": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Venerable": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Traps",
+            "Fire Blast"
+        ]
+    },
+    "Wreckktums": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Energy Blast"
+        ]
+    },
+    "Wreckkum": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "Jagwa": {
+        "archetype": "defender/corruptor"
+    },
+    "Mint Test": {
+        "archetype": "defender/corruptor"
     }
 }
