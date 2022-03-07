@@ -8118,5 +8118,89 @@
             "Psychic Blast",
             "Plant Manipulation"
         ]
+    },
+    "Ciara's Prayer": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Energy Blast"
+        ]
+    },
+    "Freedomlobsta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "High Middle": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Natrinom": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Quishmishma": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Sylvain": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "bury bobster": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "copacetic": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "one fifty": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Psychic Blast"
+        ]
+    },
+    "samIam": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "trendsetter": {
+        "archetype": "mastermind",
+        "sets": [
+            "Empathy",
+            "Thugs"
+        ]
+    },
+    "yeyeoughta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
     }
 }
