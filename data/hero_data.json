@@ -8257,5 +8257,47 @@
     },
     "Mint Test": {
         "archetype": "defender/corruptor"
+    },
+        "Kazemai": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Thermal Radiation"
+        ]
+    },
+    "Lady Frostwing": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Stolenshade": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Gravity Control"
+        ]
+    },
+    "Vorcha": {
+        "archetype": "arachnos_widow",
+        "sets": [
+            "Teamwork",
+            "Fortunata Training"
+        ]
+    },
+    "a little chili": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "johnny priest": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
     }
 }
