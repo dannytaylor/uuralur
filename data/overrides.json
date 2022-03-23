@@ -1266,5 +1266,11 @@
  },
  "220303_rng_wd": {
   "6": {"TEAMSWAP": 1}
+ },
+ "220322_kb": {
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "5": {"HERONAME":{"Dogger":"Sea Dogger"}}
  }
 }

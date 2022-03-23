@@ -8299,5 +8299,62 @@
             "Kinetics",
             "Fire Blast"
         ]
+    },
+
+    "Capt Meaner": {
+        "archetype": "blaster",
+        "sets": [
+            "Dark Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Cleocatra": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Cryodrakon": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Ice Blast"
+        ]
+    },
+    "Found my super suit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Cold Domination",
+            "Ice Blast"
+        ]
+    },
+    "Sea Dogger": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Wreckkah": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "blick blick": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Seismic Blast"
+        ]
+    },
+    "margarita": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
     }
 }
