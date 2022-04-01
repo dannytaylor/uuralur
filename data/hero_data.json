@@ -8412,5 +8412,40 @@
             "Nature Affinity",
             "Ice Blast"
         ]
+    },
+    "-Nakoma": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Bokkereyder": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "DarkestMalice": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "Slow weather Jamz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Psychic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "wrekz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Psychic Blast",
+            "Nature Affinity"
+        ]
     }
 }
