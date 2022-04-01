@@ -1272,5 +1272,8 @@
   "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "5": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220324_wd_rng": {
+  "6": {"TEAMSWAP": 1}
  }
 }

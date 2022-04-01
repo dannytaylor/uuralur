@@ -8356,5 +8356,61 @@
             "Ice Blast",
             "Nature Affinity"
         ]
+    },
+    "Dayvan Cowboy": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Psychic Blast"
+        ]
+    },
+    "Moist Taint": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Poison"
+        ]
+    },
+    "Money Folder": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Psychic Blast"
+        ]
+    },
+    "Piatue Psauscey": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "Poned v2": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Empathy",
+            "Psychic Blast"
+        ]
+    },
+    "With Butterfly Wings": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Dual Pistols",
+            "Electrical Affinity"
+        ]
+    },
+    "Wrec tum": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Psychic Blast"
+        ]
+    },
+    "compsognathus": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
     }
 }
