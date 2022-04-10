@@ -1275,5 +1275,24 @@
  },
  "220324_wd_rng": {
   "6": {"TEAMSWAP": 1}
+ },
+ "220405_taco": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220407_wd_rng": {
+  "1": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "2": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "3": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "4": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "5": {"HERONAME":{"Prideful":"Prideful-Seagate"}}
+  },
+ "220409_kb": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
  }
 }

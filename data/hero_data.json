@@ -8447,5 +8447,77 @@
             "Psychic Blast",
             "Nature Affinity"
         ]
+    },
+    "Cool Kin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "Euthanasia": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Glacial-": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "R86": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "bussin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Beam Rifle"
+        ]
+    },
+    "DondeEstaHomeDepot?": {
+        "archetype": "defender/corruptor"
+    },
+    "Janie": {
+        "archetype": "melee"
+    },
+    "Mystic-Maximum": {
+        "archetype": "defender/corruptor"
+    },
+    "Whoogiekinsit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Firourzja": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Prideful-Seagate": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Rystorm": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
     }
 }
