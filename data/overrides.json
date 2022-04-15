@@ -1294,5 +1294,19 @@
   "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
- }
+ },
+ "220412_taco": {
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220414_wd_rng": {
+  "1": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "2": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "3": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "4": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "5": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "6": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "7": {"HERONAME":{"Prideful":"Prideful-Seagate"}}
+  }
 }

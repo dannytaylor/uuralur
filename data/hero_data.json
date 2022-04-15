@@ -8519,5 +8519,57 @@
             "Fire Blast",
             "Kinetics"
         ]
+    },
+    "Ice AJ": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Justin Wire": {
+        "archetype": "blaster",
+        "sets": [
+            "Dark Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Lib's Libido": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Steel-Patriot": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Tripel Karmeliet": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Poison"
+        ]
+    },
+    "Mo Betta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "can mallex do this?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "Aeolan": {
+        "archetype": "defender/corruptor"
     }
 }
