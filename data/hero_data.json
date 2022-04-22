@@ -8571,5 +8571,54 @@
     },
     "Aeolan": {
         "archetype": "defender/corruptor"
+    },
+    "Answer AI": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Ryleus": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Thermobarik": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "Toilet Water'": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Areola": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Clitoria Euphoria": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "marijuana grande": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
     }
 }

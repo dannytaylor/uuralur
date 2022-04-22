@@ -1308,5 +1308,13 @@
   "5": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
   "6": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
   "7": {"HERONAME":{"Prideful":"Prideful-Seagate"}}
-  }
+  },
+ "220419_taco": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "5": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "6": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ }
 }
