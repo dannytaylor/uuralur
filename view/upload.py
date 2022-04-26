@@ -41,22 +41,22 @@ def main():
 
 		""")
 
-	c1,c2=st.columns([9,1])
-	upload_st = c1.empty()
-	upload_sf = c2.empty()
+	# c1,c2=st.columns([9,1])
+	upload_st = st.empty()
+	# upload_sf = c2.empty()
 	
 	uploaded_file = upload_st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False)
-	upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
-	upload_suffix = re.sub(r'\W+', '', upload_suffix)
+	# upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
+	# upload_suffix = re.sub(r'\W+', '', upload_suffix)
 
 
 	if uploaded_file is not None:
 		upload_sf.empty()
 		# format date for folder name
 		f_date = str(datetime.date.today()).replace('-','')[2:]
-		if upload_suffix:
-			upload_suffix = "_"+upload_suffix
-		f_sid = f_date + "_upload"+upload_suffix
+		# if upload_suffix:
+		# 	upload_suffix = "_"+upload_suffix
+		f_sid = f_date + "_upload"
 
 		# f_name = uploaded_file.name
 		bytes_data = uploaded_file.getvalue()

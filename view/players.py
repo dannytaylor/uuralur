@@ -260,7 +260,8 @@ def main(con):
 		c1,c2 = st.columns([2,8])
 		pname_empty = c1.empty()
 		c2.markdown("""<p class="font20"" style="display:inline;color:{}";>{}</p><p></p>""".format(config['header_color'],'overall stats'),True)
-		c1,c2,c3,c4,c5,c6 = st.columns([2,1,1,1,3,2])
+		# c1,c2,c3,c4,c5,c6 = st.columns([2,1,1,1,3,2])
+		c1,c2,c3,c4 = st.columns([3,1,1,1])
 
 
 		# st.write(hero_df)
@@ -300,36 +301,34 @@ def main(con):
 		c43 = c4.empty()
 
 		# at breakdown
+		c6,c5 = st.columns([2.5,3.5])
 		pset_fig_empty = c5.empty()
 		path_options = ['archetype','set 1','set 2']
-		pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
+		pset_path = c6.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
 		if not pset_path:
 			pset_path = path_options		
 
 		# map pie
-		c6.write('')
-		map_fig_empty = c6.empty()
+		# c6.write('')
+		sunburst_order_empty = c6.empty()
 		
 
-		c1.markdown("""<p><br></p>""",True) #pfp spacer
-		pfp = c1.empty()
-		match_linker = c6.empty()
-	
-		c1,c0,c2,c00,c3 = st.columns([2,0.25,5,0.25,2.5])
+		# c5.markdown("""<p><br></p>""",True) #pfp spacer
+		# pfp = c5.empty()
+		
+		c2,match_linker,c3 = st.empty(),st.empty(),st.empty()
 
 		player_sel = None
 		hero_sel = None
 		with c1:
 
-			st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
-				
 			hero_ag = AgGrid(
 				hero_write,
 				allow_unsafe_jscode=True,
 				gridOptions=hero_gb.build(),
 				update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load= not ss.mobile,
-				height = table_height,
+				height = 344,
 				theme=table_theme
 			)
 
@@ -368,7 +367,7 @@ def main(con):
 					gridOptions=p_heroes_gb.build(),
 					fit_columns_on_grid_load= not ss.mobile,
 					update_mode='SELECTION_CHANGED',
-					height = table_height,
+					# height = table_height,
 					theme=table_theme
 				)
 
@@ -382,6 +381,7 @@ def main(con):
 			c3.markdown("""<div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div>""",True)
 			c3.markdown("""<div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display filtered matches.'),True)
 
+			
 		with c3:
 			matches = ss.matches.copy()
 			if player_sel:
@@ -408,7 +408,7 @@ def main(con):
 					gridOptions=matches_gb.build(),
 					update_mode='SELECTION_CHANGED',
 					fit_columns_on_grid_load= not ss.mobile,
-					height = table_height,
+					# height = table_height,
 					theme=table_theme
 				)
 				row = matches_ag['selected_rows']
@@ -444,14 +444,15 @@ def main(con):
 			pfp_players = [i.split('.')[0] for i in pfp_files]
 			
 			pname_empty.markdown("""<p class="font20""  style="display:inline;color:#4d4d4d";>{}</p>""".format(player_sel),True)
-			if player_sel in pfp_players:
-				image_path = pfp_path+'/'+[p for p in pfp_files if player_sel in p][0]
-				# img = util.resize_image(pfp_path+'/'+image_path)
-				pfp.image(util.resize_image(image_path,200)) 
-			else:
-				pfp.image(pfp_path + '/null.png') 
+			# if player_sel in pfp_players:
+			# 	image_path = pfp_path+'/'+[p for p in pfp_files if player_sel in p][0]
+			# 	# img = util.resize_image(pfp_path+'/'+image_path)
+			# 	pfp.image(util.resize_image(image_path,200)) 
+			# else:
+			# 	pfp.image(pfp_path + '/null.png') 
 		else:
-			pfp.image(pfp_path + '/null.png') 
+			pname_empty.markdown("""<p class="font20""  style="display:inline;color:#4d4d4d";>{}</p>""".format("Players"),True)
+			# pfp.image(pfp_path + '/null.png') 
 
 
 		pset_hero_df = hero_df.copy()
@@ -533,8 +534,8 @@ def main(con):
 		c43.metric('# jaunts',metrics[43])
 
 		pset_fig_empty.plotly_chart(pset_fig,use_container_width=True,config={'displayModeBar': False})
-		if not ss.mobile:
-			map_fig_empty.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
+		# if not ss.mobile:
+		# 	map_fig_empty.plotly_chart(map_fig,use_container_width=True,config={'displayModeBar': False})
 
 
 
