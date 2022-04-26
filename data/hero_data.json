@@ -7352,7 +7352,7 @@
     "Overdose": {
         "archetype": "defender/corruptor",
         "sets": [
-            "Pain Domination",
+            "Empathy",
             "Dark Blast"
         ]
     },
@@ -7711,7 +7711,7 @@
             "Plant Manipulation"
         ]
     },
-        "CrueI Existence": {
+    "CrueI Existence": {
         "archetype": "blaster",
         "sets": [
             "Fire Blast",
@@ -7737,6 +7737,888 @@
         "sets": [
             "Fire Blast",
             "Plant Manipulation"
+        ]
+    },
+    "Hushflow": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Maneskin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Maximum S": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Meth": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Slippy When Wet": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Want Some Kin?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "lemon skunk": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Wrekkah": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "CoHCrypt0COIN": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Time Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Not Another wannabe": {
+        "archetype": "sentinel",
+        "sets": [
+            "Radiation Blast",
+            "Ninjitsu"
+        ]
+    },
+    "Queenut": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "jim likes dinosaurs5": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Lykarin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Pain Domination",
+            "Ice Blast"
+        ]
+    },
+    "Been to Wrecks base?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Havana": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Pain Domination"
+        ]
+    },
+    "Janie Claus": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Lobster Disrespect": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Long Legged Larry": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Cold Domination",
+            "Ice Blast"
+        ]
+    },
+    "Pyroquinn": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Sinnoh": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "WrecktumPics": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Luanaku": {
+        "archetype": "defender/corruptor"
+    },
+    "Lymphocyte": {
+        "archetype": "defender/corruptor"
+    },
+    "Janie too": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "NoLongerB": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "PopsicleTreat": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Slipstone": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Toh Heals": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Pain Domination"
+        ]
+    },
+    "Absquatulate": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Aguido Taukaboutit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Force Field",
+            "Ice Blast"
+        ]
+    },
+    "Dr Meaner": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Hardcore Hustle": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Scatcramento": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Wrecktums": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "cali4nia b0ne": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Cowboy Like Me": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Curls": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "EL Cacahuate": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Fall Back": {
+        "archetype": "dominator",
+        "sets": [
+            "Mind Control",
+            "Energy Assault"
+        ]        
+    },
+    "Frozen Turd": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Miami Ice": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Mizeron": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Martial Combat"
+        ]
+    },
+    "PeaNFT": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Tu Madre": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "ghostmatter": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Lunaken": {
+        "archetype": "defender/corruptor"
+    },
+"Frozentreats": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Patagoneano": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "bad bollywoo": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "bone zone": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "dubai bye": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "hokey pokey": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "miso gynist": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "phone home": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "pupperoni": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Psychic Blast"
+        ]
+    },
+    "ysigd": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Ciara's Prayer": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Energy Blast"
+        ]
+    },
+    "Freedomlobsta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "High Middle": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Natrinom": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Quishmishma": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Sylvain": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "bury bobster": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "copacetic": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "one fifty": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Psychic Blast"
+        ]
+    },
+    "samIam": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "trendsetter": {
+        "archetype": "mastermind",
+        "sets": [
+            "Empathy",
+            "Thugs"
+        ]
+    },
+    "yeyeoughta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Heuchera": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Hisuian": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Rikketa": {
+        "archetype": "blaster",
+        "sets": [
+            "Martial Combat",
+            "Fire Blast"
+        ]
+    },
+    "Shanghai Butterfly": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Venerable": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Traps",
+            "Fire Blast"
+        ]
+    },
+    "Wreckktums": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Energy Blast"
+        ]
+    },
+    "Wreckkum": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "Jagwa": {
+        "archetype": "defender/corruptor"
+    },
+    "Mint Test": {
+        "archetype": "defender/corruptor"
+    },
+        "Kazemai": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Thermal Radiation"
+        ]
+    },
+    "Lady Frostwing": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Stolenshade": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Gravity Control"
+        ]
+    },
+    "Vorcha": {
+        "archetype": "arachnos_widow",
+        "sets": [
+            "Teamwork",
+            "Fortunata Training"
+        ]
+    },
+    "a little chili": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "johnny priest": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+
+    "Capt Meaner": {
+        "archetype": "blaster",
+        "sets": [
+            "Dark Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Cleocatra": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Cryodrakon": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Ice Blast"
+        ]
+    },
+    "Found my super suit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Cold Domination",
+            "Ice Blast"
+        ]
+    },
+    "Sea Dogger": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Wreckkah": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "blick blick": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Seismic Blast"
+        ]
+    },
+    "margarita": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Dayvan Cowboy": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Psychic Blast"
+        ]
+    },
+    "Moist Taint": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Poison"
+        ]
+    },
+    "Money Folder": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Psychic Blast"
+        ]
+    },
+    "Piatue Psauscey": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "Poned v2": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Empathy",
+            "Psychic Blast"
+        ]
+    },
+    "With Butterfly Wings": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Dual Pistols",
+            "Electrical Affinity"
+        ]
+    },
+    "Wrec tum": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Psychic Blast"
+        ]
+    },
+    "compsognathus": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "-Nakoma": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Bokkereyder": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "DarkestMalice": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "Slow weather Jamz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Psychic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "wrekz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Psychic Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Cool Kin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Kinetics"
+        ]
+    },
+    "Euthanasia": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Glacial-": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "R86": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "bussin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Beam Rifle"
+        ]
+    },
+    "DondeEstaHomeDepot?": {
+        "archetype": "defender/corruptor"
+    },
+    "Janie": {
+        "archetype": "melee"
+    },
+    "Mystic-Maximum": {
+        "archetype": "defender/corruptor"
+    },
+    "Whoogiekinsit": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Firourzja": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Prideful-Seagate": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Rystorm": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "Ice AJ": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Justin Wire": {
+        "archetype": "blaster",
+        "sets": [
+            "Dark Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Lib's Libido": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "Steel-Patriot": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Tripel Karmeliet": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Poison"
+        ]
+    },
+    "Mo Betta": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "can mallex do this?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "Aeolan": {
+        "archetype": "defender/corruptor"
+    },
+    "Answer AI": {
+        "archetype": "dominator",
+        "sets": [
+            "Earth Control",
+            "Icy Assault"
+        ]
+    },
+    "Ryleus": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Thermobarik": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "Toilet Water'": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "Areola": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Clitoria Euphoria": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "marijuana grande": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
         ]
     }
 }

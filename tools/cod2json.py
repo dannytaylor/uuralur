@@ -35,6 +35,7 @@ def fetchicons(powerpath):
 			if iconname:
 				r = requests.get(url+iconname)
 				if r.status_code == 200: # if retrieved
+					print(iconname)
 					iconfile = open(iconpath+iconname, "wb")
 					iconfile.write(r.content)
 					iconfile.close()
@@ -43,13 +44,14 @@ def writejson(jsondata,filename,folder='.'):
 	with open(jsonfolder+'/'+folder+'/'+filename+'.json', 'w') as outfile:
 		json.dump(jsondata, outfile,indent=4)
 
-def ignore_powers(power):
+def ignore_power(power):
 	for ip in ignore_powers:
-		if ip in power:
+		if ip in not power:
 			return True
 	return False
 
 def main():
+	global powers
 	for at in ats:
 		url = 'https://cod.uberguy.net/homecoming/archetypes/'+at+'.json'
 		jsondata = fetchjson(url)

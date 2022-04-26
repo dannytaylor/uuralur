@@ -52,7 +52,7 @@ def demo2lines(demo):
 	return lines,demomap
 
 # returns player names and ids from demo
-def demo2heroes(lines):
+def demo2heroes(lines,sid,mid):
 	heroes = {}
 	npcs = []
 	for i in range(min(30000,len(lines))): # should find all heroes by 30k lines
@@ -72,6 +72,12 @@ def demo2heroes(lines):
 						heroes[hid].firstherofound = True # for team ordering later
 		if len(heroes) >= 16:
 			break
+
+	if OVERRIDE and sid in overrides and mid in overrides[sid] and "HERONAME" in overrides[sid][mid]:
+		for hid,h in heroes.items():
+			if h.name in overrides[sid][mid]['HERONAME']:
+				h.name = overrides[sid][mid]['HERONAME'][h.name]
+
 
 	# assign player names to hero names
 	for hid,h in heroes.items():
@@ -112,7 +118,7 @@ def matchstart(lines,h):
 					return time_ms
 
 def countdeath(h,time_ms):
-	if time_ms > config['death_cooldown'] + h.lastdeath: # at least 5 sec from last death to prevent double counts
+	if time_ms > config['death_cooldown'] + h.lastdeath: # at least x sec from last death to prevent double counts
 		h.deaths += 1
 		h.lastdeath = time_ms
 		return True
@@ -824,6 +830,7 @@ def spikeparse(heroes,actions,hitpoints):
 		newspike = c.Spike(si)
 		spikestart = 9999999999 # arbitrarily large number
 		spikeend   = 0
+		spikedeathtime   = None
 		spikeactors = {}
 		firsthit = spikestart
 		for a in sa:
@@ -837,6 +844,7 @@ def spikeparse(heroes,actions,hitpoints):
 				newspike.targetteam = heroes[a.tid].team
 			if a.action == "Death":
 				newspike.kill = 1
+				spikedeathtime = a.time_ms
 			if a.hid not in spikeactors: 
 				spikeactors[a.hid] = 1
 		# once timing has been determined assign relative time for each action
@@ -851,6 +859,8 @@ def spikeparse(heroes,actions,hitpoints):
 		# duration and hploss use absolute time to calculation
 		# spikestart is recalculated based on certain params
 		newspike.duration = spikeend - spikestart
+		if spikedeathtime: 
+			newspike.duration = spikedeathtime - spikestart
 		newspike.end = spikeend
 		newspike.start = spikestart 
 		newspike.hitwindow	  = spikeend - firsthit
@@ -892,7 +902,7 @@ def parsematch(path): # primary demo parse function
 	# PARSE LOGIC
 	with open(path,'r') as demofile:
 		lines,demomap = demo2lines(demofile)		
-		heroes = demo2heroes(lines)
+		heroes = demo2heroes(lines,sid,mid)
 		starttime = matchstart(lines,heroes)
 		actions, hp = demo2data(lines,heroes,starttime)
 		assignteams(sid,mid,heroes,actions) # pass sid and mid to allow teamswap override at runtime
@@ -921,7 +931,7 @@ def parsematch(path): # primary demo parse function
 			score[1]+= overrides[sid][mid]['SCORE'][1]
 		db.demo2db(mid,sid,hp,actions,spikes,heroes)
 
-	print('score:     ', score)
+	print('score:     ', score,demomap)
 	print('parsetime: ', str(datetime.datetime.now() - parsestart)) # parse runtime
 
 	db.insertsql("Matches",[mid,sid,demomap,0,score[0],score[1],targets[0],targets[1]])

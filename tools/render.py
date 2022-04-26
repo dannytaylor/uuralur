@@ -24,27 +24,27 @@ function(params) {
 # render cell text color from team
 team_color = JsCode("""
 function(params) {
-	if(params.data.team == "0") {return {"color":"dodgerblue",};} 
-	else return {"color":"tomato",};
+	if(params.data.team == "0") {return {"color":"#1946cf",};} 
+	else return {"color":"#d60000",};
 }
 """)
 
 target_team_color = JsCode("""
 function(params) {
-	if(params.data.target_team == "0") {return {"color":"dodgerblue",};} 
-	else return {"color":"tomato",};
+	if(params.data.target_team == "0") {return {"color":"#1946cf",};} 
+	else return {"color":"#d60000",};
 }
 """)
 
 blu = JsCode("""
 function(params) {
-	return {"color":"dodgerblue"};
+	return {"color":"#1946cf"};
 }
 """)
 
 red = JsCode("""
 function(params) {
-	return {"color":"tomato"};
+	return {"color":"#d60000"};
 }
 """)
 
@@ -57,14 +57,51 @@ function(params) {
 }
 """)
 
-# not used currently
-spike_list = JsCode("""
+# bg opacities from param
+deaths_bg = JsCode("""
 function(params) {
-	if(params.data.kill == "1") {
-		return {"backgroundColor":"rgba(255, 127, 80, 0.1)", "color":text_color};
-	}
+	var c = "rgba(229, 57, 53,"+params.data.deaths_opacity+")";
+	return {"background-color":c,"text-align": "center"};
 }
 """)
+targets_bg = JsCode("""
+function(params) {
+	var c = "rgba(251, 192, 45,"+params.data.targets_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""")
+surv_bg = JsCode("""
+function(params) {
+	var c = "rgba(0, 137, 123,"+params.data.surv_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""")
+otp_bg = JsCode("""
+function(params) {
+	var c = "rgba(67, 160, 71,"+params.data.otp_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""")
+ontgt_bg = JsCode("""
+function(params) {
+	var c = "rgba(124, 179, 66,"+params.data.ontgt_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""")
+onheal_bg = JsCode("""
+function(params) {
+	var c = "rgba(67, 160, 71,"+params.data.onheal_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""") # percent on heal
+onhealn_bg = JsCode("""
+function(params) {
+	var c = "rgba(124, 179, 66,"+params.data.onhealn_opacity+")";
+	return {"background-color":c,'text-align': 'center'};
+}
+""") # count on heal
+
+
 
 # heal, atk, green, jaunt, phase, other/death
 spike_action_color = JsCode("""
@@ -104,7 +141,7 @@ def init_css(width):
 	css_str = f"""
 		<style>
 			.reportview-container .main .block-container{{
-				padding: 3rem 1rem 1rem;
+				padding: 1rem 1rem 1rem;
 		"""
 	if not st.session_state.mobile:
 		css_str += f"""
@@ -113,18 +150,23 @@ def init_css(width):
 			"""
 	css_str += """}}{{}}
 		.font40 {
-		    font-size:40px !important;
+		    font-size:36px !important;
 		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
+		    font-family: 'Helvetica Neue', sans-serif;
 		    margin-top: 12px;
-		    margin-bottom: 34px;
+		    margin-bottom: 48px;
+		}
+
+		.fontheader {
+		    font-size:36px !important;
+		    font-weight: bold;
+		    font-family: 'Helvetica Neue', sans-serif;
 		}
 		.font20 {
 		    font-size:20px !important;
 		    font-weight: bold;
-		    font-family: 'Roboto', sans-serif;
-		    margin-top: 6px;
-		    margin-bottom: 6px;
+		    font-family: 'Helvetica Neue', sans-serif;
+		    margin: 0.5rem;
 		}
 		</style>
 		"""
@@ -152,4 +194,5 @@ team_name_map = {
 	"elk":"elk",
 	"pug":"pug",
 	"putos":"putos",
+	"taco":"taco",
 }

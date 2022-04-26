@@ -26,10 +26,10 @@
   "1": {"SCORE": [0,1]}
  },
  "200924_rare_vori": {
-  "1": {"SCORE": [0,1]},
-  "2": {"SCORE": [0,1]},
-  "3": {"SCORE": [0,1]},
-  "4": {"SCORE": [0,1]},
+  "1": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "2": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "3": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "4": {"SCORE": [0,1],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
   "5": {"SCORE": [0,1]}
  },
  "200925_vori_mft": {
@@ -68,9 +68,18 @@
   "6": {"TEAMSWAP": 1}
  },
  "200930_rare_rng": {
-  "1": {"TEAMSWAP": 1},
-  "2": {"TEAMSWAP": 1},
-  "3": {"TEAMSWAP": 1}
+  "1": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        },
+  "2": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        },
+  "3": {
+        "TEAMSWAP": 1,
+        "HERONAME":{"Blaziernoed":"Blaziernoed-HP"}
+        }
  },
  "201001_mft_brew": {
   "1": {"TEAMSWAP": 1},
@@ -117,9 +126,9 @@
   "4": {"SCORE": [1,0]}
  },
  "201007_rare_gb": {
-  "1": {"SCORE": [1,0]},
-  "2": {"TEAMSWAP": 1},
-  "3": {"TEAMSWAP": 1},
+  "1": {"SCORE": [1,0],"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "2": {"TEAMSWAP": 1,"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
+  "3": {"TEAMSWAP": 1,"HERONAME":{"Blaziernoed":"Blaziernoed-HP"}},
   "4": {"TEAMSWAP": 1},
   "5": {"TEAMSWAP": 1}
  },
@@ -1247,5 +1256,65 @@
   "3": {"TEAMSWAP": 1},
   "4": {"TEAMSWAP": 1},
   "7": {"SCORE": [0,1]}
+ },
+ "220113_wd_rng": {
+  "1": {"TEAMSWAP": 1}
+ },
+ "220120_wd_rng": {
+  "3": {"TEAMSWAP": 1},
+  "4": {"TEAMSWAP": 1}
+ },
+ "220303_rng_wd": {
+  "6": {"TEAMSWAP": 1}
+ },
+ "220322_kb": {
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "5": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220324_wd_rng": {
+  "6": {"TEAMSWAP": 1}
+ },
+ "220405_taco": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220407_wd_rng": {
+  "1": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "2": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "3": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "4": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "5": {"HERONAME":{"Prideful":"Prideful-Seagate"}}
+  },
+ "220409_kb": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220412_taco": {
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220414_wd_rng": {
+  "1": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "2": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "3": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "4": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "5": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "6": {"HERONAME":{"Prideful":"Prideful-Seagate"}},
+  "7": {"HERONAME":{"Prideful":"Prideful-Seagate"}}
+  },
+ "220419_taco": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "5": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "6": {"HERONAME":{"Dogger":"Sea Dogger"}}
  }
 }

@@ -121,9 +121,9 @@ def main(con):
 		# match type filters 
 		if match_type != 'all':
 			if match_type == 'kb':
-				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')]
+				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco')]
 			else:
-				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb'))]
+				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco'))]
 		if win_filter != 'all':
 			if win_filter == 'win':
 				mh_df = mh_df[mh_df['win'] == 1]
@@ -241,6 +241,7 @@ def main(con):
 						mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data+record_data,type='customNumericFormat',precision=0)
 
 					mh_gb.configure_columns(hide_data,hide=True)
+					mh_gb.configure_selection('single', pre_selected_rows=None)
 
 					# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 					mh_ag = AgGrid(
@@ -279,6 +280,7 @@ def main(con):
 		hero_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'})
 		hero_gb.configure_columns(['win','loss','tie'],hide=True)
 		hero_gb.configure_selection('single', pre_selected_rows=None)
+		# hero_gb.configure_grid_options(headerHeight=10)
 
 		# init layout for player_sel
 		c11 = c2.empty()
@@ -319,7 +321,7 @@ def main(con):
 		hero_sel = None
 		with c1:
 
-			st.markdown("""<p class="font20"" >{}</p>""".format('players'),True)
+			st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
 				
 			hero_ag = AgGrid(
 				hero_write,
@@ -337,7 +339,7 @@ def main(con):
 
 		with c2:
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('heroes'),True)
+				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp heroes'),True)
 				ph_df = hero_df[hero_df['player']==player_sel].copy()
 
 				# get latest at/set combo from dataframe
@@ -357,6 +359,8 @@ def main(con):
 
 				p_heroes_gb.configure_columns('archetype',cellRenderer=render.icon,width=32)
 				p_heroes_gb.configure_columns('#',width=32)
+
+				# p_heroes_gb.configure_grid_options(headerHeight=0)
 
 				p_hero_ag = AgGrid(
 					p_heroes,
@@ -381,7 +385,7 @@ def main(con):
 		with c3:
 			matches = ss.matches.copy()
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('matches'),True)
+				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp matches'),True)
 				h_matches = hero_df[hero_df['player']==player_sel].copy()
 				if hero_sel: h_matches = h_matches[h_matches['hero']==hero_sel]
 				h_matches['sid_mid'] = h_matches['series_id'] + h_matches['match_id'].astype(str)
@@ -396,6 +400,7 @@ def main(con):
 			matches_gb.configure_default_column(width=12,suppressMovable=True)
 			matches_gb.configure_columns(['map'],width=24)
 			matches_gb.configure_columns(['series_id'],width=36)
+			# matches_gb.configure_grid_options(headerHeight=0)
 			if player_sel:
 				matches_ag = AgGrid(
 					matches,

@@ -44,7 +44,7 @@ class Hero:
 		self.poscurrent = None
 		self.posdelay = None
 		self.posrecent = []
-		self.lastdeath = 0
+		self.lastdeath = -30000 # at least -config['death_cooldown']
 		self.lastphase = None
 		self.lasthp = 0
 		self.firstherofound = False
