@@ -8620,5 +8620,50 @@
             "Nature Affinity",
             "Ice Blast"
         ]
+    },
+    "Aeolann": {
+        "archetype": "defender/corruptor"
+    },
+    "Geedorah": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Rhumbos": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Ice Blast"
+        ]
+    },
+    "Squid Head": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "cixelsyd": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "saleem balibop": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "vin jims": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
     }
 }
