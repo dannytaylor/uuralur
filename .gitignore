@@ -143,3 +143,4 @@ data/herodump*
 assets/icons
 assets/players
 publicdemos/
+*.wal
