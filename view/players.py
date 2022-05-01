@@ -327,8 +327,8 @@ def main(con):
 				allow_unsafe_jscode=True,
 				gridOptions=hero_gb.build(),
 				update_mode='SELECTION_CHANGED',
-				fit_columns_on_grid_load= not ss.mobile,
-				height = 344,
+				# fit_columns_on_grid_load= not ss.mobile,
+				# height = 344,
 				theme=table_theme
 			)
 
@@ -365,7 +365,7 @@ def main(con):
 					p_heroes,
 					allow_unsafe_jscode=True,
 					gridOptions=p_heroes_gb.build(),
-					fit_columns_on_grid_load= not ss.mobile,
+					# fit_columns_on_grid_load= not ss.mobile,
 					update_mode='SELECTION_CHANGED',
 					# height = table_height,
 					theme=table_theme
@@ -407,7 +407,7 @@ def main(con):
 					allow_unsafe_jscode=True,
 					gridOptions=matches_gb.build(),
 					update_mode='SELECTION_CHANGED',
-					fit_columns_on_grid_load= not ss.mobile,
+					# fit_columns_on_grid_load= not ss.mobile,
 					# height = table_height,
 					theme=table_theme
 				)

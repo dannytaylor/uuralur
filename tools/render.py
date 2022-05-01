@@ -24,27 +24,27 @@ function(params) {
 # render cell text color from team
 team_color = JsCode("""
 function(params) {
-	if(params.data.team == "0") {return {"color":"#1946cf",};} 
-	else return {"color":"#d60000",};
+	if(params.data.team == "0") {return {"color":"dodgerblue",};} 
+	else return {"color":"tomato",};
 }
 """)
 
 target_team_color = JsCode("""
 function(params) {
-	if(params.data.target_team == "0") {return {"color":"#1946cf",};} 
-	else return {"color":"#d60000",};
+	if(params.data.target_team == "0") {return {"color":"dodgerblue",};} 
+	else return {"color":"tomato",};
 }
 """)
 
 blu = JsCode("""
 function(params) {
-	return {"color":"#1946cf"};
+	return {"color":"dodgerblue"};
 }
 """)
 
 red = JsCode("""
 function(params) {
-	return {"color":"#d60000"};
+	return {"color":"tomato"};
 }
 """)
 
@@ -195,4 +195,14 @@ team_name_map = {
 	"pug":"pug",
 	"putos":"putos",
 	"taco":"taco",
+}
+
+powerset_icon_map = {
+	"Fire Blast":"fireblast_blaze.png",
+	"Ice Blast":"iceblast_bitterfrostblast.png",
+	"Empathy":"empathy_healother.png",
+	"Electrical Affinity":"shocktherapy_insulatingcircuit.png",
+	"Nature Affinity":"natureaffinity_wildbastion.png",
+	"Radiation Emission":"radiationpoisoning_enervatingfield.png",
+	"Poison":"poison_envenomaoe.png"
 }

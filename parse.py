@@ -4,7 +4,8 @@ import os, sys, time, math, argparse, datetime,statistics
 
 import yaml, json, re
 import numpy as np
-import sqlite3 as sqldb
+# import sqlite3 as sqldb
+import duckdb as sqldb
 
 # parse data structures
 import data.data as d
