@@ -1,6 +1,7 @@
-import sqlite3 as sqldb
+# import sqlite3 as sqldb
+import duckdb as sqldb
 
-con = sqldb.connect('demos.db', check_same_thread=False)
+con = sqldb.connect('demos.duck.db', check_same_thread=False)
 cur = con.cursor()
 
 # functions to write to db

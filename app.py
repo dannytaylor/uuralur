@@ -1,4 +1,4 @@
-import os, sys, time, math, argparse, json, yaml, sqlite3
+import os, sys, time, math, argparse, json, yaml, sqlite3, duckdb
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -27,7 +27,7 @@ st.set_page_config(
 )
 
 # sqlite connections
-con = sqlite3.connect('demos.db')
+con = duckdb.connect('demos.duck.db')
 # cur = con.cursor()
 
 # global vars/config
@@ -187,7 +187,7 @@ class MultiPage:
 		with st.sidebar.expander('settings',expanded=False):
 			def toggle_mobile():
 				ss.mobile = not ss.mobile
-			st.checkbox('mobile view',key='mobile',help='this site is not designed with mobile in mind, but this toggle will make it viewable at least')
+			# st.checkbox('mobile view',key='mobile',help='this site is not designed with mobile in mind, but this toggle will make it viewable at least')
 
 def view_match(title, info=None):
 	match.main(con)
