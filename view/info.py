@@ -38,7 +38,8 @@ def main():
 		Power data has been downloaded from CoD with some adjustments to work for this program. Some timing data may be wrong for weird edge-case powers.
 		URLs generated when selecting matches can be shared to link to specific match.
 		Heroes are mapped to players to the best of my knowledge. If you see a hero attributed to the wrong player I can fix it when I get a chance.
-		The site is only design for desktop viewing to work with the intended layouts and hacky solutions for the components used.
+		The site is only design for desktop viewing to work with the intended layouts and hacky solutions for the components used. 
+		Message me (xhiggy) if you have any questions, or post in the pvp resources thread on the Homecoming forums.
 		""")
 
 	st.subheader('Demo limitations')
