@@ -158,8 +158,8 @@ def init_css(width):
 		}
 
 		.fontheader {
-		    font-size:36px !important;
-		    font-weight: bold;
+		    font-size:32px !important;
+		    
 		    font-family: 'Helvetica Neue', sans-serif;
 		}
 		.font20 {

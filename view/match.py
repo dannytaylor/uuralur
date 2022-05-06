@@ -193,24 +193,24 @@ def main(con):
 	if ss.view['match'] != 'series':
 		header_str +=  " · match "
 		header_str += str(ss.mid)
-	header_str += " · "
+	header_str += "<br>"
 	sid_str = ss.sid.split("_")[1:]
 	sid_str = [render.team_name_map[s] if s in render.team_name_map else s for s in sid_str]
 	header_str += " - ".join(sid_str)
 
-	# with c1:
-	# 	st.markdown("""<p class="fontheader"" style="display:inline; color:#DDD";>{}</p>""".format(header_str),True)
+	with c1:
+		st.markdown("""<p class="fontheader"" style="display:inline; color:#DDD";>{}</p>""".format(header_str),True)
 		
-	# 	st.write('') #spacing hack
-	# 	st.write('')
-	# with c2:
-	# 	score_str = """<p style="text-align: left;">"""
-	# 	score_str += """<span class="fontheader" style="color:#DDD";>{}</span>""".format('score: ')
-	# 	score_str += """<span class="fontheader" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
-	# 	score_str += """<span class="fontheader" style="color:#DDD";>{}</span>""".format(' - ')
-	# 	score_str += """<span class="fontheader" style="color:tomato";>{}</span>""".format(str(m_score[1]))
-	# 	score_str += """</p>"""
-	# 	st.markdown(score_str,True)
+		st.write('') #spacing hack
+		st.write('')
+	with c2:
+		score_str = """<p style="text-align: left;">"""
+		score_str += """<span class="fontheader" style="color:#DDD";>{}</span>""".format('score:<br> ')
+		score_str += """<span class="fontheader" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
+		score_str += """<span class="fontheader" style="color:#DDD";>{}</span>""".format(' - ')
+		score_str += """<span class="fontheader" style="color:tomato";>{}</span>""".format(str(m_score[1]))
+		score_str += """</p>"""
+		st.markdown(score_str,True)
 
 
 	opacities = ['deaths_opacity','targets_opacity','otp_opacity','ontgt_opacity','onheal_opacity','onhealn_opacity','surv_opacity']
@@ -283,7 +283,7 @@ def main(con):
 		hdf = hdf[['team','hero','support','at','deaths','targets','otp_combined','atks']+opacities]
 		hdf['support'] = hdf['support'].fillna(0)
 		hdf = hdf.sort_values(['team','support'],ascending=[True,True])
-		hdf = hdf.rename(columns={'otp_combined':'otp'})
+		hdf = hdf.rename(columns={'otp_combined':'otp','targets':'🎯','deaths':'💀','at':'at/powers'})
 
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=24,cellStyle={'text-align': 'center'},suppressMovable=True)
@@ -291,17 +291,17 @@ def main(con):
 		sum_gb.configure_columns(['hero'],pinned='left')
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',cellStyle=render.team_color)
-		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
-		sum_gb.configure_columns(['at'],cellStyle=render.support_color,width=48)
+		sum_gb.configure_columns(['💀','🎯','atks'],type='customNumericFormat',precision=0)
+		sum_gb.configure_columns(['at/powers'],cellStyle=render.support_color,width=48)
 
 		# opacities
-		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)
-		sum_gb.configure_columns(['targets'],cellStyle=render.targets_bg)
+		sum_gb.configure_columns(['💀'],cellStyle=render.deaths_bg)
+		sum_gb.configure_columns(['🎯'],cellStyle=render.targets_bg)
 		sum_gb.configure_columns(['surv'],cellStyle=render.surv_bg)
 		sum_gb.configure_columns(['otp'],cellStyle=render.support_color)
 		# sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg)
 
-		sum_gb.configure_columns(['at'],cellRenderer=render.icon)
+		sum_gb.configure_columns(['at/powers'],cellRenderer=render.icon)
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
 
 		sum_ag = AgGrid(
@@ -972,9 +972,9 @@ def main(con):
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(suppressMovable=True)
-			at_gb.configure_columns('icons',cellRenderer=render.icon,width=40)
-			at_gb.configure_columns('count',width=20)
-			at_gb.configure_columns('chain',width=40)
+			at_gb.configure_columns('icons',cellRenderer=render.icon,width=60)
+			at_gb.configure_columns('count',width=16)
+			at_gb.configure_columns('chain',width=36)
 			# at_gb.configure_grid_options(headerHeight=0)
 
 
@@ -982,7 +982,7 @@ def main(con):
 				at_write,
 				allow_unsafe_jscode=True,
 				gridOptions=at_gb.build(),
-				fit_columns_on_grid_load= not ss.mobile,
+				# fit_columns_on_grid_load= not ss.mobile,
 				height = 320,
 				theme=table_theme
 			)
@@ -1490,9 +1490,9 @@ def main(con):
 		nspike_dict[1] = dict(zip(m_df['match_id'],m_df['spikes1']))
 
 		m_gb = GridOptionsBuilder.from_dataframe(m_write)
-		m_gb.configure_default_column(width=16)
+		m_gb.configure_default_column(width=20)
 		# m_gb.configure_grid_options(rowHeight=36)
-		m_gb.configure_columns('map',width=48)
+		m_gb.configure_columns('map',width=36)
 		m_gb.configure_columns('score0',cellStyle=render.blu)
 		m_gb.configure_columns('score1',cellStyle=render.red)
 		m_gb.configure_grid_options(headerHeight=0)
@@ -1509,7 +1509,7 @@ def main(con):
 
 		with c1:
 
-			st.markdown("""<p class="font20"" style="display:inline;color:#DDD";>{}</p><br>""".format('matches'),True)
+			# st.markdown("""<p class="font20"" style="display:inline;color:#DDD";>{}</p><br>""".format('matches'),True)
 			m_write = m_write.sort_values(by='match_id')
 			m_ag = AgGrid(
 				m_write,

@@ -144,3 +144,5 @@ assets/icons
 assets/players
 publicdemos/
 *.wal
+
+st_aggrid/frontend/build/static/css/css

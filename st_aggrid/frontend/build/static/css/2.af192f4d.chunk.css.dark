@@ -12,12 +12,12 @@
     --ag-row-hover-color: #262730;
     --ag-selected-row-background-color: #323232;
     --ag-header-cell-hover-background-color: #262730;
-    --ag-range-selection-border-color: transparent;
+    /*--ag-range-selection-border-color: transparent;*/
 
     --ag-cell-horizontal-padding:  0px;
 
     -webkit-font-smoothing:antialiased;
     font-family:"Source Sans Pro",sans-serif;
-    font-size:16px;
+    font-size:14px;
     line-height:normal;
 }
