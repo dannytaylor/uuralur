@@ -41,9 +41,9 @@ def main():
 
 		""")
 
-	# c1,c2=st.columns([9,1])
-	upload_st = st.empty()
-	# upload_sf = c2.empty()
+	c1,c2=st.container(),st.container()
+	upload_st = c1.empty()
+	upload_sf = c2.empty()
 	
 	uploaded_file = upload_st.file_uploader('upload ".cohdemo" file', type='.cohdemo', accept_multiple_files=False)
 	# upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
