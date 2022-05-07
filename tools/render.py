@@ -150,7 +150,7 @@ def init_css(width):
 			"""
 	css_str += """}}{{}}
 		.font40 {
-		    font-size:36px !important;
+		    font-size:32px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
 		    margin-top: 12px;
@@ -158,7 +158,7 @@ def init_css(width):
 		}
 
 		.fontheader {
-		    font-size:32px !important;
+		    font-size:24px !important;
 		    
 		    font-family: 'Helvetica Neue', sans-serif;
 		}
