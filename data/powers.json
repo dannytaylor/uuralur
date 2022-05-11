@@ -15670,9 +15670,6 @@
         "archetypes": [
             "peacebringer"
         ],
-        "attack_fx": [
-            "POWERS/COSMICPOWERS/PEACEBRINGER/PUNCH/HEAVYPEACEPUNCHHIT.FX"
-        ],
         "effect_area": "SingleTarget",
         "frames_attack": 1666,
         "frames_before_hit": 800,
