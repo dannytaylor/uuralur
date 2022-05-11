@@ -8665,5 +8665,110 @@
             "Nature Affinity",
             "Ice Blast"
         ]
+    },
+    "Am B3R Turd": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Psychic Blast"
+        ]
+    },
+    "L E S T R A N G E": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Peyote WiFi": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Water Blast"
+        ]
+    },
+    "Psychochronokinesis": {
+        "archetype": "blaster",
+        "sets": [
+            "Temporal Manipulation",
+            "Psychic Blast"
+        ]
+    },
+    "Quantum Avoid": {
+        "archetype": "peacebringer",
+        "sets": [
+            "Luminous Blast",
+            "Luminous Aura"
+        ]
+    },
+    "Try my Big Mac": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Unbeknownst": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Seismic Blast"
+        ]
+    },
+    "shpeed": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Kinetics"
+        ]
+    },
+    "-Brunt": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "-Gman": {
+        "archetype": "sentinel",
+        "sets": [
+            "Electrical Blast",
+            "Energy Aura"
+        ]
+    },
+    "Dexington": {
+        "archetype": "blaster",
+        "sets": [
+            "Tactical Arrow",
+            "Psychic Blast"
+        ]
+    },
+    "Frostlike": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Lord Griselda": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Trick Arrow"
+        ]
+    },
+    "Unfunken Real": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Unloyal": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Radiation Emission"
+        ]
     }
 }
