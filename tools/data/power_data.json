@@ -18,7 +18,7 @@
 		"Share Pain":1233
 	},
 	"notags":{
-		"Attack":["Web Grenade"],
+		"Attack":["Web Grenade","Light Form"],
 		"Heal":["Vengeance","Soothing Aura","Adrenalin Boost","Painbringer","Experimental Injection"]
 	}
 
