@@ -8770,5 +8770,75 @@
             "Seismic Blast",
             "Radiation Emission"
         ]
+    },
+    "Bistro": {
+        "archetype": "mastermind",
+        "sets": [
+            "Demon Summoning",
+            "Electrical Affinity"
+        ]
+    },
+    "ChemTrailMix": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Seismic Blast"
+        ]
+    },
+    "Dark-Master": {
+        "archetype": "sentinel",
+        "sets": [
+            "Water Blast",
+            "Radiation Armor"
+        ]
+    },
+    "Discomposure": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Seismic Blast"
+        ]
+    },
+    "Holy Smokes": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Icevillain": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Kaskade": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Water Blast"
+        ]
+    },
+    "Metal Vector": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Beam Rifle"
+        ]
+    },
+    "Soul Assembly": {
+        "archetype": "melee",
+        "sets": [
+            "Martial Arts",
+            "Fiery Aura"
+        ]
+    },
+    "Sylvane": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
     }
 }
