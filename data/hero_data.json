@@ -8840,5 +8840,110 @@
             "Nature Affinity",
             "Ice Blast"
         ]
+    },
+    "Arcade Cannon": {
+        "archetype": "blaster",
+        "sets": [
+            "Temporal Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "Atomic Pirate": {
+        "archetype": "blaster",
+        "sets": [
+            "Atomic Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Beamix": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "Final Sim": {
+        "archetype": "blaster",
+        "sets": [
+            "Temporal Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Margiela": {
+        "archetype": "blaster",
+        "sets": [
+            "Martial Combat",
+            "Ice Blast"
+        ]
+    },
+    "Natty Ice": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Non Useful Body": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Oakland": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Phantom Mallex": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Royal Azure": {
+        "archetype": "sentinel",
+        "sets": [
+            "Electrical Blast",
+            "Regeneration"
+        ]
+    },
+    "TKI Alexensa": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "Uncouth Savage": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "bro-shot": {
+        "archetype": "blaster",
+        "sets": [
+            "Temporal Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "cayman cider": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "soft hands sam": {
+        "archetype": "melee",
+        "sets": [
+            "Claws",
+            "Radiation Armor"
+        ]
     }
 }
