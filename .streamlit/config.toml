@@ -5,3 +5,6 @@ base="light"
 port = 8501
 enableCORS = false
 maxUploadSize = 25
+
+[client]
+showErrorDetails = true

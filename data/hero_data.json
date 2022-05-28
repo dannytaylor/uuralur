@@ -741,7 +741,7 @@
             "Fire Blast"
         ]
     },
-    "Blaziernoed-HP": {
+    "Blaziernoed@HP": {
         "archetype": "blaster",
         "sets": [
             "Plant Manipulation",
@@ -8506,7 +8506,7 @@
             "Nature Affinity"
         ]
     },
-    "Prideful-Seagate": {
+    "Prideful@Seagate": {
         "archetype": "defender/corruptor",
         "sets": [
             "Ice Blast",

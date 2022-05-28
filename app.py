@@ -24,10 +24,11 @@ st.set_page_config(
 	page_title='coh demos',
 	page_icon='🤖',
 	initial_sidebar_state="expanded",
+	# layout='wide',
 )
 
 # sqlite connections
-con = sqlite3.connect('demos.db')
+con = sqlite3.connect('demos.db', timeout=300)
 # cur = con.cursor()
 
 # global vars/config
@@ -42,6 +43,7 @@ def init_series():
 def init_matches():
 	ss.matches = pd.read_sql_query("SELECT * FROM Matches", con)
 	ss.matches['sid_mid'] = ss.matches['series_id'] + "_" + ss.matches['match_id'].astype(str)
+
 if 'series' not in ss:	
 	init_series()
 if 'match' not in ss:
@@ -165,7 +167,7 @@ class MultiPage:
 			ss.mid = mid_empty.selectbox("matches",ss.sid_mids,format_func=format_mid_str,on_change=set_query,help='Match number from series in order played',key=mid_key) 
 
 		if nav_names:
-			page_view  = nav_empty.radio("navigation", nav_names ,on_change=set_query)
+			page_view  = nav_empty.radio("subpage", nav_names ,on_change=set_query)
 		else: 
 			page_view = None
 

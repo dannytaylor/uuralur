@@ -1,4 +1,5 @@
 import sqlite3 as sqldb
+import time
 
 con = sqldb.connect('demos.db', check_same_thread=False)
 cur = con.cursor()
@@ -8,7 +9,12 @@ def insertsql(table,items):
 	sql = "INSERT INTO " + table + " VALUES(" + (len(items)-1)*"?," + "?)"
 	cur.execute(sql, items)
 	# if table == 'Series' or table == 'Matches':
-		# con.commit()
+	con.commit()
+
+def multiinsertsql(table,values):
+	sql = "INSERT INTO " + table + " VALUES(" + (len(values[0])-1)*"?," + "?)"
+	cur.executemany(sql, values)
+	con.commit()
 
 def deletesql(table,sid,mid=None):
 	sql = "DELETE from " + table + " WHERE series_id=?"
@@ -17,6 +23,7 @@ def deletesql(table,sid,mid=None):
 		sql += " and match_id=?"
 		items.append(mid)
 	cur.execute(sql,items)
+	# con.commit() # function won't run on chlidog
 
 
 # db table structure, match level
@@ -128,17 +135,28 @@ def createseriestable():
 
 def demo2db(mid,sid,hp,actions,spikes,heroes):
 	cleardemoentries(mid,sid) # if rewriting existing data for a match
+
+	hp_values = []
+	action_values = []
+	spike_values = []
+	hero_values = []
+	
 	for h in hp:
-		insertsql("HP",[h.time,heroes[h.hid].name,mid,sid,h.hp,h.hploss])
+		hp_values.append([h.time,heroes[h.hid].name,mid,sid,h.hp,h.hploss])
 	for a in actions:
 		target = None
 		if a.tid: target = heroes[a.tid].name
-		insertsql("Actions",[a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.hithp,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount,str(a.tags),a.type,a.target_type,a.effect_area,a.icon])
+		action_values.append([a.aid,mid,sid,a.time_ms,heroes[a.hid].name,a.action,target,a.hittime,a.hithp,a.dist,a.roottime,a.spikeid,a.spiketime,a.spikehittime,a.spikeherocount,str(a.tags),a.type,a.target_type,a.effect_area,a.icon])
 	for s in spikes:
-		insertsql("Spikes",[s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset,s.nattacks,s.nattackers,s.nheals,s.ngreens,s.startdelta])
+		spike_values.append([s.sid,mid,sid,s.start,s.duration,s.target,s.targetteam,s.hploss,s.kill,s.reset,s.nattacks,s.nattackers,s.nheals,s.ngreens,s.startdelta])
 	for hid,h in heroes.items():
-		insertsql("Heroes",[h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.healtiming),str(h.phasetiming),str(h.jaunttiming),h.firstattacks,h.alphaheals,h.win,h.loss,h.tie,h.attacks,h.heals,h.greens,h.phases,h.jaunts])
-	# con.commit()
+		hero_values.append([h.name,h.hid,mid,sid,h.team,h.playername,h.sets[0],h.sets[1],h.archetype,h.support,h.damagetaken,h.hpmax,h.deaths,h.targets,str(h.attackchains),str(h.attacktiming),str(h.healtiming),str(h.phasetiming),str(h.jaunttiming),h.firstattacks,h.alphaheals,h.win,h.loss,h.tie,h.attacks,h.heals,h.greens,h.phases,h.jaunts])
+	
+	multiinsertsql("HP",hp_values)
+	multiinsertsql("Actions",action_values)
+	multiinsertsql("Spikes",spike_values)
+	multiinsertsql("Heroes",hero_values)
+	# con.commit() # moved to insertsql
 
 def initseries(sid):
 	deletesql("Series",sid) # delete db data if already existing prior to rewriting
@@ -153,4 +171,5 @@ def cleardemoentries(mid,sid):
 	deletesql("Actions",sid,mid)
 	deletesql("Spikes",sid,mid)
 	deletesql("Heroes",sid,mid)
+	# time.sleep(10) # for testing db lock
 	con.commit()
