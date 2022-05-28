@@ -103,7 +103,7 @@ def init_match_data(sid,mid,upload):
 	# hero_df['icon_set1'] = hero_df['set1'].map(lambda x: util.image_formatter("powers/"+render.powerset_icon_map[x]) if x in render.powerset_icon_map else spacer_base64) # placeholder if none
 	# hero_df['icon_set2'] = hero_df['set2'].map(lambda x: util.image_formatter("powers/"+render.powerset_icon_map[x]) if x in render.powerset_icon_map else spacer_base64) # placeholder if none
 	# hero_df['at'] = hero_df['icon_at'] + " " + hero_df['icon_set1']  + " " + hero_df['icon_set2']
-	hero_df['at'] = hero_df['icon_at'].apply(util.image_formatter)
+	hero_df['at'] = hero_df['icon_at']
 
 	# computed opacities for styling
 	hero_df['deaths_opacity'] = 0.2*(hero_df['deaths']/max(hero_df['deaths']))**1.5
