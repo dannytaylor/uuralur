@@ -8945,5 +8945,89 @@
             "Claws",
             "Radiation Armor"
         ]
+    },
+    "Country Music": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Dexington-": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "F 3 L L ?": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Harlem Buck Strut": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Hit Gurl": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Devices"
+        ]
+    },
+    "Lib on offense": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Motha Clucka": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Mrbubblishious": {
+        "archetype": "sentinel",
+        "sets": [
+            "Radiation Blast",
+            "Ninjitsu"
+        ]
+    },
+    "Reiko Kurokaki": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Requiem For A Beam": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Tactical Arrow"
+        ]
+    },
+    "Very Small Dog": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Xyrsysm": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Fire Blast"
+        ]
     }
 }

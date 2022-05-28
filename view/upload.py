@@ -36,8 +36,7 @@ def main():
 		Contact Xhiggy if you'd like to add a large amount of demos to the site.
 		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.)
 
-		If you'd like to separate your uploads from others at the same time enter a 1-2 character suffix below (and use the same code for subsequent uploads for the series),
-		otherwise leave blank. May temporarily disable match viewing while demo is parsing (~10 seconds). Refresh page if this error occurs.
+		May temporarily disable match viewing while demo is parsing (~10 seconds). Refresh page if this error occurs.
 
 		""")
 
