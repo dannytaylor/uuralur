@@ -314,9 +314,9 @@ def main(con):
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=56)
-		sum_gb.configure_columns(['hero'],pinned='left')
+		# sum_gb.configure_columns(['hero'],pinned='left',)
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
-		sum_gb.configure_columns('hero',cellStyle=render.team_color)
+		sum_gb.configure_columns('hero',pinned='left',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
 		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
 

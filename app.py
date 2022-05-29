@@ -1,4 +1,4 @@
-import os, sys, time, math, argparse, json, yaml, sqlite3
+import os, sys, time, math, argparse, json, yaml, sqlite3, random
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -20,9 +20,14 @@ import plotly.graph_objects as go
 
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
+favicons = ["🤖","🌭","📈","📉","📊",	]
+# icon_path = 'assets/icons/archetypes_hd/'
+# favicons = [icon_path+f for f in os.listdir(icon_path)]
+
 st.set_page_config(
-	page_title='coh demos',
-	page_icon='🤖',
+	page_title='coh pvp stats',
+	page_icon=random.choice(favicons), # randomize on page change
+	# page_icon='assets/homecomingpvp.png',
 	initial_sidebar_state="expanded",
 	# layout='wide',
 )
