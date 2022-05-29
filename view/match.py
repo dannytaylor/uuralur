@@ -27,7 +27,7 @@ table_theme = config['table_theme']
 
 
 @st.cache
-def init_match_data(sid,mid,upload,useplayernames):
+def init_match_data(sid,mid,upload):
 
 	match_row = ss.matches[(ss.matches['match_id']==mid)&(ss.matches['series_id']==sid)]
 	m_score  = [int(match_row.iloc[0]['score0']),int(match_row.iloc[0]['score1'])]
@@ -37,34 +37,12 @@ def init_match_data(sid,mid,upload,useplayernames):
 	sqlq = util.str_sqlq('Heroes',sid,mid)
 	hero_df = pd.read_sql_query(sqlq, con)
 	hero_df = hero_df.sort_values(by='team')
-	hero_list = hero_df['hero'].tolist()
 
 
 	sqlq = util.str_sqlq('Actions',sid,mid)
 	actions_df = pd.read_sql_query(sqlq, con)
 	actions_df['time'] = pd.to_datetime(actions_df['time_ms'],unit='ms').dt.strftime('%M:%S.%f').str[:-4]
 	actions_df['time_m'] = actions_df['time_ms']/60000
-
-
-	hero_player_map = util.hero_player_dict(dict(zip(hero_df['hero'],hero_df['player_name'])))
-	if ss['useplayernames']:
-		hero_df['hero'] = hero_df['hero'].map(hero_player_map)
-		actions_df['actor'] = actions_df['actor'].map(hero_player_map)
-		actions_df['target']= actions_df['target'].map(hero_player_map)
-		hero_list			= hero_df['hero'].tolist()
-
-
-	# hero info, setup heroname:player/team info for views
-	hero_team_map = {}
-	for index, row in hero_df.iterrows():
-		hname = row['hero']
-		hero_team_map[hname] = row['team']
-		pname = row['player_name']
-		if pname == None:
-			pname = hname
-		hero_player_map[hname] = pname
-	actions_df['team'] = actions_df['actor'].map(hero_team_map)
-
 
 	# hero stats on target and timing
 	hero_df['timing']  = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
@@ -155,11 +133,6 @@ def init_match_data(sid,mid,upload,useplayernames):
 	sqlq = util.str_sqlq('HP',sid,mid)
 	hp_df = pd.read_sql_query(sqlq, con)
 
-
-	if ss['useplayernames']:
-		sdf['target'] 		= sdf['target'].map(hero_player_map)
-		hp_df['hero'] 		= hp_df['hero'].map(hero_player_map)
-
 	m_attacks = {}
 	m_attacks[0] = int(hero_df[hero_df['team'] == 0]['atks'].sum())
 	m_attacks[1] = int(hero_df[hero_df['team'] == 1]['atks'].sum())
@@ -187,7 +160,7 @@ def init_match_data(sid,mid,upload,useplayernames):
 		ht_med[t] = statistics.median(ht[t])
 
 
-	return hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list
+	return hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var
 
 def main(con):
 
@@ -196,12 +169,34 @@ def main(con):
 	upload = None
 	# if 'upload' in ss.sid: # disabling for now - assuming no manual deletions for now
 	# 	upload = random.random() # to prevent using cached match data incase public demos get overwritten somehow
-	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var,hero_team_map,hero_player_map,hero_list = init_match_data(ss.sid,ss.mid,upload,ss['useplayernames'])
+	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var = init_match_data(ss.sid,ss.mid,upload)
 	
 	hero_df = hero_df.copy()
 	actions_df = actions_df.copy()
 	sdf = sdf.copy()
 	hp_df = hp_df.copy()
+
+	hero_player_map = util.hero_player_dict(dict(zip(hero_df['hero'],hero_df['player_name'])))
+	if ss['useplayernames']:
+		hero_df['hero'] 	= hero_df['hero'].map(hero_player_map)
+		hero_df['index'] = hero_df['hero']
+		hero_df = hero_df.set_index('index') 
+
+		actions_df['actor'] = actions_df['actor'].map(hero_player_map)
+		actions_df['target']= actions_df['target'].map(hero_player_map)
+		sdf['target'] 		= sdf['target'].map(hero_player_map)
+		hp_df['hero'] 		= hp_df['hero'].map(hero_player_map)
+
+	hero_list			= hero_df['hero'].tolist()
+	hero_team_map = {}
+	for index, row in hero_df.iterrows():
+		hname = row['hero']
+		hero_team_map[hname] = row['team']
+		pname = row['player_name']
+		if pname == None:
+			pname = hname
+		hero_player_map[hname] = pname
+	actions_df['team'] = actions_df['actor'].map(hero_team_map)
 
 	# MATCH HEADSER
 	c1,c2 = st.columns([8,2])

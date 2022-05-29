@@ -36,8 +36,11 @@ def resize_image(image_path,size):
 
 def hero_player_dict(h2p):
 	h2p = {k: ("@"+v if v else k) for k, v in h2p.items()}
-	dup_names = {}
-	dup_names = {dup_names.setdefault(v, set()).add(k) for k, v in h2p.items()}
+	names = set()
+	dup_names = set()
+	for k,v in h2p.items():
+		if v in names: dup_names.add(v)
+		else: names.add(v)
 	n = 1
 	for k in h2p:
 		if h2p[k] in dup_names:
