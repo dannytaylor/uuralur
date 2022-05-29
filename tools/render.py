@@ -157,8 +157,8 @@ def css_rules():
 		maxwidth = "100%"
 		minwidth = "100%"
 	else:
-		maxwidth = "1320px"
-		minwidth = "1320px"
+		maxwidth = "1520px"
+		minwidth = "1280px"
 
 	css_str = f"""
 		<style>

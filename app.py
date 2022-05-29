@@ -54,8 +54,8 @@ if 'series' not in ss:
 if 'match' not in ss:
 	init_matches()
 if 'new_mid' not in ss: ss.new_mid = False
-if 'mobile'  not in ss: 
-	ss['mobile']  = False
+if 'mobile'  not in ss: ss['mobile']  = False
+if 'useplayernames'  not in ss: ss['useplayernames']  = False
 
 class MultiPage:
 	def __init__(self):
@@ -195,6 +195,8 @@ class MultiPage:
 			def toggle_mobile():
 				ss.mobile = not ss.mobile
 			st.checkbox('small screen view',key='mobile',help='this site is not designed with small (<1280p wide) screens in mind, but this toggle will make it somewhat viewable')
+			if ss['app_choice'] == 'match':
+				st.checkbox('use player names',key='useplayernames',help='Switch from hero names to player names/aliases')
 
 def view_match(title, info=None):
 	match.main(con)

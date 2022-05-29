@@ -34,3 +34,15 @@ def resize_image(image_path,size):
 	image.thumbnail((size,size), Image.ANTIALIAS)
 	return image
 
+def hero_player_dict(h2p):
+	h2p = {k: ("@"+v if v else k) for k, v in h2p.items()}
+	dup_names = {}
+	dup_names = {dup_names.setdefault(v, set()).add(k) for k, v in h2p.items()}
+	n = 1
+	for k in h2p:
+		if h2p[k] in dup_names:
+			h2p[k] = str(h2p[k]) + f" ({n})"
+			n += 1
+	h2p = {k: (v if v else k) for k, v in h2p.items()}
+	return h2p
+
