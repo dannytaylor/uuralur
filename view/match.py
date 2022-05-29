@@ -1,4 +1,4 @@
-import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, sqlite3, random
+import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, random
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file

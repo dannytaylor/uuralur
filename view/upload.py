@@ -18,14 +18,14 @@ def main():
 	st.header('uploads')
 	st.markdown("""
 		You can upload matches in the `.cohdemo` file format here. 
-		Record these ingame with the `/demorecord <file name here>` slash command. 
+		Record these in-game with the `/demorecord <file name here>` slash command. 
 		Stop recording with the `/demostop` command or automatically when you exit the match.
 		Saved files are found in the `<coh install path>\\demos` folder.
 
 		Uploads are not visible from the sidebar navigator and are only accessible from the link generated from parsing here (so remember the link).
 		Uploaded matches are not included in *records* stats.
 		Uploaded matches and their links may be deleted or overwritten at some point. 
-		Matches uploaded may be added to the main database at a later date.
+		Matches uploaded will typically be added to the main database at a later date.
 
 		All uploads from the same date are shared within the same series.
 		The program will attempt to check for duplicate files, otherwise and reuploads of matches will not overwrite the old match.
@@ -33,11 +33,11 @@ def main():
 		File names are not preserved when uploading. 
 
 		There is a daily limit to number of uploads to manage storage space, so don't mass-upload demos.
-		Contact Xhiggy if you'd like to add a large amount of demos to the site.
-		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.)
+		Contact xhiggy if you'd like to add a large amount of demos to the site.
+		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.).
+		Demo parsing may temporarily disable match viewing while demo is parsing (~10 seconds).
 
-		May temporarily disable match viewing while demo is parsing (~10 seconds). Refresh page if this error occurs.
-
+		If you would like a hero to count towards your global stats that isn't currently being tracked, fill out the form inputs in the sidebar.
 		""")
 
 	c1,c2=st.container(),st.container()
@@ -48,6 +48,25 @@ def main():
 	# upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
 	# upload_suffix = re.sub(r'\W+', '', upload_suffix)
 
+	with st.sidebar.expander('hero/player addition',expanded=False):
+		with st.form('Enter both hero name and preferred global or alias below',clear_on_submit=True):
+			heroname   = st.text_input("Hero Name", value="",help="Must be a valid CoH hero name. If it's a shared account with multiple users playing you may need to contact me to assign matches to the correct user.")
+			playername = st.text_input("Alias or Global", value="",help="Enter your preferred alias to have your stats under. If your heroes are already being tracked under a different alias the hero will be added under that name unless you contact me to change it.")
+
+			c0 = st.container()
+			submitted = st.form_submit_button("submit")
+
+			st.caption("This is updated manually so it won't be added immediately and may be modified before adding.")
+
+			if submitted:
+				if heroname == '' or playername == '':
+					c0.warning("Fill in both fields.")
+				else:
+					submit_file = "data/player_names_submitted.txt"
+					if os.path.getsize(submit_file) < 5*10^6: # quick file size limit to prevent it getting spammed
+						print(5*10^6)
+						with open(submit_file, "a") as myfile:
+							myfile.write(f"{datetime.date.today()} @{playername}:{heroname}\n")
 
 	if uploaded_file is not None:
 		upload_sf.empty()

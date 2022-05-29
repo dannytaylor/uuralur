@@ -5,14 +5,13 @@ config = yaml.safe_load(open('data/config.yaml'))
 
 
 def main():
-	st.image('assets/info_header.png')
-	st.caption('uuralur the mirror presides over the garden of [pvp] memories')
+	st.image('assets/info_header.png',caption='uuralur the mirror presides over the garden of [pvp] memories')
 	st.subheader('Foreword')
 	st.write("""
 		This program is made for the standard structure of team arena matches: 8 vs 8, 10 minute area matches based around calling targets with multiple people attacking and healing characters on either team. 
 		The further you deviate from the typical match structure (i.e. less than 6v6) the less useful this program becomes.
 		This was made to provide a useful breakdown of matches and while it contains a lot of info about any given match, some of the details of how a match actually played out may not be obvious. 
-		Some of the parameters in reporting are based around calibration of my own matches along side my vods as well as the old version of the parser used for the last ~ 1.5 years.
+		Some of the parameters in reporting are based around calibration of my own matches along side my vods as well as the old version of the parser.
 		""")
 	st.write("""
 		Everything in these stats should be taken with a grain of salt as not all context can be or has been captured. 

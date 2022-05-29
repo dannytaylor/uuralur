@@ -144,3 +144,5 @@ assets/icons
 assets/players
 publicdemos/
 st_aggrid/frontend/build/static/css/css
+
+data/player_names_submitted.txt
