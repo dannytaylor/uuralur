@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import tools.util as util
 import tools.render as render
+import data.pset_icons as pset_icons
 from millify import millify
 
 import plotly.express as px
@@ -99,11 +100,15 @@ def init_match_data(sid,mid,upload):
 
 	spacer_base64 = "<img src=\"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg==\">"
 	hero_df['set1'] = hero_df['set1'].map(lambda x: '-' if x == None else x)
+
 	hero_df['icon_at'] = hero_df['archetype'].map(lambda x: spacer_base64 if x == None else util.image_formatter("archetypes/"+x.replace('/','.')+'.png')) # placeholder if none
-	# hero_df['icon_set1'] = hero_df['set1'].map(lambda x: util.image_formatter("powers/"+render.powerset_icon_map[x]) if x in render.powerset_icon_map else spacer_base64) # placeholder if none
-	# hero_df['icon_set2'] = hero_df['set2'].map(lambda x: util.image_formatter("powers/"+render.powerset_icon_map[x]) if x in render.powerset_icon_map else spacer_base64) # placeholder if none
+	# hero_df['icon_set1'] = hero_df['set1'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else spacer_base64) # placeholder if none
+	# hero_df['icon_set2'] = hero_df['set2'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else spacer_base64) # placeholder if none
+
 	# hero_df['at'] = hero_df['icon_at'] + " " + hero_df['icon_set1']  + " " + hero_df['icon_set2']
 	hero_df['at'] = hero_df['icon_at']
+	# hero_df['set1'] = hero_df['icon_set1'] + " " + hero_df['set1']
+	# hero_df['set2'] = hero_df['icon_set2'] + " " + hero_df['set2']
 
 	# computed opacities for styling
 	hero_df['deaths_opacity'] = 0.2*(hero_df['deaths']/max(hero_df['deaths']))**1.5
@@ -315,11 +320,12 @@ def main(con):
 
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
-		sum_gb.configure_columns(['hero','set1','set2'],width=56)
+		sum_gb.configure_columns(['hero','set1','set2'],width=64)
 		# sum_gb.configure_columns(['hero'],pinned='left',)
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',pinned='left',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
+		# sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
 		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
 
 		# opacities
@@ -329,7 +335,7 @@ def main(con):
 		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
 		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg)
 
-		sum_gb.configure_columns(['at'],cellRenderer=render.icon)
+		sum_gb.configure_columns(['at'],width=24,cellRenderer=render.icon)
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
 
 		sum_ag = AgGrid(

@@ -194,7 +194,7 @@ class MultiPage:
 		with st.sidebar.expander('settings',expanded=False):
 			def toggle_mobile():
 				ss.mobile = not ss.mobile
-			st.checkbox('mobile view',key='mobile',help='this site is not designed with mobile in mind, but this toggle will make it viewable at least')
+			st.checkbox('small screen view',key='mobile',help='this site is not designed with small (<1280p wide) screens in mind, but this toggle will make it somewhat viewable')
 
 def view_match(title, info=None):
 	match.main(con)
