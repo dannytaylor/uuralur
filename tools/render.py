@@ -137,39 +137,51 @@ heal_colours = {
 	"Alkaloid":"#99e65f",
 }
 
-def init_css(width):
+def set_width(width: str):
+	if not st.session_state.mobile:
+		pass
+	st.markdown(
+	
+	f"""
+	<style>
+	.appview-container .main .block-container{{ max-width: {width}; }}
+
+	""",
+	    unsafe_allow_html=True,
+	)
+
+
+def css_rules(width: str):
+
+	if st.session_state.mobile:
+		width = "80%"
+
 	css_str = f"""
 		<style>
-			.reportview-container .main .block-container{{
-				padding: 1rem 1rem 1rem;
-		"""
-	if not st.session_state.mobile:
-		css_str += f"""
-				min-width: """+str(width-200)+"""px;
-				max-width: """+str(width)+"""px;
-			"""
-	css_str += """}}{{}}
-		.font40 {
+		.appview-container .main .block-container{{ max-width: {width}; }}
+
+		.font40 {{
 		    font-size:36px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
 		    margin-top: 12px;
 		    margin-bottom: 48px;
-		}
+		}}
 
-		.fontheader {
+		.fontheader {{
 		    font-size:36px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
-		}
-		.font20 {
+		}}
+		.font20 {{
 		    font-size:20px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
 		    margin: 0.5rem;
-		}
+		}}
 		</style>
 		"""
+
 	st.markdown(css_str,unsafe_allow_html=True)
 
 team_name_map = {
