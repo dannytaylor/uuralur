@@ -69,14 +69,14 @@ def main(con):
 		# data filters
 		with st.sidebar.form('filters'):
 			st.write('data filters')
-			data_aggr   = st.radio('show data by',['overall','average per match'],help='applies applicable data')
+			data_aggr   = st.radio('show data by',['average per match','overall',],help='applies applicable data')
 			with st.expander('hero filters',expanded=False):
 				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
 				at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
 				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
 				hero_filter = st.multiselect('hero name',  hero_list, default=None, help='all if none selected')
 			with st.expander('match filters',expanded=False):
-				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/community series is kb, any non-kb is a 'scrim'")
+				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/taco/community series is kb, any non-kb is a 'scrim'")
 				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for this filter')
 				def team_name_map(team):
 					if team in render.team_name_map:
@@ -87,7 +87,7 @@ def main(con):
 				series_filters = {}
 				# series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
 				# series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
-				series_filters['date_first'] = st.select_slider('date filters',options=dates,value=dates[0])
+				series_filters['date_first'] = st.select_slider('date filters',options=dates,value=dates[-1])
 				series_filters['date_last']  = st.select_slider('', options=dates,value=dates[-1])
 				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
 			

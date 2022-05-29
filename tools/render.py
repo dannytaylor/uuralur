@@ -165,14 +165,14 @@ def css_rules():
 		.appview-container .main .block-container{{ 
 			max-width: {maxwidth}; 
 			min-width: {minwidth};
-			padding: 1rem 1rem 1rem;
+			padding: 2rem 1rem 1rem;
 		}}
 
 		.font40 {{
 		    font-size:36px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
-		    margin-top: 12px;
+		    margin-top: 16px;
 		    margin-bottom: 48px;
 		}}
 
@@ -185,7 +185,6 @@ def css_rules():
 		    font-size:20px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
-		    margin: 0.5rem;
 		}}
 		</style>
 		"""
