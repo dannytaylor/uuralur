@@ -31,6 +31,7 @@ def init_filter_lists(mh_df):
 
 	team_list = list(render.team_name_map.keys())
 	team_list.remove('kb')
+	team_list.remove('taco')
 	team_list.sort()
 
 	dates = ss.series[~(ss.series['series_id'].str.contains('upload'))]['date'].tolist()
@@ -75,7 +76,7 @@ def main(con):
 				at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
 				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
 				hero_filter = st.multiselect('hero name',  hero_list, default=None, help='all if none selected')
-			with st.expander('match filters',expanded=False):
+			with st.expander('match filters',expanded=True):
 				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/taco/community series is kb, any non-kb is a 'scrim'")
 				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for this filter')
 				def team_name_map(team):
@@ -83,13 +84,13 @@ def main(con):
 						return render.team_name_map[team]
 					else:
 						return team
-				team_filter   = st.multiselect('team name',team_list,format_func=team_name_map, default=None, help='all if none selected')
 				series_filters = {}
 				# series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
 				# series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
 				series_filters['date_first'] = st.select_slider('date filters',options=dates,value=dates[-1])
 				series_filters['date_last']  = st.select_slider('', options=dates,value=dates[-1])
 				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
+				team_filter   = st.multiselect('team name',team_list,format_func=team_name_map, default=None, help='all if none selected')
 			
 
 			st.form_submit_button(label="apply filters", help=None, on_click=None, args=None, kwargs=None)
@@ -231,7 +232,7 @@ def main(con):
 				
 					mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 					mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
-					mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'},pinned='left')
+					mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 					mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 					mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
 					if data_aggr == 'average per match':

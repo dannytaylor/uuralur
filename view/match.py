@@ -1674,7 +1674,7 @@ def main(con):
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
-		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left'},pinned='left')
+		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
 		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
