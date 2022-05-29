@@ -151,14 +151,22 @@ def set_width(width: str):
 	)
 
 
-def css_rules(width: str):
+def css_rules():
 
 	if st.session_state.mobile:
-		width = "80%"
+		maxwidth = "100%"
+		minwidth = "100%"
+	else:
+		maxwidth = "1440px"
+		minwidth = "1280x"
 
 	css_str = f"""
 		<style>
-		.appview-container .main .block-container{{ max-width: {width}; }}
+		.appview-container .main .block-container{{ 
+			max-width: {maxwidth}; 
+			min-width: {minwidth};
+			padding: 1rem 1rem 1rem;
+		}}
 
 		.font40 {{
 		    font-size:36px !important;

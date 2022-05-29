@@ -217,5 +217,5 @@ def main():
 	mp.run()
 
 if __name__ == '__main__':
-	render.css_rules("1440px")
+	render.css_rules()
 	main()

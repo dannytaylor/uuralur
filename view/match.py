@@ -190,9 +190,10 @@ def main(con):
 
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
-	header_str = sid_date
+	header_str = ""
+	if not st.session_state.mobile: header_str += sid_date + " · "
 	if ss.view['match'] != 'series':
-		header_str +=  " · match "
+		header_str +=  "match "
 		header_str += str(ss.mid)
 	header_str += " · "
 	sid_str = ss.sid.split("_")[1:]
@@ -206,7 +207,7 @@ def main(con):
 		st.write('')
 	with c2:
 		score_str = """<p style="text-align: left;">"""
-		score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
+		if not st.session_state.mobile: score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
 		score_str += """<span class="fontheader" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
 		score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format(' - ')
 		score_str += """<span class="fontheader" style="color:tomato";>{}</span>""".format(str(m_score[1]))
@@ -225,6 +226,7 @@ def main(con):
 		hdf = hero_df.copy()
 
 		c1,c2,c3,c4,c5,c7,c8 = st.columns([1,1,1,1,1,3,2])
+
 		# summary header
 		for t in [0,1]:
 			t2 = abs(t-1)
