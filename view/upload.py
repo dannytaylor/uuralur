@@ -63,10 +63,11 @@ def main():
 					c0.warning("Fill in both fields.")
 				else:
 					submit_file = "data/player_names_submitted.txt"
-					if os.path.getsize(submit_file) < 5*10^6: # quick file size limit to prevent it getting spammed
-						print(5*10^6)
+					if os.path.getsize(submit_file) < 5000000: # quick file size limit to prevent it getting spammed
 						with open(submit_file, "a") as myfile:
-							myfile.write(f"{datetime.date.today()} @{playername}:{heroname}\n")
+							submission_text = f"{datetime.date.today()} @{playername}:{heroname}\n"
+							print("HERO SUBMISSION: ",submission_text) # print to console for easier reference
+							myfile.write(submission_text)
 
 	if uploaded_file is not None:
 		upload_sf.empty()
