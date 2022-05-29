@@ -253,8 +253,8 @@ def main(con):
 			kill_info.loc[0,'count'] = 0
 			kill_info = kill_info.sort_index()
 
-			# kill_info = kill_info.append(kill_info.iloc[-1]).reset_index()
-			kill_info = pd.concat([kill_info,kill_info.iloc[-1]]).reset_index()
+			kill_info = kill_info.append(kill_info.iloc[-1]).reset_index()
+			# kill_info = pd.concat([kill_info,kill_info.iloc[-1]]).reset_index()
 			kill_info.loc[kill_info.index[-1], 'time_m'] = 10
 
 			score_fig.add_trace(go.Scatter(
