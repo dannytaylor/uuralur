@@ -12,7 +12,9 @@ for j in jsonfiles:
 		pset = json.load(f)
 
 		if 'power_display_names' in pset and  pset['display_name'] not in pset_icons: # if powerset doesn't have an icon yet
-			for p in pset['power_display_names']: # for each power in the power set
+			pset_powers = pset['power_display_names']
+			pset_powers.append(pset_powers.pop(0))
+			for p in pset_powers: # for each power in the power set
 				if p in power_data:
 					if len(power_data[p]['powersets']) == 1: # if the power is unique to the set
 						pset_icons[pset['display_name']] = power_data[p]['icon'] # then we can use the power icon for the set

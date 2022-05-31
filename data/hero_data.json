@@ -9029,5 +9029,96 @@
             "Energy Manipulation",
             "Fire Blast"
         ]
+    },
+    "Chaos Dragon energy": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Ninja Training"
+        ]
+    },
+    "Fee Wee": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Killing Hope": {
+        "archetype": "melee",
+        "sets": [
+            "Energy Melee",
+            "Ninjitsu"
+        ]
+    },
+    "King Phantom": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "MaliciousFire Bender": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Ninja Training"
+        ]
+    },
+    "OU812": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Otter Destruction": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Oxidization": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Southie Blanket": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Squid Head?": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Stompinfire": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Atomic Manipulation"
+        ]
+    },
+    "UTTER POPs": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Ninja Training"
+        ]
+    },
+    "Virtue Signaler": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
     }
 }
