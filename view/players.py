@@ -22,6 +22,7 @@ table_theme = config['table_theme']
 @st.cache
 def init_filter_lists(mh_df):
 	at_list = mh_df['archetype'].unique().tolist()
+	if None in at_list: at_list.remove(None)
 	pset_list = pd.unique(mh_df[['set1', 'set2']].values.ravel('K')).tolist()
 	hero_list = mh_df['hero'].unique().tolist()
 	pset_list.remove(None)
@@ -29,9 +30,8 @@ def init_filter_lists(mh_df):
 	pset_list.sort()
 	hero_list.sort()
 
-	team_list = list(render.team_name_map.keys())
-	team_list.remove('kb')
-	team_list.remove('taco')
+	team_list = set(render.team_name_map.keys())
+	team_list = list(team_list.difference(render.kb_tags))
 	team_list.sort()
 
 	dates = ss.series[~(ss.series['series_id'].str.contains('upload'))]['date'].tolist()
@@ -72,8 +72,8 @@ def main(con):
 			st.write('data filters')
 			data_aggr   = st.radio('show data by',['average per match','overall',],help='applies applicable data')
 			with st.expander('match filters',expanded=False):
-				match_type  = st.radio('match type',['all','scrim','kb'],help="any kickball/taco/community series is kb, any non-kb is a 'scrim'")
-				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties for this filter')
+				match_type  = st.radio('match type',['all','scrim','pug'],help="any kickball/taco/community/pug series is a 'pug', any non-pug is a 'scrim'")
+				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties')
 				def team_name_map(team):
 					if team in render.team_name_map:
 						return render.team_name_map[team]
@@ -122,9 +122,10 @@ def main(con):
 		# match type filters 
 		if match_type != 'all':
 			if match_type == 'kb':
-				mh_df = mh_df[mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco')]
+				# mh_df = mh_df[mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco')]
+				mh_df = mh_df[mh_df['series_id'].str.contains("|".join(render.kb_tags))==True]
 			else:
-				mh_df = mh_df[~(mh_df['series_id'].str.contains('_kb')|mh_df['series_id'].str.contains('_taco'))]
+				mh_df = mh_df[mh_df['series_id'].str.contains("|".join(render.kb_tags))==False]
 		if win_filter != 'all':
 			if win_filter == 'win':
 				mh_df = mh_df[mh_df['win'] == 1]
@@ -307,6 +308,7 @@ def main(con):
 		pset_fig_empty = c5.empty()
 		path_options = ['archetype','set 1','set 2']
 		pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
+
 		if not pset_path:
 			pset_path = path_options		
 
@@ -354,8 +356,8 @@ def main(con):
 				p_heroes = p_heroes[['hero','#','archetype','set1','set2']]
 				p_heroes = p_heroes.sort_values(by='#',ascending=False)
 
-				p_heroes['archetype'] = p_heroes['archetype'].map(lambda x: "archetypes/"+x.replace('/','.')+'.png')
-				p_heroes['archetype'] = p_heroes['archetype'].apply(util.image_formatter)
+				p_heroes['archetype'] = p_heroes['archetype'].map(lambda x: util.image_formatter("archetypes/"+x.replace('/','.')+'.png') if x else render.spacer_base64)
+				# p_heroes['archetype'] = p_heroes['archetype'].apply(util.image_formatter)
 
 				p_heroes_gb = GridOptionsBuilder.from_dataframe(p_heroes)
 				p_heroes_gb.configure_selection('single', pre_selected_rows=None)
@@ -484,6 +486,7 @@ def main(con):
 			# sunburst data
 			pset_hero_df['set 1'] = pset_hero_df['set1'].astype(str)
 			pset_hero_df['set 2'] = pset_hero_df['set2'].astype(str)
+			pset_hero_df['archetype'] = pset_hero_df['archetype'].astype(str)
 			pset_hero_df['total'] = ''
 
 			pset_fig = px.sunburst(

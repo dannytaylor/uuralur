@@ -45,17 +45,17 @@ def init_match_data(sid,mid,upload):
 	actions_df['time_m'] = actions_df['time_ms']/60000
 
 	# hero stats on target and timing
+
+	# offense
 	hero_df['timing']  = hero_df['attack_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['on_target']  = hero_df['timing'].map(lambda x: len(x) - sum(config['otp_penalty'] for t in x if t > config['otp_threshold'])) 
 	hero_df['timing']  = hero_df['timing'].map(lambda x: [a/1000 for a in x])
 	hero_df['avg atk'] = hero_df['timing'].map(lambda x: statistics.mean([abs(v) for v in x]) if len(x) > 0 else None)
 	hero_df['med atk'] = hero_df['timing'].map(lambda x: statistics.median(x) if len(x) > 0 else None)
 	hero_df['var atk'] = hero_df['timing'].map(lambda x:  statistics.variance(x)  if len(x) > 1 else 0)
-	hero_df['max_targets']= hero_df['team'].map(lambda x: m_spikes[x])
-	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
-	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
-	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x) 
+	hero_df['max_targets'] = hero_df['team'].map(lambda x: m_spikes[x])
 
+	# defense
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
 	hero_df['n_phases']     = hero_df['phase_timing'].map(lambda x: len(x))
 	hero_df['phase_timing'] = hero_df['phase_timing'].map(lambda x: [a/1000 for a in x]) 
@@ -69,6 +69,7 @@ def init_match_data(sid,mid,upload):
 	hero_df['avg jaunt']    = hero_df['avg jaunt'].map("{:0.2f}".format).astype(str) + " (" + hero_df['n_jaunts'].astype(str) + ")"
 	hero_df['avg jaunt']    = hero_df['avg jaunt'].map(lambda x: '' if 'nan' in x else x)
 
+	# support
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: ast.literal_eval(x))
 	hero_df['on heal']     = hero_df['heal_timing'].map(lambda x: len(x)  - sum(config['ohp_penalty'] for t in x if t > config['ohp_threshold']))
 	hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: [a/1000 for a in x])
@@ -77,24 +78,28 @@ def init_match_data(sid,mid,upload):
 	hero_df['var heal']    = hero_df['heal_timing'].map(lambda x: statistics.variance(x) if len(x) > 1 else None)
 	hero_df['on heal divisor'] = hero_df['team'].map(lambda x: m_spikes[abs(x-1)]) - hero_df['targets']
 	hero_df['on heal float']   = hero_df['on heal']/hero_df['on heal divisor']
+	
+
+	# summary
+	hero_df['otp_float']  = hero_df['on_target'] / hero_df['max_targets']
+	hero_df['otp']        = hero_df['otp_float'].map("{:.0%}".format)
+	hero_df['otp']        = hero_df['otp'].map(lambda x: '' if x == '0%' else x) 
 	hero_df['on heal%']    = hero_df['on heal float'].map("{:.0%}".format)
 	hero_df['on heal%']	   = hero_df['on heal%'].map(lambda x: '' if x == '0%' else x)
-
 	hero_df['surv_float'] = 1-hero_df['deaths']/hero_df['targets']
 	hero_df['surv'] = hero_df['surv_float'].map("{:.0%}".format)
 	hero_df['surv'] = hero_df['surv'].map(lambda x: '' if x == 'nan%' else x)
 
-	spacer_base64 = "<img src=\"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg==\">"
 	hero_df['set1'] = hero_df['set1'].map(lambda x: '-' if x == None else x)
+	hero_df['set2'] = hero_df['set2'].map(lambda x: '-' if x == None else x)
+	hero_df['icon_at'] = hero_df['archetype'].map(lambda x: render.spacer_base64 if x == None else util.image_formatter("archetypes/"+x.replace('/','.')+'.png')) # placeholder if none
+	# hero_df['icon_set1'] = hero_df['set1'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else render.spacer_base64) # placeholder if none
+	# hero_df['icon_set2'] = hero_df['set2'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else render.spacer_base64) # placeholder if none
+	# hero_df['set1'] = hero_df['icon_set1'] + "  " + hero_df['set1']
+	# hero_df['set2'] = hero_df['icon_set2'] + "  " + hero_df['set2']
 
-	hero_df['icon_at'] = hero_df['archetype'].map(lambda x: spacer_base64 if x == None else util.image_formatter("archetypes/"+x.replace('/','.')+'.png')) # placeholder if none
-	# hero_df['icon_set1'] = hero_df['set1'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else spacer_base64) # placeholder if none
-	# hero_df['icon_set2'] = hero_df['set2'].map(lambda x: util.image_formatter("powers/"+pset_icons.icon_map[x]) if x in pset_icons.icon_map else spacer_base64) # placeholder if none
-
-	# hero_df['at'] = hero_df['icon_at'] + " " + hero_df['icon_set1']  + " " + hero_df['icon_set2']
 	hero_df['at'] = hero_df['icon_at']
-	# hero_df['set1'] = hero_df['icon_set1'] + " " + hero_df['set1']
-	# hero_df['set2'] = hero_df['icon_set2'] + " " + hero_df['set2']
+	# hero_df['at'] = hero_df['icon_at'] + " " + hero_df['icon_set1']  + " " + hero_df['icon_set2']
 
 	# computed opacities for styling
 	hero_df['deaths_opacity'] = 0.2*(hero_df['deaths']/max(hero_df['deaths']))**1.5
@@ -327,14 +332,16 @@ def main(con):
 		hdf = hdf.rename(columns={'on heal%':'onheal'})
 
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
+		# sum_gb.configure_grid_options(enableCellTextSelection=True,ensureDomOrder=True)
+		sum_gb.configure_grid_options(enableRangeSelection=True)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=64)
 		# sum_gb.configure_columns(['hero'],pinned='left',)
 		# sum_gb.configure_columns(['surv'],cellStyle={'text-align': 'center'})
 		sum_gb.configure_columns('hero',pinned='left',cellStyle=render.team_color)
 		sum_gb.configure_columns(['deaths','targets','atks'],type='customNumericFormat',precision=0)
-		# sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
-		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=40)
+		# sum_gb.configure_columns(['set1','set2'],cellRenderer=render.icon,width=56,cellStyle={'text-align': 'left'})
+		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=48)
 
 		# opacities
 		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)

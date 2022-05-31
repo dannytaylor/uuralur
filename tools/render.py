@@ -10,6 +10,7 @@ function(params) {
 	return params.value ? params.value : '';
 }
 """)
+spacer_base64 = "<img src=\"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg==\">"
 
 # helper function for reading aggrid param data
 console = JsCode("""
@@ -193,6 +194,9 @@ def css_rules():
 
 team_name_map = {
 	"kb":"kickball",
+	"taco":"taco",
+	"pug":"pug",
+
 	"gb":"good boys",
 	"rng":"renegades",
 	"inc":"incursion",
@@ -211,7 +215,7 @@ team_name_map = {
 	"vori":"vori",
 	"four":"four",
 	"elk":"elk",
-	"pug":"pug",
 	"putos":"putos",
-	"taco":"taco",
 }
+
+kb_tags = {"kb","pug","community","taco"}

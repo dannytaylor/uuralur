@@ -9120,5 +9120,11 @@
             "Fire Blast",
             "Energy Manipulation"
         ]
+    },
+    "Xeraphine": {
+        "archetype": "blaster"
+    },
+    "Jishin Shinobu": {
+        "archetype": "blaster"
     }
 }
