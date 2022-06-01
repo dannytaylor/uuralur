@@ -9126,5 +9126,77 @@
     },
     "Jishin Shinobu": {
         "archetype": "blaster"
+    },
+    "Emparamedic": {
+        "archetype": "defender/corruptor"
+    },
+    "Flick The Beam": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Tactical Arrow"
+        ]
+    },
+    "Hot Dogger Mallex": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Lowlands": {
+        "archetype": "blaster"
+    },
+    "Old Man Chester": {
+        "archetype": "melee"
+    },
+    "Retottered": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Fire Blast"
+        ]
+    },
+    "Sim Beam Whiskey": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Martial Combat"
+        ]
+    },
+    "Waveshaper": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "You Beam Brah?": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "corls": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "ghostvillain": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "xhig not playn coh": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
     }
 }

@@ -13365,6 +13365,7 @@
             "V_COV/POWERS/NINJITSU/HIDE.FX"
         ],
         "archetypes": [
+            "blaster",
             "melee",
             "sentinel"
         ],
