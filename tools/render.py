@@ -209,6 +209,10 @@ team_name_map = {
 	"ggz":"gossipy guyz",
 	"cum":"constantly under managed",
 	"wap":"war against peace",
+	"tbbz":"blackout boys",
+	"doom":"DOOM",
+	"sos":"significant otters",
+	"obs":"only bans",
 
 	# "jh":"jh", # one match that has been renamed to correct
 	"rare":"rare",
@@ -216,6 +220,8 @@ team_name_map = {
 	"four":"four",
 	"elk":"elk",
 	"putos":"putos",
+
+	"dl1":"(draft league)",
 }
 
 kb_tags = {"kb","pug","community","taco"}

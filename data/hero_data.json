@@ -9198,5 +9198,148 @@
             "Devices",
             "Fire Blast"
         ]
+    },
+    "2006 meta": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Airball Ona Layup": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Hinokokyu": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Hot Near a School": {
+        "archetype": "blaster"
+    },
+    "P O T U S": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Playing THAT Drunk": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Reported?": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Rules r 4 Fools": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Well-Done Steak": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Xmas music in Nov": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "beam flicker": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Ball Of White": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Beamnut": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Energy Manipulation"
+        ]
+    },
+    "Corls": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Energy Manipulation"
+        ]
+    },
+    "Lancer Shot": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Kinetics"
+        ]
+    },
+    "Laser Tag": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Poison"
+        ]
+    },
+    "March Fired": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Ninja Training"
+        ]
+    },
+    "Mike the Merc": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Energy Manipulation"
+        ]
+    },
+    "Starnaut": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Energy Manipulation"
+        ]
+    },
+    "UTTER POP": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Ninja Training"
+        ]
+    },
+    "feet pics?": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Tactical Arrow"
+        ]
     }
 }

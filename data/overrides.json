@@ -1348,5 +1348,8 @@
   "4": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "5": {"HERONAME":{"Dogger":"Sea Dogger"}},
   "6": {"HERONAME":{"Dogger":"Sea Dogger"}}
+ },
+ "220602_obs_tbbz": {
+    "1": {"TEAMSWAP": 1}
  }
 }
