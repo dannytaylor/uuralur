@@ -169,7 +169,6 @@ def init_match_data(sid,mid,upload):
 
 def main(con):
 
-	# match wide dataframes
 	# match info, relevant to all views
 	upload = None
 	# if 'upload' in ss.sid: # disabling for now - assuming no manual deletions for now
