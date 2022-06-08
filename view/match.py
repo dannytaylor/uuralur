@@ -27,6 +27,7 @@ team_name_map = {0:'blu',1:'red'}
 table_theme = config['table_theme']
 cache_folder = '.cache'
 
+@st.cache(show_spinner=False)
 def init_match_data(sid,mid,upload=False):
 	# check if cache already exists
 	pickle_file = "/".join([cache_folder,str(sid),str(mid)+".pickle"])
