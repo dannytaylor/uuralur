@@ -22773,7 +22773,7 @@
         ],
         "effect_area": "SingleTarget",
         "frames_attack": 2266,
-        "frames_before_hit": 1233,
+        "frames_before_hit": 1066,
         "hit_fx": [
             "V_COV/POWERS/PAINDOMINATION/SHAREPAIN_HIT.FX"
         ],
