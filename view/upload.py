@@ -4,7 +4,7 @@ ss = st.session_state # global shorthand for this file
 import parse
 config = yaml.safe_load(open('data/config.yaml'))
 
-from view.match import init_match_data
+from tools.init_match import init_match
 
 def is_file_dupl(path,data):
 	new_hash = hashlib.md5(data).hexdigest()
@@ -140,7 +140,7 @@ def main():
 							os.system("python parse.py -m {} -i {}".format(parsepath,sid))
 
 							time.sleep(2) # delay to ensure DB okay
-							init_match_data(sid,int(mid),upload=True) # create cache pickle before first viewing
+							init_match(sid,int(mid),upload=True) # create cache pickle before first viewing
 
 							time.sleep(0.5) 
 							# parse.main(['-m',parsepath,'-i',sid])
