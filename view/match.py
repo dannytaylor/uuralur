@@ -830,7 +830,7 @@ def main(con):
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
-		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
+		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,2])
 
 		# split to only heroes with attack chains
 		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
@@ -851,8 +851,8 @@ def main(con):
 
 
 		with c7:
-			hero_sel_st = st.empty()
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
+			hero_sel_st = st.sidebar.expander("offence heroes",expanded=False)
+			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
 		c1,c2 = st.columns([2,1])
 		with c1:
@@ -891,7 +891,7 @@ def main(con):
 				)
 
 			at_fig.update_layout(
-				height=360 if not ss.mobile else 280,
+				height=400 if not ss.mobile else 280,
 				width=400,
 				margin = dict(t=24, l=0, r=32, b=0),
 				showlegend=False,
@@ -1028,8 +1028,10 @@ def main(con):
 
 			ac_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=360 if not ss.mobile else 280)
+				height=360 if not ss.mobile else 280,
+				)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
+			st.caption('attack chains')
 
 			## debugging table
 			# at_df = at_df[['id','parent','count']]
@@ -1193,7 +1195,7 @@ def main(con):
 			st_spikes = st.empty()
 
 			# spike filters
-			filters = st.expander('spike filters',expanded=False)
+			filters = st.sidebar.expander('spike filters',expanded=False)
 			spike_filters = {}
 			with filters:
 				spike_filters['players'] = st.multiselect('heroes',hero_list)
@@ -1400,7 +1402,7 @@ def main(con):
 			),row=2, col=1)
 
 			sp_fig.update_layout(
-				height=314,
+				height=250,
 				showlegend=False,
 				xaxis={'range':hp_range},
 				margin={'t': 0,'b':40,'l':48,'r':0},
@@ -1423,6 +1425,7 @@ def main(con):
 			sl_gb.configure_columns(['cell_color','hit_color'],hide=True)
 
 			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
+			# st.caption(f"spike log: #{str(spid)}")
 			sl_ag = AgGrid(
 				sl_write,
 				allow_unsafe_jscode=True,
@@ -1632,7 +1635,7 @@ def main(con):
 		table_title = 'heroes'
 		if name_toggle == 'player name':
 			table_title = 'players'
-			mh_df['player_name'] = mh_df.apply(lambda x: x['hero'] if not x['player_name'] else x['player_name'], axis=1)
+			mh_df['player_name'] = mh_df.apply(lambda x: x['hero'] if not x['player_name'] else "@"+x['player_name'], axis=1)
 			mh_df['hero'] = mh_df['player_name']
 		table_title += " (" + data_aggr + ")"
 

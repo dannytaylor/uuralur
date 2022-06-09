@@ -69,8 +69,11 @@ def main(con):
 
 		# data filters
 		with st.sidebar.form('filters'):
-			st.write('data filters')
-			data_aggr   = st.radio('show data by',['average per match','overall',],help='applies applicable data')
+			st.write('select data')
+			with st.expander('data filters',expanded=False):
+				data_aggr   = st.radio('show data by',['average per match','overall',],help='applies applicable data')
+				data_filter = st.empty()
+
 			with st.expander('match filters',expanded=False):
 				match_type  = st.radio('match type',['all','scrim','pug'],help="any kickball/taco/community/pug series is a 'pug', any non-pug is a 'scrim'")
 				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties')
@@ -105,9 +108,9 @@ def main(con):
 		record_data = ['win','loss','tie']
 		available_data += target_data + timing_data + count_data + dmg_data + record_data
 
-		with st.form('data selection'):
-			show_data = st.multiselect('show columns (filters in sidebar)',available_data,default=default_sel)
-			init_data = st.form_submit_button('get data')
+		# with st.form('data selection'):
+		show_data = data_filter.multiselect('show columns (filters in sidebar)',available_data,default=default_sel)
+			# init_data = st.form_submit_button('get data')
 
 		# toggles for viewing data by
 		table_title = 'players'
@@ -147,7 +150,7 @@ def main(con):
 			expr = '(?=.*{})'
 			mh_df = mh_df[mh_df['series_id'].str.contains(''.join(expr.format(t) for t in team_filter))]
 
-		if init_data or init_filters:
+		if init_filters:
 			try:
 				with st.spinner('calculating data...'):
 					# setup player table
@@ -232,6 +235,8 @@ def main(con):
 						# mh_write = mh_df[['player','#matches','deaths','targets','surv','dmg','otp','avg t']]
 					
 						mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
+
+						mh_gb.configure_grid_options(enableCellTextSelection=True,ensureDomOrder=True)
 						mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 						mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 						mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
@@ -252,14 +257,14 @@ def main(con):
 							gridOptions=mh_gb.build(),
 							# update_mode='SELECTION_CHANGED',
 							# fit_columns_on_grid_load= not ss.mobile,
-							height = 800 if not ss.mobile else 320,
+							height = 920 if not ss.mobile else 400,
 							theme=table_theme
 						)
 			except:
 				st.write('No data found for these filters')
 		else:
 			st.caption('')
-			st.caption('Select categories above or apply filters in the sidebar to fetch data')
+			st.caption('Select data and filters in the sidebar to fetch data')
 
 	elif ss.view['records'] == 'summary':
 		c1,c2 = st.columns([2,8])
