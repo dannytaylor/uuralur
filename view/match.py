@@ -29,12 +29,14 @@ table_theme = config['table_theme']
 
 def main(con):
 	# match info, relevant to all views
-	hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var = init_match(ss.sid,ss.mid)
+	hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med = init_match(ss.sid,ss.mid)
 	
 	hero_df = hero_df.copy()
 	actions_df = actions_df.copy()
 	sdf = sdf.copy()
-	hp_df = hp_df.copy()
+
+	sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
+	hp_df = pd.read_sql_query(sqlq, con)
 
 	hero_player_map = util.hero_player_dict(dict(zip(hero_df['hero'],hero_df['player_name'])))
 	if ss['useplayernames']:
@@ -117,7 +119,6 @@ def main(con):
 		for t in [0,1]:
 			t2 = abs(t-1)
 			kill_info = actions_df[(actions_df['team'] == t2) & (actions_df['action'] == 'Death')].copy().reset_index()
-
 			# append score 0 to start and max_score to end
 			kill_info['count'] = kill_info.index + 1
 			kill_info.loc[-1] = kill_info.loc[0]
@@ -127,7 +128,7 @@ def main(con):
 			kill_info = kill_info.sort_index()
 
 			# kill_info = kill_info.append(kill_info.iloc[-1]).reset_index()
-			kill_info = pd.concat([kill_info,pd.concat([kill_info[-1:]])]).reset_index()
+			# kill_info = pd.concat([kill_info,pd.concat([kill_info[-1:]])]).reset_index()
 			kill_info.loc[kill_info.index[-1], 'time_m'] = 10
 
 			score_fig.add_trace(go.Scatter(

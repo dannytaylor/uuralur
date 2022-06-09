@@ -1,4 +1,4 @@
-import sys,sqlite3,os,ast,yaml,statistics,pickle,inspect
+import sys,sqlite3,os,ast,yaml,statistics,inspect,json
 
 # to allow running outside of streamlit
 # run from project root
@@ -19,50 +19,70 @@ cache_folder = '.cache'
 
 import streamlit as st
 
-@st.cache(show_spinner=False)
+# @st.cache(show_spinner=False)
 def init_match(sid,mid,upload=False,batch=False,force=False):
 
 	con = sqlite3.connect(db_file)
 	
-	# should really used a DB or json
-	pickle_file = "/".join([cache_folder,str(sid),str(mid)+".pickle"])
+	cache_file = "/".join([cache_folder,str(sid),str(mid)+".db"])
+
 	# if cache already exists
 	if batch and "upload" in sid:
 		return
-	if os.path.isfile(pickle_file) and not force:
+	if os.path.isfile(cache_file) and not force:
 		if batch: 
 			print(f'already exists {sid} {mid}')
 			return
 		# if it does, just grab the init data from the pickle
-		unpickled 	= pickle.load(open(pickle_file,"rb"))
 		# need to be careful preserving order if changes made
-		hero_df 	= unpickled[0]
+
+		cache_con 	= sqlite3.connect(cache_file)
+		sqlq 	= util.str_sqlq('hero_df',sid,mid)
+		hero_df = pd.read_sql_query(sqlq, cache_con)
 
 		# check if cache current via player list
 		sqlq = util.str_sqlq('Heroes',sid,mid)
 		hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
 		# if current pickle from old version of player_names.json assume needs rerunning, otherwise OK
 		if set(hero_df['player_name'])!= set(hero_df_check):
-			print(f"regenerating pickle {sid} {mid}")
+			print(f"regenerating cache {sid} {mid}")
 			init_match(sid,mid,force=True)
 
-		actions_df 	= unpickled[1]
-		sdf 		= unpickled[2]
-		hp_df 		= unpickled[3]
-		m_score 	= unpickled[4]
-		m_spikes 	= unpickled[5]
-		m_attacks 	= unpickled[6]
-		t_spikes 	= unpickled[7]
-		t_kills 	= unpickled[8]
-		t_dmg 		= unpickled[9]
-		ht_mean 	= unpickled[10]
-		ht_med 		= unpickled[11]
-		ht_var 		= unpickled[12]
+		sqlq 		= util.str_sqlq('actions_df')
+		actions_df 	= pd.read_sql_query(sqlq, cache_con)
+
+		sqlq 		= util.str_sqlq('sdf')
+		sdf 		= pd.read_sql_query(sqlq, cache_con)
+
+		sqlq 		= util.str_sqlq('match_data')
+		match_data	= pd.read_sql_query(sqlq, cache_con)
+		m_score 	= match_data.loc[0, :].values.tolist()
+		m_spikes 	= match_data.loc[1, :].values.tolist()
+		m_attacks 	= match_data.loc[2, :].values.tolist()
+
+		sqlq 		= util.str_sqlq('t_spikes0')
+		t_spikes0 	= pd.read_sql_query(sqlq, cache_con)
+		sqlq 		= util.str_sqlq('t_spikes1')
+		t_spikes1 	= pd.read_sql_query(sqlq, cache_con)
+		t_spikes 	= {0:t_spikes0,1:t_spikes1}
+
+		sqlq 		= util.str_sqlq('t_kills0')
+		t_kills0 	= pd.read_sql_query(sqlq, cache_con)
+		sqlq 		= util.str_sqlq('t_kills1')
+		t_kills1 	= pd.read_sql_query(sqlq, cache_con)
+		t_kills 	= {0:t_kills0,1:t_kills1}
+
+		t_dmg 		= match_data.loc[3, :].values.tolist()
+		ht_mean 	= match_data.loc[4, :].values.tolist()
+		ht_med 		= match_data.loc[5, :].values.tolist()
 
 	# otherwise if no cache file already, create one for first run
 	else:
 		with st.spinner("running first time match setup..."):
-			print(f'generating pickle {sid} {mid}')
+			print(f'generating cache {sid} {mid}')
+
+			os.makedirs(os.path.dirname(cache_file), exist_ok=True)
+			cache_con 	= sqlite3.connect(cache_file)
 
 			matches = pd.read_sql_query("SELECT * FROM Matches", con)
 			match_row = matches[(matches['match_id']==mid)&(matches['series_id']==sid)]
@@ -167,10 +187,6 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 			sdf['time'] = pd.to_datetime(sdf['time_ms'],unit='ms').dt.strftime('%M:%S')
 			sdf['time_m'] = sdf['time_ms']/60000
 
-			# get hp data for later views
-			sqlq = util.str_sqlq('HP',sid,mid)
-			hp_df = pd.read_sql_query(sqlq, con)
-
 			m_attacks = {}
 			m_attacks[0] = int(hero_df[hero_df['team'] == 0]['atks'].sum())
 			m_attacks[1] = int(hero_df[hero_df['team'] == 1]['atks'].sum())
@@ -197,12 +213,33 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 				ht_mean[t] = statistics.mean([abs(x) for x in ht[t]])
 				ht_med[t] = statistics.median(ht[t])
 		
-			os.makedirs(os.path.dirname(pickle_file), exist_ok=True)
-			with open(pickle_file,'wb') as f:
-				pickle_dump = [hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var]
-				pickle.dump(pickle_dump,f)
+			# convert to str
+			stringify = ['attack_chains','attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
+			for i in stringify:
+				hero_df[i] = hero_df[i].map(lambda x: str(x))
 
-	return hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var
+			hero_df.to_sql("hero_df",cache_con,if_exists='replace')
+			actions_df.to_sql("actions_df",cache_con,if_exists='replace')
+			sdf.to_sql("sdf",cache_con,if_exists='replace')
+
+			t_spikes[0].to_sql("t_spikes0",cache_con,if_exists='replace')
+			t_spikes[1].to_sql("t_spikes1",cache_con,if_exists='replace')
+			t_kills[0].to_sql("t_kills0",cache_con,if_exists='replace')
+			t_kills[1].to_sql("t_kills1",cache_con,if_exists='replace')
+
+			match_data = {}
+			for i in [0,1]:
+				match_data[i] = [m_score[i],m_spikes[i],m_attacks[i],t_dmg[i],ht_mean[i],ht_med[i]]
+			match_data = pd.DataFrame.from_dict(match_data)
+			match_data.to_sql("match_data",cache_con,if_exists='replace')
+
+	# unconvert from str
+	stringify = ['attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
+	for i in stringify:
+		hero_df[i] = hero_df[i].map(lambda x: ast.literal_eval(x))
+
+	return hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med
+
 
 def main():
 	con = sqlite3.connect(db_file)
