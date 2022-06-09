@@ -9366,4 +9366,32 @@
     "Emergency Assistance": {
         "archetype": "defender/corruptor"
     },
+    "Coma Toast": {
+        "archetype": "dominator",
+        "sets": [
+            "Fiery Assault",
+            "Mind Control"
+        ]
+    },
+    "Metal Face": {
+        "archetype": "dominator",
+        "sets": [
+            "Fiery Assault",
+            "Mind Control"
+        ]
+    },
+    "Never enough": {
+        "archetype": "blaster",
+        "sets": [
+            "Water Blast",
+            "Ninja Training"
+        ]
+    },
+    "Otterly Ridiculous": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Thermal Radiation"
+        ]
+    }
 }
