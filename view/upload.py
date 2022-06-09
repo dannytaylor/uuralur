@@ -133,7 +133,7 @@ def main():
 					f.write(bytes_data)
 					f.close()
 					print("{} saved".format(uploaded_file))
-					with st.spinner('attemping to read demo...'):
+					with st.spinner('attemping to read demo, may take > 1 minute if the site is under load'):
 						try:
 							parsepath += f_name
 							print(sid,parsepath)

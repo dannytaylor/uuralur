@@ -61,7 +61,7 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 
 	# otherwise if no cache file already, create one for first run
 	else:
-		with st.spinner("Attempting first time match loading..."):
+		with st.spinner("running first time match setup..."):
 			print(f'generating pickle {sid} {mid}')
 
 			matches = pd.read_sql_query("SELECT * FROM Matches", con)

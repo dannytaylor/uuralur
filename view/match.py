@@ -47,7 +47,7 @@ def main(con):
 		sdf['target'] 		= sdf['target'].map(hero_player_map)
 		hp_df['hero'] 		= hp_df['hero'].map(hero_player_map)
 
-	hero_list			= hero_df['hero'].tolist()
+	hero_list = hero_df['hero'].tolist()
 	hero_team_map = {}
 	for index, row in hero_df.iterrows():
 		hname = row['hero']
@@ -64,9 +64,9 @@ def main(con):
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
 	header_str = ""
-	if not st.session_state.mobile: header_str += sid_date + " · "
+	if not ss.mobile: header_str += sid_date
 	if ss.view['match'] != 'series':
-		header_str +=  "match "
+		header_str +=  " · match "
 		header_str += str(ss.mid)
 	header_str += " · "
 	sid_str = ss.sid.split("_")[1:]
@@ -679,7 +679,7 @@ def main(con):
 
 
 		with c7:
-			hero_sel_st = st.sidebar.expander("offence heroes",expanded=False)
+			hero_sel_st = st.sidebar.expander("atk chain heroes",expanded=False)
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
 		c1,c2 = st.columns([2,1])
