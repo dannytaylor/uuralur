@@ -1,4 +1,4 @@
-import sys,sqlite3,os,ast,yaml,statistics,json,inspect
+import sys,sqlite3,os,ast,yaml,statistics,pickle,inspect
 
 # to allow running outside of streamlit
 # run from project root
@@ -24,49 +24,43 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 
 	con = sqlite3.connect(db_file)
 	
-	json_cache = "/".join([cache_folder,str(sid),str(mid)+".json"])
+	# should really used a DB or json
+	pickle_file = "/".join([cache_folder,str(sid),str(mid)+".pickle"])
 	# if cache already exists
-	if os.path.isfile(json_cache) and not force:
-		# if it does, just grab the init data from the json
+	if os.path.isfile(pickle_file) and not force:
 		if batch: 
 			print(f'already exists {sid} {mid}')
 			return
-
-		# changing dict keys back to ints
-		def jsonKeys2int(x):
-			if isinstance(x, dict):
-				return {(int(k) if k.isnumeric() else k):v for k,v in x.items()}
-			return x
-
-		json_read 	= json.load(open(json_cache),object_hook=jsonKeys2int)
+		# if it does, just grab the init data from the pickle
+		unpickled 	= pickle.load(open(pickle_file,"rb"))
 		# need to be careful preserving order if changes made
-		hero_df 	= pd.DataFrame.from_dict(json_read[0])
+		hero_df 	= unpickled[0]
 
 		# check if cache current via player list
 		sqlq = util.str_sqlq('Heroes',sid,mid)
 		hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
-		# if current cache from old version of player_names.json assume needs rerunning, otherwise OK
+		# if current pickle from old version of player_names.json assume needs rerunning, otherwise OK
 		if set(hero_df['player_name'])!= set(hero_df_check):
-			print(f"regenerating json cache {sid} {mid}")
+			print(f"regenerating pickle {sid} {mid}")
 			init_match(sid,mid,force=True)
 
-		actions_df 	= pd.DataFrame.from_dict(json_read[1])
-		sdf 		= pd.DataFrame.from_dict(json_read[2])
-		hp_df 		= pd.DataFrame.from_dict(json_read[3])
-		m_score 	= json_read[4]
-		m_spikes 	= json_read[5]
-		m_attacks 	= json_read[6]
-		t_spikes 	= {0:pd.DataFrame.from_dict(json_read[7][0]),1:pd.DataFrame.from_dict(json_read[7][1])}
-		t_kills 	= {0:pd.DataFrame.from_dict(json_read[8][0]),1:pd.DataFrame.from_dict(json_read[8][1])}
-		t_dmg 		= json_read[9]
-		ht_mean 	= json_read[10]
-		ht_med 		= json_read[11]
-		ht_var 		= json_read[12]
+		actions_df 	= unpickled[1]
+		sdf 		= unpickled[2]
+		hp_df 		= unpickled[3]
+		m_score 	= unpickled[4]
+		m_spikes 	= unpickled[5]
+		m_attacks 	= unpickled[6]
+		t_spikes 	= unpickled[7]
+		t_kills 	= unpickled[8]
+		t_dmg 		= unpickled[9]
+		ht_mean 	= unpickled[10]
+		ht_med 		= unpickled[11]
+		ht_var 		= unpickled[12]
 
 	# otherwise if no cache file already, create one for first run
 	else:
 		with st.spinner("Attempting first time match loading..."):
-			print(f'generating json cache {sid} {mid}')
+			print(f'generating pickle {sid} {mid}')
 
 			matches = pd.read_sql_query("SELECT * FROM Matches", con)
 			match_row = matches[(matches['match_id']==mid)&(matches['series_id']==sid)]
@@ -201,19 +195,10 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 				ht_mean[t] = statistics.mean([abs(x) for x in ht[t]])
 				ht_med[t] = statistics.median(ht[t])
 		
-			os.makedirs(os.path.dirname(json_cache), exist_ok=True)
-			with open(json_cache,'w') as f:
-				json_dump = [hero_df.to_dict(),actions_df.to_dict(),sdf.to_dict(),hp_df.to_dict()]
-				json_dump += [m_score,m_spikes,m_attacks]
-				t_spikes   = [t_spikes[0].to_dict(),t_spikes[1].to_dict()]
-				t_kills   = [t_kills[0].to_dict(),t_kills[1].to_dict()]
-				json_dump += [t_spikes,t_kills]
-				json_dump += [t_dmg,ht_mean,ht_med,ht_var]
-				
-				# print(t_spikes)
-				f.write(json.dumps(json_dump))
-
-
+			os.makedirs(os.path.dirname(pickle_file), exist_ok=True)
+			with open(pickle_file,'wb') as f:
+				pickle_dump = [hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var]
+				pickle.dump(pickle_dump,f)
 
 	return hero_df,actions_df,sdf,hp_df,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med,ht_var
 
