@@ -27,6 +27,8 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 	# should really used a DB or json
 	pickle_file = "/".join([cache_folder,str(sid),str(mid)+".pickle"])
 	# if cache already exists
+	if batch and "upload" in sid:
+		return
 	if os.path.isfile(pickle_file) and not force:
 		if batch: 
 			print(f'already exists {sid} {mid}')
