@@ -9341,5 +9341,29 @@
             "Fire Blast",
             "Tactical Arrow"
         ]
-    }
+    },
+    "Jitsu Bazillion": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Tactical Arrow"
+        ]
+    },
+    "redneB eriF": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Fire Blast"
+        ]
+    },
+    "weeners": {
+        "archetype": "blaster",
+        "sets": [
+            "Tactical Arrow",
+            "Fire Blast"
+        ]
+    },
+    "Emergency Assistance": {
+        "archetype": "defender/corruptor"
+    },
 }
