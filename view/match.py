@@ -10,13 +10,16 @@ import tools.render as render
 import data.pset_icons as pset_icons
 from tools.init_match import init_match
 from millify import millify
+
 import pickle
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode, DataReturnMode
 config = yaml.safe_load(open('data/config.yaml'))
 powers = json.loads(open('data/powers.json').read())
 
@@ -1049,25 +1052,25 @@ def main(con):
 
 
 			sf_write = sf[['#','time','team','kill','target','dur','attacks','attackers','dmg']]
-			sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
+			# sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
 			sf_gb = GridOptionsBuilder.from_dataframe(sf_write)
-			sf_gb.configure_default_column(filterable=False,suppressMovable=True)
+			sf_gb.configure_default_column(filterable=False,suppressMovable=True,width=54)
 			sf_gb.configure_columns(['#','team','kill'],width=18)
 			sf_gb.configure_columns(['atks','atkr','time'],width=60)
 			sf_gb.configure_columns(['dur','dmg'],width=54)
 			sf_gb.configure_columns(['target'],width=92,cellStyle=render.team_color)
-			sf_gb.configure_selection('single', pre_selected_rows=[0])
 			sf_gb.configure_columns('dur',filterable=True)
 			sf_gb.configure_columns('dmg',type='customNumericFormat',precision=0)
 			sf_gb.configure_columns('team',hide=True)
+			sf_gb.configure_selection(selection_mode='single', pre_selected_rows=[0],suppressRowDeselection=True)
 
 			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike list'),True)
 			response = AgGrid(
 				sf_write,
 				allow_unsafe_jscode=True,
 				gridOptions=sf_gb.build(),
-				# data_return_mode="filtered_and_sorted",
-				update_mode='SELECTION_CHANGED',
+				# data_return_mode="FILTERED_AND_SORTED",
+				update_mode=GridUpdateMode.SELECTION_CHANGED,
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 560 if not ss.mobile else 280,
 				theme=table_theme
