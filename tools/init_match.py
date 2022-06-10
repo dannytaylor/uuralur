@@ -28,9 +28,10 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 	
 	cache_file = "/".join([cache_folder,str(sid),str(mid)+".json"])
 
+	# skip reparsing uploads
+	# if batch and "upload" in sid: 
+	# 	return
 	# if cache already exists
-	if batch and "upload" in sid: # skip reparsing uploads
-		return
 	if os.path.isfile(cache_file) and not force:
 		if batch: 
 			print(f'already exists {sid} {mid}')
