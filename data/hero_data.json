@@ -9393,5 +9393,123 @@
             "Water Blast",
             "Thermal Radiation"
         ]
+    },
+    "Aynus": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Bug Chaser": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Seismic Blast"
+        ]
+    },
+    "Buttchuggin Justin": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Tactical Arrow"
+        ]
+    },
+    "Crop Dusting": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Gabbie Sharter": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "Gila Returns": {
+        "archetype": "melee",
+        "sets": [
+            "Ninjitsu",
+            "Spines"
+        ]
+    },
+    "Gravestone-": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "HandiBDanibr": {
+        "archetype": "melee",
+        "sets": [
+            "Radiation Armor",
+            "Super Strength"
+        ]
+    },
+    "Losss": {
+        "archetype": "melee"
+    },
+    "Mirror Phase": {
+        "archetype": "melee",
+        "sets": [
+            "Ninjitsu",
+            "Spines"
+        ]
+    },
+    "Norwood 8": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "OTTER UTTERS": {
+        "archetype": "melee"
+    },
+    "Porcelain material": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "Rocky Potato": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "Rocky Potatoe": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "Throbbin Williams": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Ninja Training"
+        ]
+    },
+    "Trudeau as Prime": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "dex calling": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
     }
 }
