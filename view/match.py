@@ -11,7 +11,6 @@ import data.pset_icons as pset_icons
 from tools.init_match import init_match
 from millify import millify
 
-import pickle
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
