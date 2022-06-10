@@ -1112,10 +1112,15 @@ def main(con):
 			hit_max = max(sl['hit'].tolist())
 			
 			# spike hp log
-			sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
-			hp_df = pd.read_sql_query(sqlq, con)
-			if ss['useplayernames']:
-				hp_df['hero'] = hp_df['hero'].map(hero_player_map)
+			@st.cache
+			def get_match_hp(sid,mid,useplayernames):
+				sqlq = util.str_sqlq('HP',sid,mid)
+				hp_df = pd.read_sql_query(sqlq, con)
+				if ss['useplayernames']:
+					hp_df['hero'] = hp_df['hero'].map(hero_player_map)
+				return hp_df
+
+			hp_df = get_match_hp(ss.sid,ss.mid,ss.useplayernames)
 
 			hp_start_time = min(sp_start - sp_delta,sp_start-act_min)
 			hp_end_time   = max(sp_end+sp_delta+1000,sp_start+hit_max+sp_delta+1000)
