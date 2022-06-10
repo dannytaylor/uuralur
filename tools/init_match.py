@@ -208,11 +208,6 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 				ht_mean[t] = statistics.mean([abs(x) for x in ht[t]])
 				ht_med[t] = statistics.median(ht[t])
 		
-			# convert to str
-			# stringify = ['attack_chains','attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
-			# for i in stringify:
-			# 	hero_df[i] = hero_df[i].map(lambda x: str(x))
-
 			hero_json 		= hero_df.to_json()
 			actions_json 	= actions_df.to_json()
 			s_json 			= sdf.to_json()
@@ -231,15 +226,10 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 			with open(cache_file, 'w') as outfile:
 				ujson.dump(json_list, outfile,indent=4)
 
-
-	# unconvert from str
-	# stringify = ['attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
-	# for i in stringify:
-	# 	hero_df[i] = hero_df[i].map(lambda x: ast.literal_eval(x))
-
 	hero_df['index'] = hero_df['hero']
-	hero_df = hero_df.set_index('index') 
-
+	hero_df = hero_df.set_index('index')
+	sdf 	= sdf.reset_index()
+	sdf['#']= sdf.index+1
 
 	# tend = time.time()
 	# print(f'DB check {tend-tstart}')
