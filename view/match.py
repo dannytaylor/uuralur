@@ -117,22 +117,20 @@ def main(con):
 		spike_fig = go.Figure()
 		for t in [0,1]:
 			t2 = abs(t-1)
-			kill_info = actions_df[(actions_df['team'] == t2) & (actions_df['action'] == 'Death')].copy().reset_index()
-			# append score 0 to start and max_score to end
-			kill_info['count'] = kill_info.index + 1
-			kill_info.loc[-1] = kill_info.loc[0]
-			kill_info.index = kill_info.index + 1
-			kill_info.loc[0,'time_m'] = 0
-			kill_info.loc[0,'count'] = 0
-			kill_info = kill_info.sort_index()
+			kill_time = [0] + actions_df[(actions_df['team'] == t2) & (actions_df['action'] == 'Death')]['time_m'].to_list()
 
-			# kill_info = kill_info.append(kill_info.iloc[-1]).reset_index()
-			# kill_info = pd.concat([kill_info,pd.concat([kill_info[-1:]])]).reset_index()
-			kill_info.loc[kill_info.index[-1], 'time_m'] = 10
+			kill_count = [0]
+			if kill_time != [0]:
+			# append score 0 to start and max_score to end
+				kill_count = [i for i in range(len(kill_time))]
+
+			kill_time.append(10)
+			kill_count.append(kill_count[-1])
+
 
 			score_fig.add_trace(go.Scatter(
-				x=kill_info['time_m'],
-				y=kill_info['count'],
+				x=kill_time,
+				y=kill_count,
 				name='',
 				mode='lines',
 				line=dict(color=team_colour_map[t], width=8),
