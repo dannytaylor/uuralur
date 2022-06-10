@@ -1,4 +1,4 @@
-import sys,sqlite3,os,ast,yaml,statistics,inspect,json
+import sys,sqlite3,os,ast,yaml,statistics,inspect,json,time
 
 # to allow running outside of streamlit
 # run from project root
@@ -42,11 +42,18 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 
 		# check if cache current via player list
 		sqlq = util.str_sqlq('Heroes',sid,mid)
-		hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
-		# if current pickle from old version of player_names.json assume needs rerunning, otherwise OK
-		if set(hero_df['player_name'])!= set(hero_df_check):
-			print(f"regenerating cache {sid} {mid}")
-			init_match(sid,mid,force=True)
+
+		def player_list_check():
+			hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
+			# if current pickle from old version of player_names.json assume needs rerunning, otherwise OK
+			if set(hero_df['player_name'])!= set(hero_df_check):
+				print(f"regenerating cache {sid} {mid}")
+				init_match(sid,mid,force=True)
+		# tstart = time.time()
+		player_list_check() # disabled checking for now, speed up?
+		# tend = time.time()
+		# print(f'DB check {tend-tstart}') # takes about ~0.01s local, ~0.1s on VPS
+		# 
 
 		sqlq 		= util.str_sqlq('actions_df')
 		actions_df 	= pd.read_sql_query(sqlq, cache_con)
@@ -56,9 +63,9 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 
 		sqlq 		= util.str_sqlq('match_data')
 		match_data	= pd.read_sql_query(sqlq, cache_con)
-		m_score 	= match_data.loc[0, :].values.tolist()
-		m_spikes 	= match_data.loc[1, :].values.tolist()
-		m_attacks 	= match_data.loc[2, :].values.tolist()
+		m_score 	= match_data.loc[0, :].values.astype(int).tolist()[1:]
+		m_spikes 	= match_data.loc[1, :].values.astype(int).tolist()[1:]
+		m_attacks 	= match_data.loc[2, :].values.astype(int).tolist()[1:]
 
 		sqlq 		= util.str_sqlq('t_spikes0')
 		t_spikes0 	= pd.read_sql_query(sqlq, cache_con)
@@ -72,9 +79,12 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 		t_kills1 	= pd.read_sql_query(sqlq, cache_con)
 		t_kills 	= {0:t_kills0,1:t_kills1}
 
-		t_dmg 		= match_data.loc[3, :].values.tolist()
-		ht_mean 	= match_data.loc[4, :].values.tolist()
-		ht_med 		= match_data.loc[5, :].values.tolist()
+		t_dmg 		= match_data.loc[3, :].values.tolist()[1:]
+		ht_mean 	= match_data.loc[4, :].values.tolist()[1:]
+		ht_med 		= match_data.loc[5, :].values.tolist()[1:]
+
+		hero_df['index'] = hero_df['hero']
+		hero_df = hero_df.set_index('index') 
 
 	# otherwise if no cache file already, create one for first run
 	else:
@@ -177,9 +187,6 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 			hero_df['atks'] = hattacks
 			hero_df['offtgt']  = hrogues
 
-			hero_df['index'] = hero_df['hero']
-			hero_df = hero_df.set_index('index') 
-			
 			# get spike data for match
 			sqlq = util.str_sqlq('Spikes',sid,mid)
 			sdf = pd.read_sql_query(sqlq, con)
@@ -237,6 +244,9 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 	stringify = ['attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
 	for i in stringify:
 		hero_df[i] = hero_df[i].map(lambda x: ast.literal_eval(x))
+
+	hero_df['index'] = hero_df['hero']
+	hero_df = hero_df.set_index('index') 
 
 	return hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med
 
