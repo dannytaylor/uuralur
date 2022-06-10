@@ -30,6 +30,10 @@ st.set_page_config(
 	# page_icon='assets/homecomingpvp.png',
 	initial_sidebar_state="expanded",
 	# layout='wide',
+	menu_items={
+		'Get Help': 'https://forums.homecomingservers.com/topic/15386-pvp-resources/',
+		'Report a bug': None,
+	}
 )
 
 # sqlite connections
@@ -54,6 +58,7 @@ if 'match' not in ss:
 if 'new_mid' not in ss: ss.new_mid = False
 if 'mobile'  not in ss: ss['mobile']  = False
 if 'useplayernames'  not in ss: ss['useplayernames']  = False
+if 'darkmode'  not in ss: ss['darkmode']  = False
 
 class MultiPage:
 	def __init__(self):
@@ -192,9 +197,10 @@ class MultiPage:
 		with st.sidebar.expander('settings',expanded=False):
 			def toggle_mobile():
 				ss.mobile = not ss.mobile
-			st.checkbox('small screen view',key='mobile',help='this site is not designed with small (<1280p wide) screens in mind, but this toggle will make it somewhat viewable')
 			if ss['app_choice'] == 'match':
 				st.checkbox('use player names',key='useplayernames',help='Switch from hero names to player names/aliases')
+			# st.checkbox('dark mode',key='darkmode',help='may not work for all cases')
+			st.checkbox('small screen view',key='mobile',help='this site is not designed with small (<1280p wide) screens in mind, but this toggle will make it somewhat viewable')
 
 def view_match(title, info=None):
 	match.main(con)
