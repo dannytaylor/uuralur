@@ -1,4 +1,4 @@
-import sys,sqlite3,os,ast,yaml,statistics,inspect,json,time
+import sys,sqlite3,os,ast,yaml,statistics,inspect,ujson,time
 
 # to allow running outside of streamlit
 # run from project root
@@ -19,15 +19,17 @@ cache_folder = '.cache'
 
 import streamlit as st
 
-# @st.cache(show_spinner=False)
+@st.cache(show_spinner=False)
 def init_match(sid,mid,upload=False,batch=False,force=False):
+
+	tstart = time.time()
 
 	con = sqlite3.connect(db_file)
 	
-	cache_file = "/".join([cache_folder,str(sid),str(mid)+".db"])
+	cache_file = "/".join([cache_folder,str(sid),str(mid)+".json"])
 
 	# if cache already exists
-	if batch and "upload" in sid:
+	if batch and "upload" in sid: # skip reparsing uploads
 		return
 	if os.path.isfile(cache_file) and not force:
 		if batch: 
@@ -36,9 +38,10 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 		# if it does, just grab the init data from the pickle
 		# need to be careful preserving order if changes made
 
-		cache_con 	= sqlite3.connect(cache_file)
-		sqlq 	= util.str_sqlq('hero_df',sid,mid)
-		hero_df = pd.read_sql_query(sqlq, cache_con)
+		f = open(cache_file,"r")
+		cache_json 	= ujson.load(f)
+		f.close()
+		hero_df = pd.DataFrame.from_dict(ujson.loads(cache_json[0]))
 
 		# check if cache current via player list
 		sqlq = util.str_sqlq('Heroes',sid,mid)
@@ -49,39 +52,27 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 			if set(hero_df['player_name'])!= set(hero_df_check):
 				print(f"regenerating cache {sid} {mid}")
 				init_match(sid,mid,force=True)
-		# tstart = time.time()
-		player_list_check() # disabled checking for now, speed up?
-		# tend = time.time()
-		# print(f'DB check {tend-tstart}') # takes about ~0.01s local, ~0.1s on VPS
-		# 
+		player_list_check()
 
-		sqlq 		= util.str_sqlq('actions_df')
-		actions_df 	= pd.read_sql_query(sqlq, cache_con)
+		actions_df 	= pd.DataFrame.from_dict(ujson.loads(cache_json[1]))
+		sdf 		= pd.DataFrame.from_dict(ujson.loads(cache_json[2]))
 
-		sqlq 		= util.str_sqlq('sdf')
-		sdf 		= pd.read_sql_query(sqlq, cache_con)
+		t_spikes 	= {
+			0:pd.DataFrame.from_dict(ujson.loads(cache_json[3][0])),
+			1:pd.DataFrame.from_dict(ujson.loads(cache_json[3][1]))
+		}
+		t_kills 	= {
+			0:pd.DataFrame.from_dict(ujson.loads(cache_json[4][0])),
+			1:pd.DataFrame.from_dict(ujson.loads(cache_json[4][1]))
+		}
 
-		sqlq 		= util.str_sqlq('match_data')
-		match_data	= pd.read_sql_query(sqlq, cache_con)
-		m_score 	= match_data.loc[0, :].values.astype(int).tolist()[1:]
-		m_spikes 	= match_data.loc[1, :].values.astype(int).tolist()[1:]
-		m_attacks 	= match_data.loc[2, :].values.astype(int).tolist()[1:]
-
-		sqlq 		= util.str_sqlq('t_spikes0')
-		t_spikes0 	= pd.read_sql_query(sqlq, cache_con)
-		sqlq 		= util.str_sqlq('t_spikes1')
-		t_spikes1 	= pd.read_sql_query(sqlq, cache_con)
-		t_spikes 	= {0:t_spikes0,1:t_spikes1}
-
-		sqlq 		= util.str_sqlq('t_kills0')
-		t_kills0 	= pd.read_sql_query(sqlq, cache_con)
-		sqlq 		= util.str_sqlq('t_kills1')
-		t_kills1 	= pd.read_sql_query(sqlq, cache_con)
-		t_kills 	= {0:t_kills0,1:t_kills1}
-
-		t_dmg 		= match_data.loc[3, :].values.tolist()[1:]
-		ht_mean 	= match_data.loc[4, :].values.tolist()[1:]
-		ht_med 		= match_data.loc[5, :].values.tolist()[1:]
+		match_data	= cache_json[5]
+		m_score 	= match_data[0]
+		m_spikes 	= match_data[1]
+		m_attacks 	= match_data[2]
+		t_dmg 		= match_data[3]
+		ht_mean 	= match_data[4]
+		ht_med 		= match_data[5]
 
 		hero_df['index'] = hero_df['hero']
 		hero_df = hero_df.set_index('index') 
@@ -90,9 +81,6 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 	else:
 		with st.spinner("running first time match setup..."):
 			print(f'generating cache {sid} {mid}')
-
-			os.makedirs(os.path.dirname(cache_file), exist_ok=True)
-			cache_con 	= sqlite3.connect(cache_file)
 
 			matches = pd.read_sql_query("SELECT * FROM Matches", con)
 			match_row = matches[(matches['match_id']==mid)&(matches['series_id']==sid)]
@@ -211,7 +199,7 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 				t_dmg[t] = hero_df[(hero_df['team'] == t)]['damage_taken'].sum()
 				
 			# calc hero timing by team for headers
-			ht,ht_mean,ht_med,ht_var = {},{},{},{}
+			ht,ht_mean,ht_med = {},{},{}
 			for t in [0,1]:
 				ht[t] = []
 				for tl in hero_df[(hero_df['team'] == t)]['timing']:
@@ -221,32 +209,45 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 				ht_med[t] = statistics.median(ht[t])
 		
 			# convert to str
-			stringify = ['attack_chains','attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
-			for i in stringify:
-				hero_df[i] = hero_df[i].map(lambda x: str(x))
+			# stringify = ['attack_chains','attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
+			# for i in stringify:
+			# 	hero_df[i] = hero_df[i].map(lambda x: str(x))
 
-			hero_df.to_sql("hero_df",cache_con,if_exists='replace')
-			actions_df.to_sql("actions_df",cache_con,if_exists='replace')
-			sdf.to_sql("sdf",cache_con,if_exists='replace')
+			hero_json 		= hero_df.to_json()
+			actions_json 	= actions_df.to_json()
+			s_json 			= sdf.to_json()
 
-			t_spikes[0].to_sql("t_spikes0",cache_con,if_exists='replace')
-			t_spikes[1].to_sql("t_spikes1",cache_con,if_exists='replace')
-			t_kills[0].to_sql("t_kills0",cache_con,if_exists='replace')
-			t_kills[1].to_sql("t_kills1",cache_con,if_exists='replace')
+			t_spikes0 		= t_spikes[0].to_json()
+			t_spikes1 		= t_spikes[1].to_json()
+			t_kills0 		= t_kills[0].to_json()
+			t_kills1 		= t_kills[1].to_json()
 
-			match_data = {}
-			for i in [0,1]:
-				match_data[i] = [m_score[i],m_spikes[i],m_attacks[i],t_dmg[i],ht_mean[i],ht_med[i]]
-			match_data = pd.DataFrame.from_dict(match_data)
-			match_data.to_sql("match_data",cache_con,if_exists='replace')
+			match_data 		= [m_score,m_spikes,list(m_attacks.values()),list(t_dmg.values()),list(ht_mean.values()),list(ht_med.values())]
+
+			json_list = [hero_json,actions_json,s_json,[t_spikes0,t_spikes1],[t_kills0,t_kills1],match_data]
+
+			# print(json_list)
+			os.makedirs(os.path.dirname(cache_file), exist_ok=True)
+			with open(cache_file, 'w') as outfile:
+				ujson.dump(json_list, outfile,indent=4)
+
 
 	# unconvert from str
-	stringify = ['attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
-	for i in stringify:
-		hero_df[i] = hero_df[i].map(lambda x: ast.literal_eval(x))
+	# stringify = ['attack_timing','phase_timing','heal_timing','jaunt_timing','timing']
+	# for i in stringify:
+	# 	hero_df[i] = hero_df[i].map(lambda x: ast.literal_eval(x))
 
 	hero_df['index'] = hero_df['hero']
 	hero_df = hero_df.set_index('index') 
+
+
+	# tend = time.time()
+	# print(f'DB check {tend-tstart}')
+	## local times
+	# sqlite: 0.6 generate 0.05 retrieve 1.0x file size
+	# pickle: 0.8 generate 0.01 retrieve 1.5x file size # plus pickle security issues
+	# ujson:  0.5 generate 0.35 retrieve 2.0x file size
+	# VPS times ~10-20x longer
 
 	return hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med
 
