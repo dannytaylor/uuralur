@@ -491,7 +491,7 @@ def main(con):
 			t_dmg_surv[t] = hero_df[(hero_df['team'] == t)]['dmg_surv'].sum()
 			t_dmg_surv[t] /= (m_spikes[t2] - c_deaths)
 			t_dmg_death[t] = hero_df[(hero_df['team'] == t)]['dmg_death'].sum()
-			t_dmg_death[t] /= c_deaths
+			t_dmg_death[t] /= max(c_deaths,1)
 
 
 		for t in [0,1]:
