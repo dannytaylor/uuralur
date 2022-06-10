@@ -2,7 +2,7 @@
 
 import os, sys, time, math, argparse, datetime,statistics
 
-import yaml, json, re
+import yaml, ujson, re
 import numpy as np
 import sqlite3 as sqldb
 
@@ -14,9 +14,9 @@ import tools.database as db
 
 # load config settings and database
 config = yaml.safe_load(open('data/config.yaml'))
-powers = json.loads(open('data/powers.json').read())
-fx     = json.loads(open('data/fx.json').read())
-playernames = json.loads(open('data/player_names.json').read())
+powers = ujson.loads(open('data/powers.json').read())
+fx     = ujson.loads(open('data/fx.json').read())
+playernames = ujson.loads(open('data/player_names.json').read())
 
 HERODUMP = True
 OVERRIDE = True # allows overrides if match in override data
@@ -26,9 +26,9 @@ hero_data = {}
 herodump = {}
 overrides = {}
 if os.path.exists('data/hero_data.json'):
-	hero_data = json.loads(open('data/hero_data.json').read())
+	hero_data = ujson.loads(open('data/hero_data.json').read())
 if os.path.exists('data/overrides.json'):
-	overrides = json.loads(open('data/overrides.json').read())
+	overrides = ujson.loads(open('data/overrides.json').read())
 
 # converts demo file to list
 def demo2lines(demo):
@@ -1029,9 +1029,9 @@ def main(args=None):
 			else:
 				herodump_defined[hero] = val
 		with open('data/herodump_defined.json','w') as f:
-			json.dump(herodump_defined,f,indent=4,sort_keys=True)
+			ujson.dump(herodump_defined,f,indent=4,sort_keys=True)
 		with open('data/herodump_undefined.json','w') as f:
-			json.dump(herodump_undefined,f,indent=4,sort_keys=True)
+			ujson.dump(herodump_undefined,f,indent=4,sort_keys=True)
 	
 	db.con.commit()
 	return

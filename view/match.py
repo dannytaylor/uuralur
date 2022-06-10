@@ -1,4 +1,4 @@
-import os, sys, time, math, json, datetime, yaml, sqlite3, ast, statistics, random
+import os, sys, time, math, ujson, datetime, yaml, sqlite3, ast, statistics, random
 
 import streamlit as st
 ss = st.session_state # global shorthand for this file
@@ -21,7 +21,7 @@ from plotly.subplots import make_subplots
 
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode, GridUpdateMode, DataReturnMode
 config = yaml.safe_load(open('data/config.yaml'))
-powers = json.loads(open('data/powers.json').read())
+powers = ujson.loads(open('data/powers.json').read())
 
 # match wide vars
 team_emoji_map = {0:'🔵',1:'🔴','':''}

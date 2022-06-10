@@ -34,11 +34,9 @@ st.set_page_config(
 
 # sqlite connections
 con = sqlite3.connect('demos.db', timeout=300)
-# cur = con.cursor()
 
 # global vars/config
 config = yaml.safe_load(open('data/config.yaml'))
-# h2p    = json.loads(open('data/hero2player.json').read())
 
 # setup series/match multiselect dataframes
 def init_series():
