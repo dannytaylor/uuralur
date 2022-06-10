@@ -38,9 +38,6 @@ def main(con):
 	actions_df = actions_df.copy()
 	sdf = sdf.copy()
 
-	sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
-	hp_df = pd.read_sql_query(sqlq, con)
-
 	hero_player_map = util.hero_player_dict(dict(zip(hero_df['hero'],hero_df['player_name'])))
 	if ss['useplayernames']:
 		hero_df['hero'] 	= hero_df['hero'].map(hero_player_map)
@@ -50,7 +47,6 @@ def main(con):
 		actions_df['actor'] = actions_df['actor'].map(hero_player_map)
 		actions_df['target']= actions_df['target'].map(hero_player_map)
 		sdf['target'] 		= sdf['target'].map(hero_player_map)
-		hp_df['hero'] 		= hp_df['hero'].map(hero_player_map)
 
 	hero_list = hero_df['hero'].tolist()
 	hero_team_map = {}
@@ -1118,6 +1114,11 @@ def main(con):
 			hit_max = max(sl['hit'].tolist())
 			
 			# spike hp log
+			sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
+			hp_df = pd.read_sql_query(sqlq, con)
+			if ss['useplayernames']:
+				hp_df['hero'] = hp_df['hero'].map(hero_player_map)
+
 			hp_start_time = min(sp_start - sp_delta,sp_start-act_min)
 			hp_end_time   = max(sp_end+sp_delta+1000,sp_start+hit_max+sp_delta+1000)
 			sp_hp_df = hp_df[(hp_df['hero'] == sp_target)&(hp_df['time_ms'] >= hp_start_time)&(hp_df['time_ms'] <= hp_end_time)].copy()
