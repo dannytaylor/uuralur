@@ -267,11 +267,12 @@ def main(con):
 			st.caption('Select data and filters in the sidebar to fetch data')
 
 	elif ss.view['records'] == 'summary':
-		c1,c2 = st.columns([2,8])
-		pname_empty = c1.empty()
-		c2.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><p></p>""".format('overall stats'),True)
+		st.caption('player summaries')
+		
+		# c2.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><p></p>""".format('overall stats'),True)
 		c1,c2,c3,c4,c5,c6 = st.columns([2,1,1,1,3,2])
-
+		
+		pname_empty = c1.empty()
 
 		# st.write(hero_df)
 

@@ -681,7 +681,7 @@ def main(con):
 
 
 		with c7:
-			hero_sel_st = st.sidebar.expander("atk chain heroes",expanded=False)
+			hero_sel_st = st.sidebar.expander("⚔️ atk chain heroes",expanded=False)
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
 		c1,c2 = st.columns([2.5,1])
@@ -1028,7 +1028,7 @@ def main(con):
 			st_spikes = st.empty()
 
 			# spike filters
-			filters = st.sidebar.expander('spike filters',expanded=False)
+			filters = st.sidebar.expander('🔍 spike filters',expanded=False)
 			spike_filters = {}
 			with filters:
 				spike_filters['players'] = st.multiselect('heroes',hero_list)
@@ -1299,7 +1299,7 @@ def main(con):
 
 		with c1:
 			# st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
-			with st.expander('filters',expanded=False):
+			with st.expander('🔍 filters',expanded=False):
 				with st.form('log filters'):
 					# list filters
 					# time bounds
@@ -1318,7 +1318,7 @@ def main(con):
 
 					st.form_submit_button('apply filters')
 
-			with st.expander('counts',expanded=True):
+			with st.expander('🧮 counts',expanded=True):
 				counts_heroes = st.multiselect('heroes',hero_list)
 				power_list = a_df['action'].unique().tolist()
 				power_list.sort()
@@ -1426,7 +1426,7 @@ def main(con):
 
 		c1,c2 = st.columns([4,6])
 
-		with st.sidebar.expander('data table settings',expanded=False):
+		with st.sidebar.expander('🔧 data table settings',expanded=False):
 			name_toggle    = st.radio('group by',['player name','hero name'])
 			data_aggr      = st.radio('show data by',['total for series','average per match'],help='applies applicable data')
 			support_toggle = st.radio('role',['all','offence','support'])
@@ -1576,6 +1576,7 @@ def main(con):
 		hide_data = [d for d in available_data if d not in show_data]
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
+		# mh_gb.configure_side_bar()
 		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
 		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
@@ -1591,6 +1592,7 @@ def main(con):
 			mh_write,
 			allow_unsafe_jscode=True,
 			gridOptions=mh_gb.build(),
+			# enable_enterprise_modules=True,
 			# update_mode='SELECTION_CHANGED',
 			# fit_columns_on_grid_load= not ss.mobile,
 			height = 680 if not ss.mobile else 320,

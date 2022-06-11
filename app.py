@@ -194,7 +194,7 @@ class MultiPage:
 		app = self.apps[self.app_names.index(viewer)]
 		app['function'](app['title'], *app['args'], **app['kwargs'])
 
-		with st.sidebar.expander('settings',expanded=False):
+		with st.sidebar.expander('⚙️ settings',expanded=False):
 			def toggle_mobile():
 				ss.mobile = not ss.mobile
 			if ss['app_choice'] == 'match':

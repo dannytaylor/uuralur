@@ -17,7 +17,7 @@ def is_file_dupl(path,data):
 
 
 def main():
-	st.header('uploads')
+	st.header('📫 uploads')
 	st.markdown("""
 		You can upload matches in the `.cohdemo` file format here. 
 		Record these in-game with the `/demorecord <file name here>` slash command. 
@@ -50,7 +50,7 @@ def main():
 	# upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
 	# upload_suffix = re.sub(r'\W+', '', upload_suffix)
 
-	with st.sidebar.expander('hero/player addition',expanded=True):
+	with st.sidebar.expander('📩 hero/player addition',expanded=True):
 		with st.form('Enter both hero name and preferred global or alias below',clear_on_submit=True):
 			heroname   = st.text_input("Hero Name", value="",help="Must be a valid CoH hero name. If it's a shared account with multiple users playing you may need to contact me to assign matches to the correct user.")
 			playername = st.text_input("Alias or Global", value="",help="Enter your preferred alias to have your stats under. If your heroes are already being tracked under a different alias the hero will be added under that name unless you contact me to change it.")
