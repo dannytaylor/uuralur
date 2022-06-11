@@ -158,7 +158,7 @@ def css_rules():
 		maxwidth = "100%"
 		minwidth = "100%"
 	else:
-		maxwidth = "1520px"
+		maxwidth = "1280px"
 		minwidth = "1280px"
 
 	css_str = f"""
@@ -178,7 +178,7 @@ def css_rules():
 		}}
 
 		.fontheader {{
-		    font-size:36px !important;
+		    font-size:28px !important;
 		    font-weight: bold;
 		    font-family: 'Helvetica Neue', sans-serif;
 		}}

@@ -326,13 +326,14 @@ def main(con):
 		pfp = c1.empty()
 		match_linker = c6.empty()
 	
-		c1,c0,c2,c00,c3 = st.columns([2,0.25,5,0.25,2.5])
+		c1,c0,c2,c00,c3 = st.columns([2,0.1,3.5,0.1,2.3])
 
 		player_sel = None
 		hero_sel = None
 		with c1:
 
-			st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
+			# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
+			st.caption("players")
 				
 			hero_ag = AgGrid(
 				hero_write,
@@ -350,7 +351,8 @@ def main(con):
 
 		with c2:
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp heroes'),True)
+				# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp heroes'),True)
+				st.caption("heroes")
 				ph_df = hero_df[hero_df['player']==player_sel].copy()
 
 				# get latest at/set combo from dataframe
@@ -368,6 +370,7 @@ def main(con):
 				p_heroes_gb.configure_selection('single', pre_selected_rows=None)
 				p_heroes_gb.configure_default_column(filterable=False,width=64,suppressMovable=True)
 
+				p_heroes_gb.configure_columns(['set1','set2'],width=44)
 				p_heroes_gb.configure_columns('archetype',cellRenderer=render.icon,width=32)
 				p_heroes_gb.configure_columns('#',width=32)
 
@@ -396,7 +399,8 @@ def main(con):
 		with c3:
 			matches = ss.matches.copy()
 			if player_sel:
-				st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp matches (YYMMDD)'),True)
+				# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp matches (YYMMDD)'),True)
+				st.caption("matches (YYMMDD)")
 				h_matches = hero_df[hero_df['player']==player_sel].copy()
 				if hero_sel: h_matches = h_matches[h_matches['hero']==hero_sel]
 				h_matches['sid_mid'] = h_matches['series_id'] + h_matches['match_id'].astype(str)

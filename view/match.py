@@ -202,7 +202,7 @@ def main(con):
 		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
 		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg)
 
-		sum_gb.configure_columns(['at'],width=24,cellRenderer=render.icon)
+		sum_gb.configure_columns(['at'],width=28,cellRenderer=render.icon)
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
 
 		sum_ag = AgGrid(
@@ -411,20 +411,22 @@ def main(con):
 
 
 		sup_write = sup_df[['hero','at','set2','team','support','targets','on heal%','on heal','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals","topups"]+opacities].copy()
-		sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
+		sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"med","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs","topups":"top ups","on heal%":"on %"})
+		# sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
 
 		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
 		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		# sup_gb.configure_columns('hero',width=96)
 		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=48,pinned='left')
 		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
-		sup_gb.configure_columns('at',cellRenderer=render.icon,width=28)
-		sup_gb.configure_columns(['tgtd','on heal','alpha','phase hits','ffs','late',"cms","heals"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
-		sup_gb.configure_columns(['avg','median','variance'],type='customNumericFormat',precision=2)
+		sup_gb.configure_columns('at',cellRenderer=render.icon,width=32)
+		sup_gb.configure_columns(['tgtd','on heal','alpha','phase hits','ffs','late',"cms","heals","top ups"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
+		sup_gb.configure_columns(['avg','med','variance'],type='customNumericFormat',precision=2)
 		sup_gb.configure_columns(['team','support','variance','ffs']+opacities,hide=True)
-		sup_gb.configure_columns(['on heal%'],cellStyle=render.onheal_bg)
+		sup_gb.configure_columns(['on %'],cellStyle=render.onheal_bg)
 		sup_gb.configure_columns(['on heal'],cellStyle=render.onhealn_bg)
 		sup_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
+		sup_gb.configure_grid_options(headerHeight=64)
 		
 
 		sup_ag = AgGrid(
@@ -432,7 +434,7 @@ def main(con):
 			allow_unsafe_jscode=True,
 			gridOptions=sup_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
-			height = len(sup_df)*48+64,
+			height = len(sup_df)*48+100,
 			theme=table_theme
 		)
 	# END SUPPORT
@@ -518,13 +520,15 @@ def main(con):
 		# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 		hero_write['avg jaunt'] = hero_write['avg jaunt'].fillna('')
 		hero_write['avg phase'] = hero_write['avg phase'].fillna('')
+		hero_write = hero_write.rename(columns={"nonspike_dmg":"nonspike dmg","dmg/surv":"dmg /surv","dmg/death":"dmg /death","heals_taken":"heals taken"})
+		
 		
 		def_gb = GridOptionsBuilder.from_dataframe(hero_write)
 		# type=["numericColumn","numberColumnFilter"], )
 		def_gb.configure_default_column(filterable=False,width=64,cellStyle={'text-align': 'center'},suppressMovable=True)
 		def_gb.configure_selection('multiple', pre_selected_rows=None)
 		# def_gb.configure_columns(['avg phase','avg jaunt'],type='customNumericFormat',precision=2)
-		def_gb.configure_columns(['dmg_per_surv','dmg/death','heals_taken','deaths','targets'],type='customNumericFormat',precision=0)
+		def_gb.configure_columns(['dmg /surv','dmg /death','heals taken','deaths','targets'],type='customNumericFormat',precision=0)
 		def_gb.configure_columns(['team']+opacities,hide=True)
 		def_gb.configure_columns('hero',width=96,pinned='left')
 		def_gb.configure_columns('hero',cellStyle=render.team_color)
@@ -533,6 +537,7 @@ def main(con):
 		def_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)
 		def_gb.configure_columns(['targets'],cellStyle=render.targets_bg)
 		def_gb.configure_columns(['surv'],cellStyle=render.surv_bg)
+		def_gb.configure_grid_options(headerHeight=64)
 
 
 		def_ag = AgGrid(
@@ -541,7 +546,7 @@ def main(con):
 			gridOptions=def_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
 			update_mode='SELECTION_CHANGED',
-			height = 16*48+64,
+			height = 16*48+100,
 			theme=table_theme
 		)
 
@@ -679,7 +684,7 @@ def main(con):
 			hero_sel_st = st.sidebar.expander("atk chain heroes",expanded=False)
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
-		c1,c2 = st.columns([2,1])
+		c1,c2 = st.columns([2.5,1])
 		with c1:
 			# box plot for attack timing
 			at_fig = make_subplots(rows=1,cols=2,column_widths=[0.7, 0.3],horizontal_spacing=0.05, shared_yaxes=True)
@@ -716,7 +721,7 @@ def main(con):
 				)
 
 			at_fig.update_layout(
-				height=400 if not ss.mobile else 280,
+				height=340 if not ss.mobile else 240,
 				width=400,
 				margin = dict(t=24, l=0, r=32, b=0),
 				showlegend=False,
@@ -729,7 +734,7 @@ def main(con):
 			
 			# slice DF to new df for offence
 			hero_write = hdf[['team','hero','targets','deaths','otp','on_target','avg atk','med atk','var atk','atks','offtgt','first_attacks']+opacities]
-			hero_write = hero_write.rename(columns={"targets":'tgtd',"on_target": "ontgt", "avg atk": "avg","med atk": "med","var atk": "var","first_attacks":'first'})
+			hero_write = hero_write.rename(columns={"targets":'tgtd',"on_target": "on tgt","offtgt": "offtgt atk", "avg atk": "avg","med atk": "med","var atk": "var","first_attacks":'first'})
 			hero_write = hero_write.sort_values(by='team')
 			# hero_write['team'] = hero_write['team'].map(team_emoji_map)
 
@@ -738,10 +743,10 @@ def main(con):
 			of_gb.configure_default_column(filterable=False,width=32,suppressMovable=True)
 			of_gb.configure_grid_options(autoHeight=True)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
-			of_gb.configure_columns(['ontgt','atks','offtgt','first','tgtd'],filterable=False,type='customNumericFormat',precision=0)
+			of_gb.configure_columns(['on tgt','atks','offtgt atk','first','tgtd'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60,pinned='left')
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
-			of_gb.configure_columns(['deaths','team']+opacities,hide=True)
+			of_gb.configure_columns(['deaths','team','var']+opacities,hide=True)
 
 			of_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
 			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
@@ -853,7 +858,7 @@ def main(con):
 
 			ac_fig.update_layout(
 				margin = dict(t=0, l=0, r=0, b=0),
-				height=360 if not ss.mobile else 280,
+				height=300 if not ss.mobile else 240,
 				)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
 			st.caption('attack chains')
@@ -868,12 +873,14 @@ def main(con):
 			at_write = at_write[at_write['chain'] != 'Total']
 			# chain to icons
 			at_write['icons'] = at_write['chain'].map(lambda x: ' '.join([util.image_formatter('powers/' + powers[a]['icon']) for a in x.split(" → ")]))
-			at_write = at_write[['count','icons','chain']]
+
+			at_write = at_write.rename(columns={'count':'#'})
+			at_write = at_write[['#','icons','chain']]
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
-			at_gb.configure_default_column(suppressMovable=True)
+			at_gb.configure_default_column(filterable=False,suppressMovable=True)
 			at_gb.configure_columns('icons',cellRenderer=render.icon,width=40)
-			at_gb.configure_columns('count',width=20)
+			at_gb.configure_columns('#',width=10,type='customNumericFormat',precision=0)
 			at_gb.configure_columns('chain',width=40)
 			# at_gb.configure_grid_options(headerHeight=0)
 
@@ -882,8 +889,9 @@ def main(con):
 				at_write,
 				allow_unsafe_jscode=True,
 				gridOptions=at_gb.build(),
-				fit_columns_on_grid_load= not ss.mobile,
-				height = 636 if not ss.mobile else 320,
+				# fit_columns_on_grid_load= not ss.mobile,
+				fit_columns_on_grid_load= False,
+				# height = 636 if not ss.mobile else 320,
 				theme=table_theme
 			)
 
@@ -1045,19 +1053,20 @@ def main(con):
 
 
 			sf_write = sf[['#','time','team','kill','target','dur','attacks','attackers','dmg']]
-			# sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
+			sf_write = sf_write.rename(columns={'attacks':'atks','attackers':'atkr'})
 			sf_gb = GridOptionsBuilder.from_dataframe(sf_write)
 			sf_gb.configure_default_column(filterable=False,suppressMovable=True,width=54)
 			sf_gb.configure_columns(['#','team','kill'],width=18)
-			sf_gb.configure_columns(['atks','atkr','time'],width=60)
-			sf_gb.configure_columns(['dur','dmg'],width=54)
+			sf_gb.configure_columns(['atks','atkr','time'],width=64)
+			sf_gb.configure_columns(['dur','dmg'],width=56)
 			sf_gb.configure_columns(['target'],width=92,cellStyle=render.team_color)
-			sf_gb.configure_columns('dur',filterable=True)
-			sf_gb.configure_columns('dmg',type='customNumericFormat',precision=0)
+			sf_gb.configure_columns('dur',type='customNumericFormat',precision=1)
+			sf_gb.configure_columns(['dmg','atks','atkr'],type='customNumericFormat',precision=0,width=56)
 			sf_gb.configure_columns('team',hide=True)
 			sf_gb.configure_selection(selection_mode='single', pre_selected_rows=[0],suppressRowDeselection=True)
 
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike list'),True)
+			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike list'),True)
+			st.caption("spike list")
 			response = AgGrid(
 				sf_write,
 				allow_unsafe_jscode=True,
@@ -1256,14 +1265,16 @@ def main(con):
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
 			sl_gb.configure_default_column(filterable=False,suppressMovable=True)
 			sl_gb.configure_columns(['actor','action'],width=80)
-			sl_gb.configure_columns(['cast','hit','dist'],width=44)
+			sl_gb.configure_columns(['hit','dist'],width=42)
+			sl_gb.configure_columns(['cast'],width=48)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
-			sl_gb.configure_columns('image',cellRenderer=render.icon,width=40)
+			sl_gb.configure_columns('image',cellRenderer=render.icon,width=44)
 			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)
 			sl_gb.configure_columns(['hit'],cellStyle=render.spike_hit_color)
 			sl_gb.configure_columns(['cell_color','hit_color'],hide=True)
 
-			st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
+			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
+			st.caption(f"spike log #{spid}")
 			# st.caption(f"spike log: #{str(spid)}")
 			sl_ag = AgGrid(
 				sl_write,
@@ -1375,7 +1386,7 @@ def main(con):
 			al_gb = GridOptionsBuilder.from_dataframe(actions_write)
 			al_gb.configure_default_column(width=84,suppressMovable=True)
 			al_gb.configure_columns(['actor','target','action'],width=84)
-			al_gb.configure_columns(['cast','image'],width=48)
+			al_gb.configure_columns(['cast','image'],width=52)
 			al_gb.configure_columns(['team','target_team'],hide=True)
 			al_gb.configure_columns('image',cellRenderer=render.icon)
 			al_gb.configure_columns('actor',cellStyle=render.team_color)
@@ -1405,7 +1416,7 @@ def main(con):
 		m_gb = GridOptionsBuilder.from_dataframe(m_write)
 		m_gb.configure_default_column(width=16)
 		# m_gb.configure_grid_options(rowHeight=36)
-		m_gb.configure_columns('map',width=48)
+		m_gb.configure_columns('map',width=42)
 		m_gb.configure_columns('score0',cellStyle=render.blu)
 		m_gb.configure_columns('score1',cellStyle=render.red)
 		m_gb.configure_grid_options(headerHeight=0)
@@ -1413,7 +1424,7 @@ def main(con):
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 
-		c1,c2 = st.columns([3,7])
+		c1,c2 = st.columns([4,6])
 
 		with st.sidebar.expander('data table settings',expanded=False):
 			name_toggle    = st.radio('group by',['player name','hero name'])

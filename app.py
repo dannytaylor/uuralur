@@ -200,7 +200,7 @@ class MultiPage:
 			if ss['app_choice'] == 'match':
 				st.checkbox('use player names',key='useplayernames',help='Switch from hero names to player names/aliases')
 			# st.checkbox('dark mode',key='darkmode',help='may not work for all cases')
-			st.checkbox('small screen view',key='mobile',help='this site is not designed with small (<1280p wide) screens in mind, but this toggle will make it somewhat viewable')
+			st.checkbox('small screen view',key='mobile',help='this site is not designed with mobile or small (<1080p) screens in mind, but this toggle will make it somewhat viewable')
 
 def view_match(title, info=None):
 	match.main(con)
