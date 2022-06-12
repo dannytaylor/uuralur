@@ -506,7 +506,7 @@ def main(con):
 		# hp loss data
 		sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hero','hp','hp_loss'])
 		hp_df = pd.read_sql_query(sqlq, con)
-		if ss['useplayernames']:
+		if 'useplayernames' in ss and ss['useplayernames']:
 			hp_df['hero'] = hp_df['hero'].map(hero_player_map)
 
 		hero_df['dmg'] = hero_df['damage_taken']/1000
@@ -1119,26 +1119,14 @@ def main(con):
 			act_min = min(sl['cast'].tolist())
 			hit_max = max(sl['hit'].tolist())
 			
-			# spike hp log
-			@st.cache
-			def get_match_hp(sid,mid,useplayernames):
-				sqlq = util.str_sqlq('HP',ss.sid,ss.mid)
-				hp_df = pd.read_sql_query(sqlq, con)
-				if ss['useplayernames']:
-					hp_df['hero'] = hp_df['hero'].map(hero_player_map)
-				return hp_df
-
-			# hp_df = get_match_hp(ss.sid,ss.mid,ss.useplayernames)
-
 			hp_start_time = min(sp_start - sp_delta,sp_start-act_min)
 			hp_end_time   = max(sp_end+sp_delta+1000,sp_start+hit_max+sp_delta+1000)
-			sqlq = util.str_sqlq('HP',ss.sid,ss.mid,["hero","time_ms","hp","hp_loss"],f"AND hero='{sp_target}' AND time_ms>={hp_start_time} AND time_ms<={hp_end_time}")
+			str_target = str(sp_target).replace('\'','\'\'')
+			sqlq = util.str_sqlq('HP',ss.sid,ss.mid,["hero","time_ms","hp","hp_loss"],f"AND hero='{str_target}' AND time_ms>={hp_start_time} AND time_ms<={hp_end_time}")
 			sp_hp_df = pd.read_sql_query(sqlq, con)
 			if ss['useplayernames']:
 				sp_hp_df['hero'] = sp_hp_df['hero'].map(hero_player_map)
-			# sp_hp_df = hp_df[(hp_df['hero'] == sp_target)&(hp_df['time_ms'] >= hp_start_time)&(hp_df['time_ms'] <= hp_start_time)].copy()
 			sp_hp_df = sp_hp_df.reset_index()
-
 
 			act_min /= 1000
 			hit_max /= 1000
