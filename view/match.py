@@ -504,8 +504,13 @@ def main(con):
 
 
 		# hp loss data
-		sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hero','hp','hp_loss'])
-		hp_df = pd.read_sql_query(sqlq, con)
+		@st.cache(show_spinner=False)
+		def get_hp_data(sid,mid):
+			with st.spinner("fetching HP data"):
+				sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hero','hp','hp_loss'])
+				return pd.read_sql_query(sqlq, con)
+
+		hp_df = get_hp_data(ss.sid,ss.mid).copy()
 		if 'useplayernames' in ss and ss['useplayernames']:
 			hp_df['hero'] = hp_df['hero'].map(hero_player_map)
 
@@ -777,14 +782,19 @@ def main(con):
 			# ATTACK CHAINS
 			hero_sel = hero_sel_st.multiselect('heroes',hero_df.index,default=hero_sel,help='You can also click/ctrl-click from the table on the right to select heroes.')
 			# default to all heroes if non selected
+			ignore_missed = False
 			if hero_sel == []:
+				ignore_missed = True
 				hero_sel = hero_df.index
 
 			at_dicts = []
 			max_length = 0
 			for h in hero_sel:
 				hteam  = hero_df.loc[h]['team']
-				missed = m_spikes[hteam] - hero_df.loc[h]['on_target']
+				if ignore_missed:
+					missed = 0 
+				else:
+					missed = m_spikes[hteam] - hero_df.loc[h]['on_target']
 				at_dicts.append({'label':'Total','id':'Total','parent':'','text':'','count':missed,'length':0})
 				hat = ast.literal_eval(hero_df.loc[h]['attack_chains']) # hero attack chains dict (list:count)
 				for at,n in hat.items():
