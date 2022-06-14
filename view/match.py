@@ -213,7 +213,6 @@ def main(con):
 			height = 16*48+64,
 			theme = table_theme,
 		)
-
 	# END SUMMARY PAGE
 
 
@@ -439,6 +438,7 @@ def main(con):
 		)
 	# END SUPPORT
 
+
 	# START DEFENCE
 	if ss.view['match'] == 'defence':
 		c1,c2,c3,c4,c5 = st.columns([1,1,1,1,6])
@@ -660,8 +660,8 @@ def main(con):
 		hpl_fig.update_xaxes(title_text="time (m)", row=1, col=2)
 		hpl_fig.update_yaxes(visible=True, fixedrange=True,range=green_range, showgrid=True, title='greens used',row=1, col=2)
 		hp_loss_st.plotly_chart(hpl_fig, use_container_width=True,config={'displayModeBar': False})
-
 	# END DEFENCE 
+
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
@@ -904,8 +904,6 @@ def main(con):
 				# height = 636 if not ss.mobile else 320,
 				theme=table_theme
 			)
-
-
 	# END OFFENCE
 
 
@@ -1261,10 +1259,10 @@ def main(con):
 			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
-			sl_gb.configure_default_column(filterable=False,suppressMovable=True)
-			sl_gb.configure_columns(['actor','action'],width=80)
-			sl_gb.configure_columns(['hit','dist'],width=42)
-			sl_gb.configure_columns(['cast'],width=48)
+			sl_gb.configure_default_column(filterable=False,suppressMovable=True,width=48)
+			sl_gb.configure_columns('actor',width=80)
+			sl_gb.configure_columns('action',width=64)
+			# sl_gb.configure_columns(['cast'],width=48)
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=44)
 			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)
@@ -1282,9 +1280,7 @@ def main(con):
 				height = 560,
 				theme=table_theme
 			)
-
 	# END SPIKES
-
 
 
 	# START LOGS
@@ -1400,6 +1396,7 @@ def main(con):
 				theme=table_theme
 			)
 	# END LOGS
+
 
 	# START SERIES
 	elif ss.view['match'] == 'series':
@@ -1596,7 +1593,6 @@ def main(con):
 			height = 680 if not ss.mobile else 320,
 			theme=table_theme
 		)
-
 	# END SERIES
 	
 # end match viewer

@@ -29,6 +29,12 @@ function(params) {
 	else return {"color":"#d60000",};
 }
 """)
+team_color_bold = JsCode("""
+function(params) {
+	if(params.data.team == "0") {return {"color":"#1946cf","font-weight":"bold"};} 
+	else return {"color":"#d60000","font-weight":"bold"};
+}
+""")
 
 target_team_color = JsCode("""
 function(params) {
