@@ -51,9 +51,9 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 			if set(hero_df['player_name'])!= set(hero_df_check):
 				print(f"regenerating cache {sid} {mid}")
 				init_match(sid,mid,force=True)
-			else:
-				print(f'already exists with same players {sid} {mid}')
-				return
+			# else:
+			# 	print(f'already exists with same players {sid} {mid}')
+			# 	return
 		player_list_check()
 
 		actions_df 	= pd.DataFrame.from_dict(ujson.loads(cache_json[1]))
@@ -240,7 +240,7 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 	# pickle: 0.8 generate 0.01 retrieve 1.5x file size # plus pickle security issues
 	# ujson:  0.5 generate 0.35 retrieve 2.0x file size
 	# VPS times ~10-20x longer
-	if batch: return True
+	if batch: return
 	return hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med
 
 
