@@ -20,7 +20,7 @@ cache_folder = '.cache'
 import streamlit as st
 
 @st.cache(show_spinner=False)
-def init_match(sid,mid,upload=False,batch=False,force=False):
+def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 
 	tstart = time.time()
 
@@ -28,16 +28,14 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 	
 	cache_file = "/".join([cache_folder,str(sid),str(mid)+".json"])
 
-	# skip reparsing uploads
-	# if batch and "upload" in sid: 
-	# 	return
 	# if cache already exists
 	if os.path.isfile(cache_file) and not force:
-		if batch: 
+
+		# if it does, just grab the init data from the cache
+		# need to be careful preserving order if changes made
+		if batch and not pname_check: 
 			print(f'already exists {sid} {mid}')
 			return
-		# if it does, just grab the init data from the pickle
-		# need to be careful preserving order if changes made
 
 		f = open(cache_file,"r")
 		cache_json 	= ujson.load(f)
@@ -49,10 +47,13 @@ def init_match(sid,mid,upload=False,batch=False,force=False):
 
 		def player_list_check():
 			hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
-			# if current pickle from old version of player_names.json assume needs rerunning, otherwise OK
+			# if current cache from old version of player_names.json assume needs rerunning, otherwise OK
 			if set(hero_df['player_name'])!= set(hero_df_check):
 				print(f"regenerating cache {sid} {mid}")
 				init_match(sid,mid,force=True)
+			else:
+				print(f'already exists with same players {sid} {mid}')
+				return
 		player_list_check()
 
 		actions_df 	= pd.DataFrame.from_dict(ujson.loads(cache_json[1]))
@@ -250,7 +251,7 @@ def main():
 	for sid in series['series_id']:
 		mids = pd.read_sql_query("SELECT * FROM Matches WHERE series_id = \""+sid+"\"", con)
 		for mid in mids['match_id']:
-			init_match(sid,int(mid),batch=True)
+			init_match(sid,int(mid),batch=True,pname_check=True)
 
 
 if __name__ == '__main__':
