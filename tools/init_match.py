@@ -16,7 +16,6 @@ db_file = "demos.db"
 config = yaml.safe_load(open('data/config.yaml'))
 cache_folder = '.cache'
 
-con = sqlite3.connect(db_file)
 
 import streamlit as st
 
@@ -25,6 +24,7 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 
 	tstart = time.time()
 
+	con = sqlite3.connect(db_file)
 	
 	cache_file = "/".join([cache_folder,str(sid),str(mid)+".json"])
 
