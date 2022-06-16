@@ -16,6 +16,7 @@ db_file = "demos.db"
 config = yaml.safe_load(open('data/config.yaml'))
 cache_folder = '.cache'
 
+con = sqlite3.connect(db_file)
 
 import streamlit as st
 
@@ -24,7 +25,6 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 
 	tstart = time.time()
 
-	con = sqlite3.connect(db_file)
 	
 	cache_file = "/".join([cache_folder,str(sid),str(mid)+".json"])
 
@@ -240,7 +240,7 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 	# pickle: 0.8 generate 0.01 retrieve 1.5x file size # plus pickle security issues
 	# ujson:  0.5 generate 0.35 retrieve 2.0x file size
 	# VPS times ~10-20x longer
-
+	if batch: return True
 	return hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med
 
 
@@ -248,10 +248,12 @@ def main():
 	con = sqlite3.connect(db_file)
 	matches = pd.read_sql_query("SELECT * FROM Matches", con)
 	series = pd.read_sql_query("SELECT * FROM Series", con)
+	pcheck = False
+	if len(sys.argv) > 1: pcheck = True
 	for sid in series['series_id']:
 		mids = pd.read_sql_query("SELECT * FROM Matches WHERE series_id = \""+sid+"\"", con)
 		for mid in mids['match_id']:
-			init_match(sid,int(mid),batch=True,pname_check=True)
+			init_match(sid,int(mid),batch=True,pname_check=pcheck)
 
 
 if __name__ == '__main__':
