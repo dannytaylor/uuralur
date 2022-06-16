@@ -47,8 +47,10 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 
 		def player_list_check():
 			hero_df_check = pd.read_sql_query(sqlq, con)['player_name']
+			player_check1 = [h.upper() for h in hero_df_check if h]
+			player_check2 = [h.upper() for h in hero_df['player_name'] if h]
 			# if current cache from old version of player_names.json assume needs rerunning, otherwise OK
-			if set(hero_df['player_name'])!= set(hero_df_check):
+			if set(player_check1)!= set(player_check2):
 				print(f"regenerating cache {sid} {mid}")
 				init_match(sid,mid,force=True)
 			# else:
