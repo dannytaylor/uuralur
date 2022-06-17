@@ -337,7 +337,10 @@ def main(con):
 
 		sup_eff_fig = go.Figure()
 		
-		hmax = max(sup_df['heals'])
+		hmax = 1
+		if not sup_df.empty: 
+			hmax = max(sup_df['heals'])
+
 		for h in sup_heroes:
 			hhero = sup_df.loc[h,'heals']
 			sup_eff_fig.add_trace(go.Box(
@@ -356,86 +359,87 @@ def main(con):
 
 
 
+		if sup_df.empty:
+			st.write('no support heroes determined')
+		else:
+			c1,c2,c3,c4 = st.columns(4)
+			row_height = 440
+			if ss.mobile: 
+				row_height = 240
+			h_margins = dict(t=32, l=16, r=16, b=0)
+			with c1:
+				sup_timing_fig.update_layout(
+					title_text='timing',
+					height=row_height,
+					margin = h_margins,
+					showlegend=False,
+					yaxis_title='first heal cast (s)',
+					# yaxis={'range': [min_timing,min(6,max_timing)]},
+					yaxis={'range': [0,min(6,max_timing)]},
+					)
+				st.plotly_chart(sup_timing_fig,use_container_width=True, config={'displayModeBar': False})
 
-		c1,c2,c3,c4 = st.columns(4)
-		row_height = 440
-		if ss.mobile: 
-			row_height = 240
-		h_margins = dict(t=32, l=16, r=16, b=0)
-		with c1:
-			sup_timing_fig.update_layout(
-				title_text='timing',
-				height=row_height,
-				margin = h_margins,
-				showlegend=False,
-				yaxis_title='first heal cast (s)',
-				# yaxis={'range': [min_timing,min(6,max_timing)]},
-				yaxis={'range': [0,min(6,max_timing)]},
-				)
-			st.plotly_chart(sup_timing_fig,use_container_width=True, config={'displayModeBar': False})
-
-		with c2:
-			sup_heal_fig.update_layout(
-				title_text='heal powers',
-				height=row_height,
-				margin = h_margins,
-				showlegend=False,
-				barmode='stack',
-				bargap=0.40,
-				)
-			st.plotly_chart(sup_heal_fig,use_container_width=True, config={'displayModeBar': False})
-
-
-		with c3:
-			sup_eff_fig.update_layout(
-				title_text='hit efficacy (rough est.)',
-				height=row_height,
-				margin = h_margins,
-				showlegend=False,
-				yaxis_title='hp missing on hit',
-				yaxis={'range': [1850,-5]},
-				)
-			st.plotly_chart(sup_eff_fig,use_container_width=True, config={'displayModeBar': False})
-		
-		with c4:
-			sup_extras_fig.update_layout(
-				title_text='extras',
-				height=row_height,
-				margin = h_margins,
-				showlegend=False,
-				barmode='stack',
-				bargap=0.40,
-				)
-			st.plotly_chart(sup_extras_fig,use_container_width=True, config={'displayModeBar': False})
+			with c2:
+				sup_heal_fig.update_layout(
+					title_text='heal powers',
+					height=row_height,
+					margin = h_margins,
+					showlegend=False,
+					barmode='stack',
+					bargap=0.40,
+					)
+				st.plotly_chart(sup_heal_fig,use_container_width=True, config={'displayModeBar': False})
 
 
-		sup_write = sup_df[['hero','at','set2','team','support','targets','on heal%','on heal','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals","topups"]+opacities].copy()
-		sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"med","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs","topups":"top ups","on heal%":"on %"})
-		# sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
+			with c3:
+				sup_eff_fig.update_layout(
+					title_text='hit efficacy (rough est.)',
+					height=row_height,
+					margin = h_margins,
+					showlegend=False,
+					yaxis_title='hp missing on hit',
+					yaxis={'range': [1850,-5]},
+					)
+				st.plotly_chart(sup_eff_fig,use_container_width=True, config={'displayModeBar': False})
+			
+			with c4:
+				sup_extras_fig.update_layout(
+					title_text='extras',
+					height=row_height,
+					margin = h_margins,
+					showlegend=False,
+					barmode='stack',
+					bargap=0.40,
+					)
+				st.plotly_chart(sup_extras_fig,use_container_width=True, config={'displayModeBar': False})
 
-		sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
-		sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
-		# sup_gb.configure_columns('hero',width=96)
-		sup_gb.configure_columns('hero',cellStyle=render.team_color,width=48,pinned='left')
-		sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
-		sup_gb.configure_columns('at',cellRenderer=render.icon,width=32)
-		sup_gb.configure_columns(['tgtd','on heal','alpha','phase hits','ffs','late',"cms","heals","top ups"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
-		sup_gb.configure_columns(['avg','med','variance'],type='customNumericFormat',precision=2)
-		sup_gb.configure_columns(['team','support','variance','ffs']+opacities,hide=True)
-		sup_gb.configure_columns(['on %'],cellStyle=render.onheal_bg)
-		sup_gb.configure_columns(['on heal'],cellStyle=render.onhealn_bg)
-		sup_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
-		sup_gb.configure_grid_options(headerHeight=64)
-		
 
-		sup_ag = AgGrid(
-			sup_write,
-			allow_unsafe_jscode=True,
-			gridOptions=sup_gb.build(),
-			fit_columns_on_grid_load= not ss.mobile,
-			height = len(sup_df)*48+100,
-			theme=table_theme
-		)
+			sup_write = sup_df[['hero','at','set2','team','support','targets','on heal%','on heal','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals","topups"]+opacities].copy()
+			sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"med","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs","topups":"top ups","on heal%":"on %"})
+			# sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
+
+			sup_gb = GridOptionsBuilder.from_dataframe(sup_write)
+			sup_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
+			# sup_gb.configure_columns('hero',width=96)
+			sup_gb.configure_columns('hero',cellStyle=render.team_color,width=48,pinned='left')
+			sup_gb.configure_columns('set2',cellStyle=render.support_color,width=44)
+			sup_gb.configure_columns('at',cellRenderer=render.icon,width=32)
+			sup_gb.configure_columns(['tgtd','on heal','alpha','phase hits','ffs','late',"cms","heals","top ups"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
+			sup_gb.configure_columns(['avg','med','variance'],type='customNumericFormat',precision=2)
+			sup_gb.configure_columns(['team','support','variance','ffs']+opacities,hide=True)
+			sup_gb.configure_columns(['on %'],cellStyle=render.onheal_bg)
+			sup_gb.configure_columns(['on heal'],cellStyle=render.onhealn_bg)
+			sup_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
+			sup_gb.configure_grid_options(headerHeight=64)
+			
+			sup_ag = AgGrid(
+				sup_write,
+				allow_unsafe_jscode=True,
+				gridOptions=sup_gb.build(),
+				fit_columns_on_grid_load= not ss.mobile,
+				height = len(sup_df)*48+100,
+				theme=table_theme
+			)
 	# END SUPPORT
 
 
