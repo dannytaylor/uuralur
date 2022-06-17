@@ -9511,5 +9511,144 @@
             "Fire Blast",
             "Devices"
         ]
+    },
+    "ANITA DIKKENME": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Blood and Thunder": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Calamitous Intent": {
+        "archetype": "defender/corruptor"
+    },
+    "Daymares": {
+        "archetype": "melee",
+        "sets": [
+            "Radiation Armor",
+            "Claws"
+        ]
+    },
+    "Devington": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Earf": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Seismic Blast"
+        ]
+    },
+    "Hinokami Kagura": {
+        "archetype": "blaster",
+        "sets": [
+            "Energy Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Otterly Retotttered": {
+        "archetype": "melee",
+        "sets": [
+            "Spines",
+            "Ninjitsu"
+        ]
+    },
+    "Poppa Tiddy": {
+        "archetype": "sentinel",
+        "sets": [
+            "Radiation Armor",
+            "Ice Blast"
+        ]
+    },
+    "QQ cm QQ": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Caillou-": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Mucho Mallex": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Water Blast"
+        ]
+    },
+    "copy catter": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Devices"
+        ]
+    },
+    "Crash Industrial": {
+        "archetype": "mastermind",
+        "sets": [
+            "Thugs",
+            "Trick Arrow"
+        ]
+    },
+    "Low Key": {
+        "archetype": "blaster",
+        "sets": [
+            "Tactical Arrow",
+            "Beam Rifle"
+        ]
+    },
+    "Baberham Lincoln": {
+        "archetype": "melee",
+        "sets": [
+            "Ninjitsu",
+            "Spines"
+        ]
+    },
+    "Hfuhruhurr": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Mentira": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Fire Blast"
+        ]
+    },
+    "Motha Effing Spec": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "gsw win tonight": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "next t arget": {
+        "archetype": "defender/corruptor"
     }
 }
