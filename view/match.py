@@ -1044,8 +1044,8 @@ def main(con):
 			spike_filters = {}
 			with filters:
 				spike_filters['players'] = st.multiselect('heroes',hero_list)
-				spike_filters['team'] = st.radio('team',['all','blue','red'])
-				spike_filters['deaths'] = st.radio('deaths',['all','dead','alive'])
+				spike_filters['team'] = st.radio('team',['all','blue','red'],horizontal=True)
+				spike_filters['deaths'] = st.radio('deaths',['all','dead','alive'],horizontal=True)
 			sf = sdf.copy() # spikes filtered dataframe copy
 			if spike_filters['players']: # if 1+ players are selected
 				sf = sf[sf['target'].isin(spike_filters['players'])]
@@ -1311,8 +1311,8 @@ def main(con):
 					a_spikes = st.checkbox('show spike actions',value=True)
 					a_nonspikes = st.checkbox('show non-spike actions',value=True)
 
-					a_actor_team = st.radio('caster team',['all','blu','red'])
-					a_target_team = st.radio('target team',['all','blu','red'])
+					a_actor_team = st.radio('caster team',['all','blu','red'],horizontal=True)
+					a_target_team = st.radio('target team',['all','blu','red'],horizontal=True)
 
 					st.form_submit_button('apply filters')
 
@@ -1426,9 +1426,9 @@ def main(con):
 		c1,c2 = st.columns([4,6])
 
 		with st.sidebar.expander('🔧 data table settings',expanded=False):
-			name_toggle    = st.radio('group by',['player name','hero name'])
-			data_aggr      = st.radio('show data by',['total for series','average per match'],help='applies applicable data')
-			support_toggle = st.radio('role',['all','offence','support'])
+			name_toggle    = st.radio('group by',['player name','hero name'],horizontal=True)
+			data_aggr      = st.radio('show data by',['total for series','avg/match'],help='applies applicable data',horizontal=True)
+			support_toggle = st.radio('role',['all','offence','support'],horizontal=True)
 
 		with c1:
 
@@ -1552,7 +1552,7 @@ def main(con):
 		# get data by mean or total
 		sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
 		sum_or_avg += count_data + record_data
-		if data_aggr == 'average per match':
+		if data_aggr == 'avg/match':
 			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].mean()
 		else:
 			mh_write[sum_or_avg] = mh_df.groupby('hero')[sum_or_avg].sum()
@@ -1567,7 +1567,7 @@ def main(con):
 
 		mh_write = mh_write.fillna('')
 
-		# if data_aggr == 'average per match':
+		# if data_aggr == 'avg/match':
 		# 	mh_write['deaths'] = mh_write['deaths'].map("{:0.1f}".format)
 		# 	mh_write['targets'] = mh_write['targets'].map("{:0.1f}".format)
 
@@ -1582,7 +1582,7 @@ def main(con):
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
 		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(hide_data,hide=True)
-		if data_aggr == 'average per match':
+		if data_aggr == 'avg/match':
 			mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
 			mh_gb.configure_columns(record_data,type='customNumericFormat',precision=2)
 

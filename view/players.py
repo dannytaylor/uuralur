@@ -28,7 +28,7 @@ def init_filter_lists(mh_df):
 	pset_list.remove(None)
 	at_list.sort()
 	pset_list.sort()
-	hero_list.sort()
+	hero_list.sort()	
 
 	team_list = set(render.team_name_map.keys())
 	team_list = list(team_list.difference(render.kb_tags))
@@ -71,12 +71,12 @@ def main(con):
 		with st.sidebar.form('filters'):
 			st.write('select data')
 			with st.expander('data filters',expanded=False):
-				data_aggr   = st.radio('show data by',['average per match','overall',],help='applies applicable data')
+				data_aggr   = st.radio('show data by',['avg/match','overall',],help='applies applicable data',horizontal=True)
 				data_filter = st.empty()
 
 			with st.expander('match filters',expanded=False):
-				match_type  = st.radio('match type',['all','scrim','pug'],help="any kickball/taco/community/pug series is a 'pug', any non-pug is a 'scrim'")
-				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties')
+				match_type  = st.radio('match type',['all','scrim','pug'],help="any kickball/taco/community/pug series is a 'pug', any non-pug is a 'scrim'",horizontal=True)
+				win_filter  = st.radio('win/loss',['all','win','loss'],help='losses includes ties',horizontal=True)
 				def team_name_map(team):
 					if team in render.team_name_map:
 						return render.team_name_map[team]
@@ -91,7 +91,7 @@ def main(con):
 				team_filter   = st.multiselect('teams',team_list,format_func=team_name_map, default=None, help='all if none selected')
 			
 			with st.expander('hero filters',expanded=False):
-				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches')
+				support_toggle = st.radio('role',['all','offence','support'],help='if set to all only calculates otp for offence matches and ohp for support matches',horizontal=True)
 				at_filter   = st.multiselect('archetypes', at_list, default=None,help='all if none selected')
 				pset_filter = st.multiselect('powersets',  pset_list, default=None, help='all if none selected')
 				hero_filter = st.multiselect('hero name',  hero_list, default=None, help='all if none selected')
@@ -215,7 +215,7 @@ def main(con):
 						# get data by mean or total
 						sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
 						sum_or_avg += count_data + record_data
-						if data_aggr == 'average per match':
+						if data_aggr == 'avg/match':
 							mh_write[sum_or_avg] = mh_df.groupby('player')[sum_or_avg].mean()
 						else:
 							mh_write[sum_or_avg] = mh_df.groupby('player')[sum_or_avg].sum()
@@ -241,7 +241,7 @@ def main(con):
 						mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 						mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 						mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
-						if data_aggr == 'average per match':
+						if data_aggr == 'avg/match':
 							mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
 							mh_gb.configure_columns(record_data,type='customNumericFormat',precision=3)
 						else:
