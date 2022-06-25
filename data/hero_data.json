@@ -9650,5 +9650,26 @@
     },
     "next t arget": {
         "archetype": "defender/corruptor"
+    },
+    "Cold Storage'": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Unphasing": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Towering": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
     }
 }
