@@ -9671,5 +9671,114 @@
             "Devices",
             "Fire Blast"
         ]
+    },
+    "I'mbetterthanVinnie": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Sonic Resonance",
+            "Fire Blast"
+        ]
+    },
+    "Las Tunas": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Pain Domination",
+            "Fire Blast"
+        ]
+    },
+    "PLS no Bully": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "S I M ?": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Devices"
+        ]
+    },
+    "Yolk of Faith": {
+        "archetype": "blaster"
+    },
+    "321 Let's Jam": {
+        "archetype": "blaster",
+        "sets": [
+            "Martial Combat",
+            "Beam Rifle"
+        ]
+    },
+    "Ayotte": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Cuban Mojito": {
+        "archetype": "mastermind",
+        "sets": [
+            "Demon Summoning",
+            "Nature Affinity"
+        ]
+    },
+    "Puffco Peaks": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Devices"
+        ]
+    },
+    "Better?": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Sonic Resonance"
+        ]
+    },
+    "Ground Score": {
+        "archetype": "controller",
+        "sets": [
+            "Electrical Affinity",
+            "Illusion Control"
+        ]
+    },
+    "I N D O": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Ice Blast"
+        ]
+    },
+    "PvP?Only": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Psychic Blast"
+        ]
+    },
+    "funny guy": {
+        "archetype": "dominator",
+        "sets": [
+            "Mind Control",
+            "Energy Assault"
+        ]
+    },
+    "funny guy3": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Poison"
+        ]
+    },
+    "funny guy4": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
     }
+
 }
