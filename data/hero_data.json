@@ -9779,6 +9779,82 @@
             "Plant Manipulation",
             "Fire Blast"
         ]
+    },
+    "Itty Bitty Bish": {
+        "archetype": "mastermind",
+        "sets": [
+            "Thugs",
+            "Trick Arrow"
+        ]
+    },
+    "Zaynif": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Giblet": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Trick Arrow"
+        ]
+    },
+    "Ask for free PL": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Aynus's": {
+        "archetype": "dominator",
+        "sets": [
+            "Fiery Assault",
+            "Earth Control"
+        ]
+    },
+    "Nunc Fluens": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Camo King": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Ice Blast",
+            "Nature Affinity"
+        ]
+    },
+    "Frostling": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Get Me Out": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Water Blast"
+        ]
+    },
+    "OG Velocity": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Point and Laugh": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
     }
-
 }
