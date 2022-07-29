@@ -121,8 +121,11 @@ def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 			hero_df['n_jaunts']     = hero_df['jaunt_timing'].map(lambda x: len(x))
 			hero_df['jaunt_timing'] = hero_df['jaunt_timing'].map(lambda x: [a/1000 for a in x])
 			hero_df['avg jaunt']    = hero_df['jaunt_timing'].map(lambda x: statistics.mean(x) if len(x) > 0 else None)
-			hero_df['avg jaunt']    = hero_df['avg jaunt'].map("{:0.2f}".format).astype(str) + " (" + hero_df['n_jaunts'].astype(str) + ")"
-			hero_df['avg jaunt']    = hero_df['avg jaunt'].map(lambda x: '' if 'nan' in x else x)
+			try:
+				hero_df['avg jaunt']    = hero_df['avg jaunt'].map("{:0.2f}".format).astype(str) + " (" + hero_df['n_jaunts'].astype(str) + ")"
+				hero_df['avg jaunt']    = hero_df['avg jaunt'].map(lambda x: '' if 'nan' in x else x)
+			except:
+				hero_df['avg jaunt'] 	= ''
 
 			# support
 			hero_df['heal_timing'] = hero_df['heal_timing'].map(lambda x: ast.literal_eval(x))
