@@ -202,7 +202,7 @@ team_name_map = {
 	"kb":"kickball",
 	"taco":"taco",
 	"pug":"pug",
-	"tdt":"throwdown thursday",
+	"ttd":"thursday throwdown",
 
 	"gb":"good boys",
 	"rng":"renegades",
@@ -231,4 +231,4 @@ team_name_map = {
 	"dl1":"(draft league)",
 }
 
-kb_tags = {"kb","pug","community","taco","tdt"}
+kb_tags = {"kb","pug","community","taco","ttd"}
