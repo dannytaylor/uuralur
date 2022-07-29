@@ -9856,5 +9856,95 @@
             "Ice Blast",
             "Plant Manipulation"
         ]
+    },
+    "Delta Sim": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Trick Arrow"
+        ]
+    },
+    "Hypercritical": {
+        "archetype": "melee",
+        "sets": [
+            "Martial Arts",
+            "Ninjitsu"
+        ]
+    },
+    "Lobster Italiano": {
+        "archetype": "melee",
+        "sets": [
+            "Ninjitsu",
+            "Energy Melee"
+        ]
+    },
+    "Loner": {
+        "archetype": "melee",
+        "sets": [
+            "Bio Armor",
+            "Street Justice"
+        ]
+    },
+    "Cultivated Darkness": {
+        "archetype": "melee",
+        "sets": [
+            "Super Strength",
+            "Fiery Aura"
+        ]
+    },
+    "Clyde McMahon": {
+        "archetype": "melee",
+        "sets": [
+            "Super Strength",
+            "Fiery Aura"
+        ]
+    },
+    "Culture Vulture": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Cold Domination"
+        ]
+    },
+    "E equals MC Escher": {
+        "archetype": "dominator",
+        "sets": [
+            "Energy Assault",
+            "Mind Control"
+        ]
+    },
+    "Intergalatica": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Thermal Radiation",
+            "Water Blast"
+        ]
+    },
+    "Master Ninja Gordon": {
+        "archetype": "blaster",
+        "sets": [
+            "Dual Pistols",
+            "Ninja Training"
+        ]
+    },
+    "Strong Island": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "THICC BOI": {
+        "archetype": "sentinel",
+        "sets": [
+            "Ice Blast",
+            "Bio Armor"
+        ]
+    },
+    "Empirical": {
+        "archetype": "defender/corruptor"        
+    },
+    "IckyStickyGangBanger": {
+        "archetype": "mastermind"
     }
 }

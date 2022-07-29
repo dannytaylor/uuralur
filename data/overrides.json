@@ -1351,5 +1351,11 @@
  },
  "220602_obs_tbbz": {
     "1": {"TEAMSWAP": 1}
+ },
+ "220728_tdt": {
+  "1": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "2": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "3": {"HERONAME":{"Dogger":"Sea Dogger"}},
+  "4": {"HERONAME":{"Dogger":"Sea Dogger"}}
  }
 }
