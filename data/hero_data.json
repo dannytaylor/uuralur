@@ -9946,5 +9946,198 @@
     },
     "IckyStickyGangBanger": {
         "archetype": "mastermind"
+    },
+    "AFK Sim": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Ice Blast"
+        ]
+    },
+    "Ashynra": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Avril LaBeam": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Beam Rifle"
+        ]
+    },
+    "Doggerr": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Emmerson Biggins": {
+        "archetype": "mastermind",
+        "sets": [
+            "Necromancy",
+            "Poison"
+        ]
+    },
+    "Forced Mobilization": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Blast",
+            "Thermal Radiation"
+        ]
+    },
+    "FrostIing": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Jaunt-": {
+        "archetype": "controller",
+        "sets": [
+            "Empathy",
+            "Illusion Control"
+        ]
+    },
+    "Major- Havok": {
+        "archetype": "mastermind"
+    },
+    "Psycho Stubb": {
+        "archetype": "blaster",
+        "sets": [
+            "Psychic Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Violent Array": {
+        "archetype": "mastermind",
+        "sets": [
+            "Mercenaries",
+            "Radiation Emission"
+        ]
+    },
+    "Wotsisface": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Blast",
+            "Nature Affinity"
+        ]
+    },
+    "n i h i l i s m": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Big Daddy Yoke Lion": {
+        "archetype": "melee"        
+    },
+    "SikoticsEmp": {
+        "archetype": "defender/corruptor"        
+    },
+    "Cotton Candy Sky": {
+        "archetype": "defender/corruptor"        
+    },
+    "-Coconut": {
+        "archetype": "blaster",
+        "sets": [
+            "Beam Rifle",
+            "Tactical Arrow"
+        ]
+    },
+    "Boo Bee's": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Miss Petty": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Empathy",
+            "Ice Blast"
+        ]
+    },
+    "Needs Respec": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Ray Rogers": {
+        "archetype": "melee",
+        "sets": [
+            "Bio Armor",
+            "Super Strength"
+        ]
+    },
+    "Solamphetamine": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Martial Combat"
+        ]
+    },
+    "Soltrimethoprim": {
+        "archetype": "blaster"
+    },
+    "Specladdin": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Touch me Mommy": {
+        "archetype": "sentinel",
+        "sets": [
+            "Beam Rifle",
+            "Bio Armor"
+        ]
+    },
+    "yard sale enthusiast": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Psychic Blast"
+        ]
+    },
+    "Finish It": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Smesh": {
+        "archetype": "mastermind"
+    },
+    "YoUbEtTeRuN": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Temporal Manipulation"
+        ]
+    },
+    "fireblastplantman": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "shOutraged1": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Sonic Attack",
+            "Time Manipulation"
+        ]
     }
 }
