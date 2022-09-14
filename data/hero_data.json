@@ -10139,5 +10139,309 @@
             "Sonic Attack",
             "Time Manipulation"
         ]
+    },
+    "El Cubano": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Energy Blast",
+            "Empathy"
+        ]
+    },
+    "Kaskaade": {
+        "archetype": "blaster",
+        "sets": [
+            "Ninja Training",
+            "Water Blast"
+        ]
+    },
+    "MV the Supervillain": {
+        "archetype": "melee",
+        "sets": [
+            "Regeneration",
+            "Super Strength"
+        ]
+    },
+    "Mental Gymnast-": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Psychic Blast"
+        ]
+    },
+    "Shop-Vac": {
+        "archetype": "sentinel",
+        "sets": [
+            "Regeneration",
+            "Electrical Blast"
+        ]
+    },
+    "Spiciest": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Energy Manipulation"
+        ]
+    },
+    "Spiritual": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Welcome To Chili's": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Trick Arrow"
+        ]
+    },
+    "pewpeww": {
+        "archetype": "controller",
+        "sets": [
+            "Gravity Control",
+            "Empathy"
+        ]
+    },
+    "u have no MANA": {
+        "archetype": "sentinel",
+        "sets": [
+            "Regeneration",
+            "Electrical Blast"
+        ]
+    },
+    "Aynus?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Ice Blast"
+        ]
+    },
+    "Beambag Chair": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Electrical Affinity"
+        ]
+    },
+    "Boo Bees?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "ChippiChoppy": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Cold Heals1": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Electrical Blast"
+        ]
+    },
+    "Devil Wears Nada": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Cold Domination"
+        ]
+    },
+    "Hazard Circular": {
+        "archetype": "mastermind",
+        "sets": [
+            "Thugs",
+            "Poison"
+        ]
+    },
+    "HeirIoom": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Ice Blast"
+        ]
+    },
+    "Kiki Moon": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Pain Domination",
+            "Ice Blast"
+        ]
+    },
+    "Lemming the Pink": {
+        "archetype": "melee",
+        "sets": [
+            "Energy Melee",
+            "Ice Armor"
+        ]
+    },
+    "Light Roast": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Miami Iced": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Pudding lt In You": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Blast",
+            "Time Manipulation"
+        ]
+    },
+    "Sandy of the Ficus": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Seismic Blast"
+        ]
+    },
+    "Sauer": {
+        "archetype": "sentinel",
+        "sets": [
+            "Water Blast",
+            "Regeneration"
+        ]
+    },
+    "Sikotics'": {
+        "archetype": "peacebringer",
+        "sets": [
+            "Luminous Blast",
+            "Luminous Aura"
+        ]
+    },
+    "Sorry BB": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Psychic Blast",
+            "Electrical Affinity"
+        ]
+    },
+    "Wotserface": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Dark Blast"
+        ]
+    },
+    "some newfie": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Beam Rifle",
+            "Cold Domination"
+        ]
+    },
+    "some uppercut": {
+        "archetype": "melee",
+        "sets": [
+            "Street Justice",
+            "Ninjitsu"
+        ]
+    },
+    "Love Doctor1": {
+        "archetype": "defender/corruptor"
+    },
+    "AntediIluvian": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Radiation Emission",
+            "Water Blast"
+        ]
+    },
+    "Chardonnay": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Poison"
+        ]
+    },
+    "DeIirium": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "HoIIow": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Traps"
+        ]
+    },
+    "Los Angeles County": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Proper Dose": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Sober Larry": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Spectricity": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Electrical Affinity"
+        ]
+    },
+    "Teslas Burn": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Electrical Affinity"
+        ]
+    },
+    "Thicc 30": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "TinyTrack": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Traps"
+        ]
+    },
+    "Verano Sin Ti": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "deus oke machina": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Electrical Affinity"
+        ]
     }
 }
