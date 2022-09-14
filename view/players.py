@@ -85,8 +85,8 @@ def main(con):
 				series_filters = {}
 				# series_filters['date_first'] = st.date_input('start date filter',value=dates[0],min_value=dates[0],max_value=dates[-1])
 				# series_filters['date_last']  = st.date_input('end date filter', value=dates[-1],min_value=series_filters['date_first'] ,max_value=dates[-1])
-				series_filters['date_first'] = st.select_slider('date filters',options=dates,value=dates[0])
-				series_filters['date_last']  = st.select_slider('', options=dates,value=dates[-1])
+				series_filters['date_first'],series_filters['date_last'] = st.select_slider('date filters',options=dates,value=(dates[0],dates[-1]))
+				# series_filters['date_last']  = st.select_slider('', options=dates,value=dates[-1])
 				date_filtered = ss.series[(ss.series['date'] >= series_filters['date_first']) & (ss.series['date'] <= series_filters['date_last'])]['series_id'].tolist()
 				team_filter   = st.multiselect('teams',team_list,format_func=team_name_map, default=None, help='all if none selected')
 			

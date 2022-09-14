@@ -4,7 +4,6 @@ import streamlit as st
 ss = st.session_state # global shorthand for this file
 
 import pandas as pd
-import numpy as np
 import tools.util as util
 import tools.render as render
 import data.pset_icons as pset_icons
@@ -1301,8 +1300,8 @@ def main(con):
 				with st.form('log filters'):
 					# list filters
 					# time bounds
-					t_start = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=0.0, step=0.25, format=None)
-					t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
+					t_start,t_end = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=(0.0,10.0), step=0.25, format=None)
+					# t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
 					t_start = min(t_start,t_end)*1000*60
 					t_end = max(t_start,t_end)*1000*60
 
