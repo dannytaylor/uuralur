@@ -10443,5 +10443,96 @@
             "Fire Blast",
             "Electrical Affinity"
         ]
+    },
+    "Charlie Sim": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Traps",
+            "Fire Blast"
+        ]
+    },
+    "Knoping": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "Sim Bull": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Fire Blast"
+        ]
+    },
+    "Swirl-E": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Empathy",
+            "Water Blast"
+        ]
+    },
+    "Then Again": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Traps",
+            "Fire Blast"
+        ]
+    },
+    "renamelaterzz": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Mind Control"
+        ]
+    },
+    "French Kiss": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Traps",
+            "Fire Blast"
+        ]
+    },
+    "World War": {
+        "archetype": "dominator",
+        "sets": [
+            "Fiery Assault",
+            "Mind Control"
+        ]
+    },
+    "Boozeroony": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Fire Blast",
+            "Traps"
+        ]
+    },
+    "Cawtion": {
+        "archetype": "melee",
+        "sets": [
+            "Savage Melee",
+            "Ninjitsu"
+        ]
+    },
+    "Illest Villain": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Poison"
+        ]
+    },
+    "Industrial Sector": {
+        "archetype": "melee",
+        "sets": [
+            "Energy Melee",
+            "Ninjitsu"
+        ]
+    },
+    "V E L O C I T Y": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
     }
 }
