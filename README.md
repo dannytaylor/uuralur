@@ -22,7 +22,7 @@ folder structure
         |- ...
     |- ...
 ```
-recommend using the same naming convention as [me](https://demos.chli.dog/)
+recommend using the same naming convention as [me](https://demos.hcc.ovh/)
 
 run web app with existing sqlite db  
 ``` streamlit run app.py```  
