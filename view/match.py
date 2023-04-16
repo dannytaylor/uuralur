@@ -1281,7 +1281,8 @@ def main(con):
 				gridOptions=sl_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 560,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 	# END SPIKES
 
@@ -1343,6 +1344,7 @@ def main(con):
 						gridOptions=count_gb.build(),
 						theme=table_theme,
 						height = len(count_df)*48+64,
+						enable_enterprise_modules=False
 					)
 
 			# apply filters
@@ -1396,7 +1398,8 @@ def main(con):
 				gridOptions=al_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 1024,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 	# END LOGS
 
@@ -1440,7 +1443,8 @@ def main(con):
 				# update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 240,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 
 		with c2:
@@ -1594,7 +1598,8 @@ def main(con):
 			# update_mode='SELECTION_CHANGED',
 			# fit_columns_on_grid_load= not ss.mobile,
 			height = 680 if not ss.mobile else 320,
-			theme=table_theme
+			theme=table_theme,
+			enable_enterprise_modules=False
 		)
 	# END SERIES
 	

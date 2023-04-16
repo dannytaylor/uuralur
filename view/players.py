@@ -258,7 +258,8 @@ def main(con):
 							# update_mode='SELECTION_CHANGED',
 							# fit_columns_on_grid_load= not ss.mobile,
 							height = 920 if not ss.mobile else 400,
-							theme=table_theme
+							theme=table_theme,
+							enable_enterprise_modules=False
 						)
 			except:
 				st.write('No data found for these filters')
@@ -343,7 +344,8 @@ def main(con):
 				update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load= not ss.mobile,
 				height = table_height,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 
 			row = hero_ag['selected_rows']
@@ -384,7 +386,8 @@ def main(con):
 					fit_columns_on_grid_load= not ss.mobile,
 					update_mode='SELECTION_CHANGED',
 					height = table_height,
-					theme=table_theme
+					theme=table_theme,
+					enable_enterprise_modules=False
 				)
 
 				hrow = p_hero_ag['selected_rows']
@@ -425,7 +428,8 @@ def main(con):
 					update_mode='SELECTION_CHANGED',
 					fit_columns_on_grid_load= not ss.mobile,
 					height = table_height,
-					theme=table_theme
+					theme=table_theme,
+					enable_enterprise_modules=False
 				)
 				row = matches_ag['selected_rows']
 			sid,mid = None,None
