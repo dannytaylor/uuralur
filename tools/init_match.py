@@ -19,7 +19,7 @@ cache_folder = '.cache'
 
 import streamlit as st
 
-@st.cache(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def init_match(sid,mid,upload=False,batch=False,force=False,pname_check=False):
 
 	tstart = time.time()

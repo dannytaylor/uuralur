@@ -4,7 +4,7 @@ from io import BytesIO
 import base64
 import streamlit as st
 
-@st.cache
+@st.cache_data
 def str_sqlq(table,sid=None,mid=None,columns='*',conditions=None):
 	where = ""
 	if sid: 
@@ -18,14 +18,14 @@ def str_sqlq(table,sid=None,mid=None,columns='*',conditions=None):
 
 # https://www.kaggle.com/stassl/displaying-inline-images-in-pandas-dataframe
 # format images as base64 to get around streamlit static content limitations
-@st.cache
+@st.cache_data
 def image_base64(path,prepend=""):
 	path = prepend+'assets/icons/' + path
 	im = Image.open(path)
 	with BytesIO() as buffer:
 		im.save(buffer, 'png')
 		return base64.b64encode(buffer.getvalue()).decode()
-@st.cache
+@st.cache_data
 def image_formatter(path,prepend=""):
 	return f'<img src="data:image/jpeg;base64,{image_base64(path,prepend)}">'
 

@@ -507,7 +507,7 @@ def main(con):
 
 
 		# hp loss data
-		@st.cache(show_spinner=False)
+		@st.cache_data(show_spinner=False)
 		def get_hp_data(sid,mid):
 			with st.spinner("fetching HP data"):
 				sqlq = util.str_sqlq('HP',ss.sid,ss.mid,['time_ms','hero','hp','hp_loss'])
@@ -1179,8 +1179,8 @@ def main(con):
 			# format spike dataframe
 			sl['cast'] = sl['cast']/1000
 			sl['hit'] = sl['hit']/1000
-			sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).replace(-1,pd.NA)
-			sl['dist'] = sl['dist'].fillna(-1).astype(int).replace(-1,pd.NA)
+			sl['hit_hp'] = sl['hit_hp'].fillna(-1).astype(int).astype(object).replace(-1,pd.NA)
+			sl['dist'] = sl['dist'].fillna(-1).astype(int).astype(object).replace(-1,pd.NA)
 			sl['icon_path'] = 'powers/'+sl['icon']
 			sl['image'] = sl['icon_path'].apply(util.image_formatter)
 			sl_write = sl[['cast','actor','image','action','hit','dist','cell_color','hit_color']]   

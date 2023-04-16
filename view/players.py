@@ -19,7 +19,7 @@ config = yaml.safe_load(open('data/config.yaml'))
 table_theme = config['table_theme']
 
 
-@st.cache
+@st.cache_resource
 def init_filter_lists(mh_df):
 	at_list = mh_df['archetype'].unique().tolist()
 	if None in at_list: at_list.remove(None)
@@ -491,7 +491,7 @@ def main(con):
 		)
 
 
-		@st.cache(show_spinner=False,ttl=30)
+		@st.cache_resource(show_spinner=False,ttl=30)
 		def get_player_data(player_sel):
 			# sunburst data
 			pset_hero_df['set 1'] = pset_hero_df['set1'].astype(str)

@@ -1,3 +1,6 @@
+[global]
+showWarningOnDirectExecution = false
+
 [theme]
 base="light"
 primaryColor="#EF0A83"
