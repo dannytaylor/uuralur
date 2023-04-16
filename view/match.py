@@ -211,6 +211,7 @@ def main(con):
 			fit_columns_on_grid_load= not ss.mobile,
 			height = 16*48+64,
 			theme = table_theme,
+			enable_enterprise_modules=False
 		)
 	# END SUMMARY PAGE
 
@@ -437,7 +438,8 @@ def main(con):
 				gridOptions=sup_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				height = len(sup_df)*48+100,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 	# END SUPPORT
 
@@ -555,7 +557,8 @@ def main(con):
 			fit_columns_on_grid_load= not ss.mobile,
 			update_mode='SELECTION_CHANGED',
 			height = 16*48+100,
-			theme=table_theme
+			theme=table_theme,
+			enable_enterprise_modules=False
 		)
 
 		hero_sel = []
@@ -770,6 +773,7 @@ def main(con):
 				update_mode='SELECTION_CHANGED',
 				height = len(hero_write)*48+64 if not ss.mobile else 320,
 				theme = table_theme,
+				enable_enterprise_modules=False
 			)
 
 			# get hero selection from aggrid clicks
@@ -892,9 +896,9 @@ def main(con):
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(filterable=False,suppressMovable=True)
-			at_gb.configure_columns('icons',cellRenderer=render.icon,width=40)
-			at_gb.configure_columns('#',width=10,type='customNumericFormat',precision=0)
-			at_gb.configure_columns('chain',width=40)
+			at_gb.configure_columns('icons',cellRenderer=render.icon,width=192)
+			at_gb.configure_columns('#',width=32,type='customNumericFormat',precision=0)
+			at_gb.configure_columns('chain',width=256)
 			# at_gb.configure_grid_options(headerHeight=0)
 
 
@@ -905,7 +909,8 @@ def main(con):
 				# fit_columns_on_grid_load= not ss.mobile,
 				fit_columns_on_grid_load= False,
 				# height = 636 if not ss.mobile else 320,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 	# END OFFENCE
 
@@ -1086,7 +1091,8 @@ def main(con):
 				update_mode=GridUpdateMode.SELECTION_CHANGED,
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 560 if not ss.mobile else 280,
-				theme=table_theme
+				theme=table_theme,
+				enable_enterprise_modules=False
 			)
 
 			# selected row on grid click
@@ -1415,7 +1421,7 @@ def main(con):
 		nspike_dict[1] = dict(zip(m_df['match_id'],m_df['spikes1']))
 
 		m_gb = GridOptionsBuilder.from_dataframe(m_write)
-		m_gb.configure_default_column(width=16)
+		m_gb.configure_default_column(width=32)
 		# m_gb.configure_grid_options(rowHeight=36)
 		m_gb.configure_columns('map',width=42)
 		m_gb.configure_columns('score0',cellStyle=render.blu)
@@ -1579,8 +1585,8 @@ def main(con):
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		# mh_gb.configure_side_bar()
-		mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
-		mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
+		mh_gb.configure_default_column(width=100,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
+		mh_gb.configure_columns('player',width=160,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
 		mh_gb.configure_columns(count_data+dmg_data,type='customNumericFormat',precision=0)
