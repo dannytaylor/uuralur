@@ -6,7 +6,8 @@ base="light"
 primaryColor="#EF0A83"
 
 [server]
-port = 8501
+port = 9501
 enableCORS = false
+enableXsrfProtection=false
 maxUploadSize = 25
 enableWebsocketCompression = false

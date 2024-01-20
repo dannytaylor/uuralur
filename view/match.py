@@ -913,7 +913,7 @@ def main(con):
 				gridOptions=at_gb.build(),
 				# fit_columns_on_grid_load= not ss.mobile,
 				fit_columns_on_grid_load= False,
-				# height = 636 if not ss.mobile else 320,
+				height = 636 if not ss.mobile else 320,
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
