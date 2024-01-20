@@ -254,6 +254,7 @@ def main(con):
 						mh_ag = AgGrid(
 							mh_write,
 							allow_unsafe_jscode=True,
+							custom_css=render.grid_css,
 							gridOptions=mh_gb.build(),
 							# update_mode='SELECTION_CHANGED',
 							# fit_columns_on_grid_load= not ss.mobile,
@@ -340,6 +341,7 @@ def main(con):
 			hero_ag = AgGrid(
 				hero_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=hero_gb.build(),
 				update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load= not ss.mobile,
@@ -382,6 +384,7 @@ def main(con):
 				p_hero_ag = AgGrid(
 					p_heroes,
 					allow_unsafe_jscode=True,
+					custom_css=render.grid_css,
 					gridOptions=p_heroes_gb.build(),
 					fit_columns_on_grid_load= not ss.mobile,
 					update_mode='SELECTION_CHANGED',
@@ -424,6 +427,7 @@ def main(con):
 				matches_ag = AgGrid(
 					matches,
 					allow_unsafe_jscode=True,
+					custom_css=render.grid_css,
 					gridOptions=matches_gb.build(),
 					update_mode='SELECTION_CHANGED',
 					fit_columns_on_grid_load= not ss.mobile,

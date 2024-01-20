@@ -5,11 +5,24 @@ import streamlit as st
 # and color maps for graphs
 
 # return base64 image html to be rendered
-icon = JsCode("""
+# original before aggrid change
+icon1 = JsCode("""
 function(params) {
 	return params.value ? params.value : '';
 }
 """)
+icon = JsCode("""
+class UrlCellRenderer {
+  init(params) {
+    this.eGui = document.createElement('img');
+    this.eGui.setAttribute('src', params.value);
+  }
+  getGui() {
+    return this.eGui;
+  }
+}
+""")
+
 spacer_base64 = "<img src=\"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg==\">"
 
 # helper function for reading aggrid param data
@@ -144,6 +157,11 @@ heal_colours = {
 	"Alkaloid":"#99e65f",
 }
 
+grid_css = {
+    ".ag-cell": {"font-family": "'Inter'"},
+    "#gridToolBar": {"display": "none"}
+    }
+
 def set_width(width: str):
 	if not st.session_state.mobile:
 		pass
@@ -169,16 +187,30 @@ def css_rules():
 
 	css_str = f"""
 		<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter&family=Rubik&display=swap'); 
+
+		html, body, [class*="css"] {{
+		    font-family: 'Inter', sans-serif;
+		}}
+
 		.appview-container .main .block-container{{ 
 			max-width: {maxwidth}; 
 			min-width: {minwidth};
+			min-height: {minwidth};
 			padding: 2rem 1rem 1rem;
+		}}
+
+		ag-row-level-0 
+
+		#gridToolBar {{
+			display: none;
+			max-height: 0px;
 		}}
 
 		.font40 {{
 		    font-size:36px !important;
 		    font-weight: bold;
-		    font-family: 'Helvetica Neue', sans-serif;
+		    font-family: 'Inter', sans-serif;
 		    margin-top: 16px;
 		    margin-bottom: 48px;
 		}}
@@ -186,12 +218,12 @@ def css_rules():
 		.fontheader {{
 		    font-size:28px !important;
 		    font-weight: bold;
-		    font-family: 'Helvetica Neue', sans-serif;
+		    font-family: 'Inter', sans-serif;
 		}}
 		.font20 {{
 		    font-size:20px !important;
 		    font-weight: bold;
-		    font-family: 'Helvetica Neue', sans-serif;
+		    font-family: 'Inter', sans-serif;
 		}}
 		</style>
 		"""

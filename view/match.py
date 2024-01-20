@@ -207,9 +207,10 @@ def main(con):
 		sum_ag = AgGrid(
 			hdf,
 			allow_unsafe_jscode=True,
+			custom_css=render.grid_css,
 			gridOptions=sum_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
-			height = 16*48+64,
+			height = 16*48+92,
 			theme = table_theme,
 			enable_enterprise_modules=False
 		)
@@ -435,6 +436,7 @@ def main(con):
 			sup_ag = AgGrid(
 				sup_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=sup_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				height = len(sup_df)*48+100,
@@ -553,6 +555,7 @@ def main(con):
 		def_ag = AgGrid(
 			hero_write,
 			allow_unsafe_jscode=True,
+			custom_css=render.grid_css,
 			gridOptions=def_gb.build(),
 			fit_columns_on_grid_load= not ss.mobile,
 			update_mode='SELECTION_CHANGED',
@@ -768,10 +771,11 @@ def main(con):
 			of_ag = AgGrid(
 				hero_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=of_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				update_mode='SELECTION_CHANGED',
-				height = len(hero_write)*48+64 if not ss.mobile else 320,
+				height = len(hero_write)*48+92 if not ss.mobile else 320,
 				theme = table_theme,
 				enable_enterprise_modules=False
 			)
@@ -896,7 +900,7 @@ def main(con):
 
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(filterable=False,suppressMovable=True)
-			at_gb.configure_columns('icons',cellRenderer=render.icon,width=192)
+			at_gb.configure_columns('icons',cellRenderer=render.icon,width=192,hide=True)
 			at_gb.configure_columns('#',width=32,type='customNumericFormat',precision=0)
 			at_gb.configure_columns('chain',width=256)
 			# at_gb.configure_grid_options(headerHeight=0)
@@ -905,6 +909,7 @@ def main(con):
 			sl_ag = AgGrid(
 				at_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=at_gb.build(),
 				# fit_columns_on_grid_load= not ss.mobile,
 				fit_columns_on_grid_load= False,
@@ -1089,8 +1094,9 @@ def main(con):
 				gridOptions=sf_gb.build(),
 				# data_return_mode="FILTERED_AND_SORTED",
 				update_mode=GridUpdateMode.SELECTION_CHANGED,
+				custom_css=render.grid_css,
 				fit_columns_on_grid_load= not ss.mobile,
-				height = 560 if not ss.mobile else 280,
+				height = 600 if not ss.mobile else 280,
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
@@ -1284,9 +1290,10 @@ def main(con):
 			sl_ag = AgGrid(
 				sl_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=sl_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
-				height = 560,
+				height = 600,
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
@@ -1346,10 +1353,11 @@ def main(con):
 					count_ag = AgGrid(
 						count_df,
 						allow_unsafe_jscode=True,
+						custom_css=render.grid_css,
 						fit_columns_on_grid_load= not ss.mobile,
 						gridOptions=count_gb.build(),
 						theme=table_theme,
-						height = len(count_df)*48+64,
+						height = len(count_df)*48+92,
 						enable_enterprise_modules=False
 					)
 
@@ -1401,6 +1409,7 @@ def main(con):
 			al_ag = AgGrid(
 				actions_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=al_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
 				height = 1024,
@@ -1445,10 +1454,11 @@ def main(con):
 			m_ag = AgGrid(
 				m_write,
 				allow_unsafe_jscode=True,
+				custom_css=render.grid_css,
 				gridOptions=m_gb.build(),
 				# update_mode='SELECTION_CHANGED',
 				fit_columns_on_grid_load= not ss.mobile,
-				height = 240,
+				height = 280,
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
@@ -1599,11 +1609,12 @@ def main(con):
 		mh_ag = AgGrid(
 			mh_write,
 			allow_unsafe_jscode=True,
+			custom_css=render.grid_css,
 			gridOptions=mh_gb.build(),
 			# enable_enterprise_modules=True,
 			# update_mode='SELECTION_CHANGED',
 			# fit_columns_on_grid_load= not ss.mobile,
-			height = 680 if not ss.mobile else 320,
+			height = 760 if not ss.mobile else 320,
 			theme=table_theme,
 			enable_enterprise_modules=False
 		)
