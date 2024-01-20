@@ -509,6 +509,7 @@ def main(con):
 			c3.metric("dmg/surv"*t2,millify(t_dmg_surv[t],precision=1),millify((t_dmg_surv[t]-t_dmg_surv[t2])/1000,precision=2),delta_color="inverse")
 			c4.metric("dmg/death"*t2,  millify(t_dmg_death[t],precision=1),millify((t_dmg_death[t]-t_dmg_death[t2])/1000,precision=2),delta_color="inverse")
 
+		st.caption('click to view player graphs, ctrl-click to unselect.')
 
 		# hp loss data
 		@st.cache_data(show_spinner=False)
@@ -882,7 +883,7 @@ def main(con):
 				height=300 if not ss.mobile else 240,
 				)
 			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
-			st.caption('attack chains')
+			st.caption('attack chains (select hero to view individually)')
 
 			## debugging table
 			# at_df = at_df[['id','parent','count']]
@@ -1285,7 +1286,7 @@ def main(con):
 			sl_gb.configure_columns(['cell_color','hit_color'],hide=True)
 
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
-			st.caption(f"spike log #{spid}")
+			st.caption(f"spike log #{spid} (select from list to view)")
 			# st.caption(f"spike log: #{str(spid)}")
 			sl_ag = AgGrid(
 				sl_write,

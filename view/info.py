@@ -5,7 +5,11 @@ config = yaml.safe_load(open('data/config.yaml'))
 
 
 def main():
-	st.image('assets/info_header.png',caption='uuralur the mirror presides over the garden of [pvp] memories')
+	st.image('assets/info_header.png')#,caption='uuralur the mirror presides over the garden of [pvp] memories')
+	
+	st.warning('Note this app is unmaintained since 2021 and may not work with changes to the game since.',
+	icon="⚠️")
+
 	st.subheader('Foreword')
 	st.write("""
 		This program is made for the standard structure of team arena matches: 8 vs 8, 10 minute area matches based around calling targets with multiple people attacking and healing characters on either team. 
@@ -66,6 +70,70 @@ def main():
 		Only half *on target* credit is given based on late timing of the first attack or heal on a target (relative to the spike start). 
 		Calculations were adjusted to align with results from the old demoparse OTP calculations.
 		""")
+	
+	st.subheader('Legend')
+	st.write('Terms and definitions used in the original 2020 parser and report copied below for reference. May not fully match current usage of terms.')
+	with st.expander('Terms'):
+		st.code("""
+		SPIKES
+		spike target - there's some additional parameters at play, but simplified: you need at least 2 people committing significant attacks on an enemy within a short spike timing window. e.g. 2 people blazing bolting an emp between targets won't get picked up, but 2 blazes at the same time will or 3 bb's at the same time will
+		spike length - time from first attack to last attack on a spike
+		kill length - time from first attack to target death
+		cast time - start of a power cast in a demo file, typically when activated
+		hit time - cast time plus + effect delay and estimated projectile travel time
+		hit window - on a spike kill, the time between the first attack hit (excluding debuffs) and death
+		cleanliness - average hit window
+
+		OFFENCE
+		primary attack - a non-trash damage attack. i.e. charged shot, ice blast would be considered trash, where as lancer shot or BIB would be considered primary (some wiggle room)
+		on target - when a player fires at least 1 attack on an enemy who is determined a spike target
+		late attack - if the first attack by a player on a spike at least 2 seconds after the start of the spike
+		followup time - average time between starting first atk and second atk on a spike (for spikes with >1 atk)
+		timing - average time in which you cast your first attack on a spike (from the first primary atk on the target)
+		atk variance - variance of your timings
+		k part (kill participation) - percent of successful spikes (kills) a player was on
+		first - the first primary attack on an enemy determined a spike target, also determines the start of the spike
+		first distance - average distance from target on first spike attacks
+		first attack timing - bins first attacks on spike by timing relative to spike start
+
+
+		DEFENCE/SUPPORT
+		dmg/death - the average hp lost on lethal spikes, greater than your max HP means you're typically getting heals on spikes and still dying
+		dmg/surv - the average hp lost on non-lethal spikes, you want this number to be less than your max HP - i.e. you want the typical spike on you to not require healing
+		heals - the number of heal powers received
+		non-spike dmg - total of all match hp losses that occurs while not a spike target
+		greens - assumes a full tray of 20 was taken into the match
+		jaunt reaction - avg time to cast jaunt after the start of a spike (prejaunts not counted)
+		support
+		heal speed (av spd) - heal cast time relative to the start of a spike (~reaction time)
+		timing (avg tm) - absolute heal hit time relative to the first instance of damage (>100), i.e. practical heal timing. calc excludes spike targets starting below max HP or already taking damage.
+		heal categories, all mutually exclusive and calculated in the following order:
+		    early - heal that hits before any instance of damage taken on a full hp target
+		    late - first heal on a target cast before but that lands after the target has died
+		    quick - a first heal cast by <1.67s in of a spike or if it hits within <0.67s of first dmg
+		    timely - cast or hit within twice of either the quick timing windows
+		    slow - first on target heal slower than a timely heal (generally not a saving heal)
+		    follow up - any heal on a spike target after a support's first heal on a spike target
+		    top up - any heal cast on a teammate that is not being spiked and not at full hp (minus ff's)
+		    fat finger (ff)  - top up heal on a full health teammate 
+		alpha - a first (or tied first) heal on a spike target
+		predict - if a spirit ward is cast within 12 seconds prior of a teammate becoming a spike target it counts as a predict (lasts for ~10s + projectile travel)
+		phase heal - heals on a target who has already phased (i.e. uneffecting healing), estimated on from phase cast time
+		heal efficacy - bins first heals cast by target missing HP at hit time
+		late (quick) - late heals cast fast (<1.5 after spike start) to differentiate from 'reguar' late
+		extras - includes some non-healing abilities done by a support (e.g. attacks, buffs, summons)
+		cm - counts usage of cm-like powers (starting from after the buff period)
+
+
+		OTHER
+		rogue - any attack, phase, or green use outside of a spike window (entangles will show as strangler in the rogue log)
+		gather - defined by an aoe buff hitting 4 or more teammates (outside of the buff period)
+		utility power - generic term which includes some limited non-attack and non-heal powers, see source code for the list
+
+		""",language=None)
+
+
+	st.subheader('.')
 
 	# st.subheader('Definitions')
 	# st.write("*Phase hit* - when a heal/attack is **cast** shortly after a phase power **finishes** activating.")
