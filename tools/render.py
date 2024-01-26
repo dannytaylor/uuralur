@@ -158,7 +158,6 @@ heal_colours = {
 }
 
 grid_css = {
-    ".ag-cell": {"font-family": "'Inter'"},
     "#gridToolBar": {"display": "none"}
     }
 
@@ -187,7 +186,7 @@ def css_rules():
 
 	css_str = f"""
 		<style>
-		@import url('https://fonts.googleapis.com/css2?family=Inter&family=Rubik&display=swap'); 
+		@import url('https://fonts.googleapis.com/css2?family=Inter'); 
 
 		html, body, [class*="css"] {{
 		    font-family: 'Inter', sans-serif;
