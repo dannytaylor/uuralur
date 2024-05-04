@@ -1,16 +1,17 @@
 ##### uuralur the mirror presides over the garden of pvp memories
 
+s/o charlie for the deep lore name
+
 record demos in game, arena maps only, with slash command  
 `/demorecord DEMONAME`  
 `/demostop` or stops on map exit  
 demos saved to the `COH DIRECTORY\demos` location
 
-dependencies  
-``` pip install streamlit streamlit-aggrid plotly millify pandas numpy ujson```  
+requirements.txt should be update to date
 
 parse by main demo folder (all demos), by series, or a single match  
 ``` python parse.py -a PARENTFOLDERPATH | -s SERIESFOLDERPATH | -m MATCHDEMOPATH [-d DBFILE]```  
-writes to demos.db by default
+writes to an sqlite3 demos.db by default
 
 folder structure 
 ```
@@ -22,7 +23,8 @@ folder structure
         |- ...
     |- ...
 ```
-recommend using the same naming convention as [me](https://demos.hcc.ovh/)
+
+folder name structure yymmdd_SERIES where series is usually team1_team2 or pug or kb
 
 run web app with existing sqlite db  
 ``` streamlit run app.py```  
