@@ -237,8 +237,8 @@ def main(con):
 						mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 
 						mh_gb.configure_grid_options(enableCellTextSelection=True,ensureDomOrder=True)
-						mh_gb.configure_default_column(width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
-						mh_gb.configure_columns('player',width=64,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
+						mh_gb.configure_default_column(width=128,cellStyle={'text-align': 'center'},suppressMovable=True)
+						mh_gb.configure_columns('player',width=128,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 						mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 						mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=3)
 						if data_aggr == 'avg/match':

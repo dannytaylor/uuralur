@@ -42,7 +42,7 @@ def main():
 		URLs generated when selecting matches can be shared to link to specific match.
 		Heroes are mapped to players to the best of my knowledge. If you see a hero attributed to the wrong player I can fix it when I get a chance.
 		The site is only designed for desktop viewing to work with the intended layouts and hacky solutions for the components used. Toggle mobile view in the sidebar for a partial workaround on phones. 
-		Message me (xhiggy@forums, daniel#4509@discord) if you have any questions, or post in the [pvp resources thread](https://forums.homecomingservers.com/topic/15386-pvp-resources/) on the Homecoming forums.
+		Message me (xhiggy @forums, @discord, or @twitter) if you have any questions, or post in the [pvp resources thread](https://forums.homecomingservers.com/topic/15386-pvp-resources/) on the Homecoming forums.
 		""")
 
 	st.subheader('Demo limitations')
@@ -56,21 +56,6 @@ def main():
 		Player position and time at a position is not updated in the demo record regularly/consistently, so any distance reported between 2 players is a rough estimate based on available data.
 		""")
 
-	st.subheader('Timing/On Target')
-	st.write("""
-		Timing is measured from a *spike start time* which is defined by the midpoint of the first 3 attacks within 1 second on a spike. 
-		If a debuff is the first attack on a spike (EF, envenom), then it is the midpoint of the first 4 attacks within 2 seconds.
-		Average (mean) attack timing is measured by absolute value (so a < 0 timing attack will not necessarily bring the average down).
-		All other mean calculations (heal, phase, jaunt) do not use an absolute value calculation.
-		Note that this means these timings will appear slightly better than the old system in most situations.
-		Median is probabably a better metric for general viewing in most cases.
-		""")
-	# st.subheader('On target')
-	st.write("""
-		Only half *on target* credit is given based on late timing of the first attack or heal on a target (relative to the spike start). 
-		Calculations were adjusted to align with results from the old demoparse OTP calculations.
-		""")
-	
 	st.subheader('Legend')
 	st.write('Terms and definitions used in the original 2020 parser and report copied below for reference. May not fully match current usage of terms.')
 	with st.expander('Terms'):
@@ -133,6 +118,23 @@ def main():
 		""",language=None)
 
 
+
+	st.subheader('Timing/On Target')
+	st.write("""
+		Timing is measured from a *spike start time* which is defined by the midpoint of the first 3 attacks within 1 second on a spike. 
+		If a debuff is the first attack on a spike (EF, envenom), then it is the midpoint of the first 4 attacks within 2 seconds.
+		Average (mean) attack timing is measured by absolute value (so a < 0 timing attack will not necessarily bring the average down).
+		All other mean calculations (heal, phase, jaunt) do not use an absolute value calculation.
+		Note that this means these timings will appear slightly better than the old system in most situations.
+		Median is probabably a better metric for general viewing in most cases.
+		""")
+	# st.subheader('On target')
+	st.write("""
+		Only half *on target* credit is given based on late timing of the first attack or heal on a target (relative to the spike start). 
+		Calculations were adjusted to align with results from the old demoparse OTP calculations.
+		""")
+	
+	
 	st.subheader('.')
 
 	# st.subheader('Definitions')
