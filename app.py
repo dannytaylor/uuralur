@@ -82,7 +82,7 @@ class MultiPage:
 		# st.sidebar.image('assets/sidebar_header.png')
 		st.sidebar.markdown("""
 			<a href='/'>
-			<img src='https://raw.githubusercontent.com/dannytaylor/uuralur/bad1599d072cc570ff167e27afb23d960a7fda3f/assets/sidebar_header.png'>
+			<img src='https://raw.githubusercontent.com/dannytaylor/uuralur/main/assets/sidebar_header.png'>
 			</a><p/>
 			""",True)
 		st_sidebar_title = st.sidebar.empty()
