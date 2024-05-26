@@ -61,7 +61,7 @@ def main():
 
 	st.subheader('Legend')
 	st.write('Terms and definitions used in the original 2020 parser and report copied below for reference. May not fully match current usage of terms.')
-	with st.expander('Terms'):
+	with st.expander('Legend'):
 		st.code("""
 		SPIKES
 		spike target - there's some additional parameters at play, but simplified: you need at least 2 people committing significant attacks on an enemy within a short spike timing window. e.g. 2 people blazing bolting an emp between targets won't get picked up, but 2 blazes at the same time will or 3 bb's at the same time will

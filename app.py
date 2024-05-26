@@ -10,6 +10,7 @@ import datetime
 
 import view.match as match
 import view.players as players
+import view.records as records
 import view.upload as upload
 import view.info
 
@@ -205,8 +206,11 @@ class MultiPage:
 def view_match(title, info=None):
 	match.main(con)
 
-def view_records(title, info=None):
+def view_players(title, info=None):
 	players.main(con)
+
+def view_records(title, info=None):
+	records.main(con)
 
 def view_upload(title, info=None):
 	upload.main()
@@ -217,7 +221,8 @@ def view_info(title, info=None):
 def main():
 	mp = MultiPage()
 	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
-	mp.add_app('records',['summary','stats'], view_records, info='')
+	mp.add_app('players',[], view_players, info='')
+	mp.add_app('records',[], view_records, info='')
 	mp.add_app('upload',[], view_upload, info='')
 	mp.add_app('info',[], view_info, info='')
 	mp.run()
