@@ -46,7 +46,7 @@ def writejson(jsondata,filename,folder='.'):
 
 def ignore_power(power):
 	for ip in ignore_powers:
-		if ip in not power:
+		if ip not in power:
 			return True
 	return False
 
