@@ -186,17 +186,17 @@ def css_rules():
 
 	css_str = f"""
 		<style>
-		@import url('https://fonts.googleapis.com/css2?family=Inter'); 
+		@import url('https://fonts.googleapis.com/css2?family=Radio+Canada+Big'); 
 
 		html, body, [class*="css"] {{
-		    font-family: 'Inter', sans-serif;
+		    font-family: "Radio Canada Big", sans-serif;
 		}}
 
 		.appview-container .main .block-container{{ 
 			max-width: {maxwidth}; 
 			min-width: {minwidth};
 			min-height: {minwidth};
-			padding: 2rem 1rem 1rem;
+			padding: 3rem 1rem 1rem;
 		}}
 
 		ag-row-level-0 
@@ -209,20 +209,20 @@ def css_rules():
 		.font40 {{
 		    font-size:36px !important;
 		    font-weight: bold;
-		    font-family: 'Inter', sans-serif;
-		    margin-top: 16px;
-		    margin-bottom: 48px;
+		    font-family: "Radio Canada Big", sans-serif;
+		    margin-top: 20px;
+		    margin-bottom: 32px;
 		}}
 
 		.fontheader {{
 		    font-size:28px !important;
 		    font-weight: bold;
-		    font-family: 'Inter', sans-serif;
+		    font-family: "Radio Canada Big", sans-serif;
 		}}
 		.font20 {{
 		    font-size:20px !important;
 		    font-weight: bold;
-		    font-family: 'Inter', sans-serif;
+		    font-family: "Radio Canada Big", sans-serif;
 		}}
 		</style>
 		"""
