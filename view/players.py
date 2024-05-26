@@ -453,10 +453,10 @@ def main(con):
 
 						ss['app_choice'] = 'players'
 
-						params = st.experimental_get_query_params()
+						params = {}
 						params['s'] = sid
 						params['m'] = mid
-						st.experimental_set_query_params(**params)
+						st.query_params.from_dict(params)
 					match_linker.button(label="go to match {} - {}".format(sid,mid), on_click=go_to_match)
 				else:
 					match_linker.button(label="select a match below")

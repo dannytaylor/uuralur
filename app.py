@@ -90,22 +90,22 @@ class MultiPage:
 		mid_key='mid_key'
 
 		# get app choice from query_params
-		query_params = st.experimental_get_query_params()
-		query_sid_choice = query_params['s'][0] if 's' in query_params else None
+		query_params = st.query_params.to_dict()
+		query_sid_choice = query_params['s'] if 's' in query_params else None
 		if 'm' in query_params and query_params['m'][0].isnumeric():
 			query_mid_choice = int(query_params['m'][0])  
 		else:
 			query_mid_choice = None
 
 		def set_query():
-			params = st.experimental_get_query_params()
+			params = st.query_params.to_dict()
 			if 'sid_key' in ss:
 				params['s'] = ss['sid_key']
 				params['m'] = ss['mid_key']
-				st.experimental_set_query_params(**params)
+				st.query_params.from_dict({'s':params['s'],'m':params['m']})
+				# st.query_params.from_dict(**params)
 		def clear_query():
-			st.experimental_set_query_params()
-
+			st.query_params.clear()
 		# sidebar layout setup
 		app_exp = st.sidebar.empty()
 		sid_empty = st.sidebar.empty()
@@ -145,13 +145,13 @@ class MultiPage:
 					ss.new_mid = False
 				elif query_mid_choice in sid_mids:
 					ss[mid_key] = query_mid_choice 
-				else: 
-					params = {'s':[query_sid_choice]}
-					st.experimental_set_query_params(**params)
+				else:
+					params = {'s':query_sid_choice}
+					st.query_params.from_dict(params)
 					ss[mid_key] = sid_mids[0]
-			else:
-				clear_query()
-				ss[sid_key] = series_ids[0]
+			# else:
+			# 	clear_query()
+			# 	ss[sid_key] = series_ids[0]
 
 			def format_sid_str(sid):
 				# sid_date = "20" + sid[0:2] + "/" + sid[2:4] + "/" + sid[4:6] + " "

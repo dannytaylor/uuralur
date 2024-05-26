@@ -123,10 +123,10 @@ def main():
 
 					ss['app_choice'] = 'players'
 
-					params = st.experimental_get_query_params()
+					params = {}
 					params['s'] = sid
 					params['m'] = mid
-					st.experimental_set_query_params(**params) 
+					st.query_params.from_dict(params)
 
 
 				with st.spinner('checking for duplicates of file'):
