@@ -75,8 +75,8 @@ def main(con):
 	with c1:
 		st.markdown("""<p class="fontheader"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 		
-		st.write('') #spacing hack
-		st.write('')
+		st.write(' ') #spacing hack
+		st.write(' ')
 	with c2:
 		score_str = """<p style="text-align: left;">"""
 		if not st.session_state.mobile: score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
@@ -102,13 +102,16 @@ def main(con):
 		# summary header
 		for t in [0,1]:
 			t2 = abs(t-1)
+			vis = "visible"
+			if t2 == 0:
+				vis  = 'hidden'
 			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
 			c1.markdown(teamstring,True)
-			c2.metric("Score"*t2,m_score[t],m_score[t]-m_score[t2])
-			c3.metric("Spikes Called"*t2,m_spikes[t],m_spikes[t]-m_spikes[t2])
-			c4.metric("Attacks Thrown"*t2,m_attacks[t],m_attacks[t]-m_attacks[t2])
-			# c6.metric("Avg Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c5.metric("Dmg Taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse")
+			c2.metric("Score",m_score[t],m_score[t]-m_score[t2], label_visibility=vis)
+			c3.metric("Spikes Called",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
+			c4.metric("Attacks Thrown",m_attacks[t],m_attacks[t]-m_attacks[t2], label_visibility=vis)
+			# c6.metric("Avg Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
+			c5.metric("Dmg Taken",millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse", label_visibility=vis)
 
 
 		score_fig = go.Figure()
@@ -505,9 +508,14 @@ def main(con):
 		for t in [0,1]:
 			t2 = abs(t-1)
 
-			c2.metric("dmg taken"*t2,millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2])/1000,precision=1),delta_color="inverse")
-			c3.metric("dmg/surv"*t2,millify(t_dmg_surv[t],precision=1),millify((t_dmg_surv[t]-t_dmg_surv[t2])/1000,precision=2),delta_color="inverse")
-			c4.metric("dmg/death"*t2,  millify(t_dmg_death[t],precision=1),millify((t_dmg_death[t]-t_dmg_death[t2])/1000,precision=2),delta_color="inverse")
+			vis = "visible"
+			if t2 == 0:
+				vis  = 'hidden'
+
+
+			c2.metric("dmg taken",millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2])/1000,precision=1),delta_color="inverse", label_visibility=vis)
+			c3.metric("dmg/surv",millify(t_dmg_surv[t],precision=1),millify((t_dmg_surv[t]-t_dmg_surv[t2])/1000,precision=2),delta_color="inverse", label_visibility=vis)
+			c4.metric("dmg/death",  millify(t_dmg_death[t],precision=1),millify((t_dmg_death[t]-t_dmg_death[t2])/1000,precision=2),delta_color="inverse", label_visibility=vis)
 
 		st.caption('click to view player graphs, ctrl-click to unselect.')
 
@@ -686,13 +694,16 @@ def main(con):
 
 		for t in [0,1]:
 			t2 = abs(t-1)
+			vis = "visible"
+			if t2 == 0:
+				vis  = 'hidden'
 			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
 			c1.markdown(teamstring,True)
-			c2.metric("Spikes Called"*t2,m_spikes[t],m_spikes[t]-m_spikes[t2])
-			c3.metric("Attacks Thrown"*t2,m_attacks[t],m_attacks[t]-m_attacks[t2])
-			c4.metric("Mean Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c5.metric("Median Timing"*t2,round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse')
-			c6.metric("Avg On Tgt"*t2,round(ontgt[t],1),round(ontgt[t]-ontgt[t2],2))
+			c2.metric("Spikes Called",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
+			c3.metric("Attacks Thrown",m_attacks[t],m_attacks[t]-m_attacks[t2], label_visibility=vis)
+			c4.metric("Mean Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse', label_visibility=vis)
+			c5.metric("Median Timing",round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse', label_visibility=vis)
+			c6.metric("Avg On Tgt",round(ontgt[t],1),round(ontgt[t]-ontgt[t2],2), label_visibility=vis)
 
 
 		with c7:
@@ -933,17 +944,20 @@ def main(con):
 
 		for t in [0,1]:
 			t2 = abs(t-1)
+			vis = "visible"
+			if t2 == 0:
+				vis  = 'hidden'
 
-			c2.metric("Spikes"*t2,m_spikes[t],m_spikes[t]-m_spikes[t2])
-			c3.metric("Mean Timing"*t2,round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c4.metric("Median Timing"*t2,round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse')
+			c2.metric("Spikes",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
+			c3.metric("Mean Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse', label_visibility=vis)
+			c4.metric("Median Timing",round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse', label_visibility=vis)
 
 			a1 = round(t_spikes[t]['attacks'].mean(),2)
 			a0 = round(t_spikes[t2]['attacks'].mean(),2)
-			c5.metric("Avg Attacks"*t2,a0,round(a0-a1,2))
+			c5.metric("Avg Attacks",a0,round(a0-a1,2), label_visibility=vis)
 			a1 = round(t_spikes[t]['attackers'].mean(),2)
 			a0 = round(t_spikes[t2]['attackers'].mean(),2)
-			c6.metric("Avg Attackers"*t2,a0,round(a0-a1,2))
+			c6.metric("Avg Attackers",a0,round(a0-a1,2), label_visibility=vis)
 
 		# graph spikes and kills for summary
 		with c7:
