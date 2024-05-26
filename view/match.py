@@ -76,7 +76,7 @@ def main(con):
 		st.markdown("""<p class="fontheader"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 		
 		st.write(' ') #spacing hack
-		st.write(' ')
+		# st.write(' ')
 	with c2:
 		score_str = """<p style="text-align: left;">"""
 		if not st.session_state.mobile: score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
@@ -1610,7 +1610,7 @@ def main(con):
 		# mh_write = mh_df[['hero','#matches','deaths','targets','surv','dmg','otp','avg t']]
 		mh_gb = GridOptionsBuilder.from_dataframe(mh_write)
 		# mh_gb.configure_side_bar()
-		mh_gb.configure_default_column(width=100,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
+		mh_gb.configure_default_column(width=116,cellStyle={'text-align': 'center'},filterable=False,suppressMovable=True)
 		mh_gb.configure_columns('player',width=160,cellStyle={'text-align': 'left','font-weight':'bold'},pinned='left')
 		mh_gb.configure_columns(['attacks','heals','on_target','on_heal'],type='customNumericFormat',precision=0)
 		mh_gb.configure_columns(timing_data,type='customNumericFormat',precision=2)
