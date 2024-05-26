@@ -23,7 +23,7 @@ class UrlCellRenderer {
 }
 """)
 
-spacer_base64 = "<img src=\"data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg==\">"
+spacer_base64 = "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAH0lEQVR42mNkoBAwjhowasCoAaMGjBowasCoAcPNAACOMAAhOO/A7wAAAABJRU5ErkJggg=="
 
 # helper function for reading aggrid param data
 console = JsCode("""
