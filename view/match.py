@@ -187,7 +187,7 @@ def main(con):
 
 		sum_gb = GridOptionsBuilder.from_dataframe(hdf)
 		# sum_gb.configure_grid_options(enableCellTextSelection=True,ensureDomOrder=True)
-		sum_gb.configure_grid_options(enableRangeSelection=True)
+		sum_gb.configure_grid_options(enableRangeSelection=True,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 		sum_gb.configure_default_column(filterable=False,width=32,cellStyle={'text-align': 'center'},suppressMovable=True)
 		sum_gb.configure_columns(['hero','set1','set2'],width=64)
 		# sum_gb.configure_columns(['hero'],pinned='left',)
@@ -198,13 +198,13 @@ def main(con):
 		sum_gb.configure_columns(['set1','set2'],cellStyle=render.support_color,width=48)
 
 		# opacities
-		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)
-		sum_gb.configure_columns(['targets'],cellStyle=render.targets_bg)
-		sum_gb.configure_columns(['surv'],cellStyle=render.surv_bg)
-		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
-		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg)
+		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg,headerTooltip="# deaths")
+		sum_gb.configure_columns(['targets'],cellStyle=render.targets_bg,headerTooltip="# of times spike targeted")
+		sum_gb.configure_columns(['surv'],cellStyle=render.surv_bg,headerTooltip="spike survival rate")
+		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage")
+		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg,headerTooltip="on heal percentage")
 
-		sum_gb.configure_columns(['at'],width=28,cellRenderer=render.icon)
+		sum_gb.configure_columns(['at'],width=28,cellRenderer=render.icon,headerTooltip="archetype")
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
 
 		sum_ag = AgGrid(
@@ -431,10 +431,22 @@ def main(con):
 			sup_gb.configure_columns(['tgtd','on heal','alpha','phase hits','ffs','late',"cms","heals","top ups"],type='customNumericFormat',precision=0) # force render as string to remove hamburger menu
 			sup_gb.configure_columns(['avg','med','variance'],type='customNumericFormat',precision=2)
 			sup_gb.configure_columns(['team','support','variance','ffs']+opacities,hide=True)
-			sup_gb.configure_columns(['on %'],cellStyle=render.onheal_bg)
-			sup_gb.configure_columns(['on heal'],cellStyle=render.onhealn_bg)
-			sup_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
-			sup_gb.configure_grid_options(headerHeight=64)
+			sup_gb.configure_columns(['on %'],cellStyle=render.onheal_bg,headerTooltip="on heal rate")
+			sup_gb.configure_columns(['on heal'],cellStyle=render.onhealn_bg,headerTooltip="# times healing on target")
+			sup_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg,headerTooltip="# of times spike targeted")
+			
+			# tooltips
+			sup_gb.configure_columns(['avg'],headerTooltip="average timing on first heal")
+			sup_gb.configure_columns(['med'],headerTooltip="median timing on first heal")
+			sup_gb.configure_columns(['variance'],headerTooltip="variance of first heal timing")
+			sup_gb.configure_columns(['alpha'],headerTooltip="# times first heal on spike target")
+			sup_gb.configure_columns(['phase hits'],headerTooltip="# heals hitting unaffected target")
+			sup_gb.configure_columns(['late'],headerTooltip="heals cast that land after a target dies")
+			sup_gb.configure_columns(['top ups'],headerTooltip="# heals not associated with a spike")
+			sup_gb.configure_columns(['heals'],headerTooltip="total healing powers cast")
+			sup_gb.configure_columns(['cms'],headerTooltip="clear mind or equivalent powers")
+
+			sup_gb.configure_grid_options(headerHeight=64,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 			
 			sup_ag = AgGrid(
 				sup_write,
@@ -558,7 +570,17 @@ def main(con):
 		def_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg)
 		def_gb.configure_columns(['targets'],cellStyle=render.targets_bg)
 		def_gb.configure_columns(['surv'],cellStyle=render.surv_bg)
-		def_gb.configure_grid_options(headerHeight=64)
+
+		# tooltips
+		def_gb.configure_columns(['dmg'],headerTooltip="total estimated damage taken, calculated by HP loss")
+		def_gb.configure_columns(['dmg /surv'],headerTooltip="average damage taken per spike")
+		def_gb.configure_columns(['dmg /death'],headerTooltip="average damage taken per successful spike")
+		def_gb.configure_columns(['avg phase'],headerTooltip="average time to activate phase power measured from spike start. Number of applicable spikes in brackets")
+		def_gb.configure_columns(['avg jaunt'],headerTooltip="average time to activate jaunt power measured from spike start. Number of applicable spikes in brackets")
+		def_gb.configure_columns(['heals taken'],headerTooltip="number of heal powers received")
+
+
+		def_gb.configure_grid_options(headerHeight=64,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 
 
 		def_ag = AgGrid(
@@ -767,7 +789,7 @@ def main(con):
 			# aggrid options for offence table
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
 			of_gb.configure_default_column(filterable=False,width=32,suppressMovable=True)
-			of_gb.configure_grid_options(autoHeight=True)
+			of_gb.configure_grid_options(autoHeight=True,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
 			of_gb.configure_columns(['on tgt','atks','offtgt atk','first','tgtd'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60,pinned='left')
@@ -775,8 +797,14 @@ def main(con):
 			of_gb.configure_columns(['deaths','team','var']+opacities,hide=True)
 
 			of_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
-			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg)
-			of_gb.configure_columns(['ontgt'],cellStyle=render.ontgt_bg)
+			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage")
+			of_gb.configure_columns(['ontgt'],cellStyle=render.ontgt_bg,headerTooltip="total # times on spike target")
+			
+			of_gb.configure_columns(['avg'],headerTooltip="average timing of first attack on spike, measured from spike start")
+			of_gb.configure_columns(['med'],headerTooltip="median timing of first attack on spike, measured from spike start")
+			of_gb.configure_columns(['atks'],headerTooltip="total # attack powers thrown")
+			of_gb.configure_columns(['offtgt atk'],headerTooltip="# attacks thrown not counted on a spike")
+			of_gb.configure_columns(['first'],headerTooltip="# of times hero is first attack on a spike")
 
 			of_gb.configure_selection('multiple', pre_selected_rows=None)
 
@@ -1101,6 +1129,14 @@ def main(con):
 			sf_gb.configure_columns('team',hide=True)
 			sf_gb.configure_selection(selection_mode='single', pre_selected_rows=[0],suppressRowDeselection=True)
 
+			sf_gb.configure_columns('time',headerTooltip="match time game start")
+			sf_gb.configure_columns('dur',headerTooltip="duration of spike from first cast to last hit. Not including heals")
+			sf_gb.configure_columns('atks',headerTooltip="# attacks thrown on spike")
+			sf_gb.configure_columns('atkr',headerTooltip="# unique attacking heroes involved in spike")
+			sf_gb.configure_columns('dmg',headerTooltip="estimated HP loss occuring over spike duration")
+
+			sf_gb.configure_grid_options(tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
+
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike list'),True)
 			st.caption("spike list")
 			response = AgGrid(
@@ -1296,8 +1332,12 @@ def main(con):
 			sl_gb.configure_columns(['cast','hit'],type='customNumericFormat',precision=2)
 			sl_gb.configure_columns('image',cellRenderer=render.icon,width=44)
 			sl_gb.configure_columns(['actor','action'],cellStyle=render.spike_action_color)
-			sl_gb.configure_columns(['hit'],cellStyle=render.spike_hit_color)
+			sl_gb.configure_columns(['hit'],cellStyle=render.spike_hit_color,headerTooltip="hit time of power. Estimated for projectile powers based on projectile speed and distance cast")
 			sl_gb.configure_columns(['cell_color','hit_color'],hide=True)
+			sl_gb.configure_columns(['dist'],headerTooltip="estimated distance based on reported demorecord hero locations")
+			sl_gb.configure_columns(['cast'],headerTooltip="initial cast time of power, relative to spike start. See INFO page for more detail on spikes.")
+
+			sl_gb.configure_grid_options(tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike log: #' + str(spid)),True)
 			st.caption(f"spike log #{spid} (select from list to view)")
