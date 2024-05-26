@@ -17,30 +17,15 @@ def is_file_dupl(path,data):
 
 
 def main():
-	st.header('📫 uploads')
+	st.header('📫 upload')
 	st.markdown("""
 		You can upload matches in the `.cohdemo` file format here. 
 		Record these in-game with the `/demorecord <file name here>` slash command. 
 		Stop recording with the `/demostop` command or automatically when you exit the match.
 		Saved files are found in the `<coh install path>\\demos` folder.
-
-		Uploads are not visible from the sidebar navigator and are only accessible from the link generated from parsing here (so remember the link).
-		Uploaded matches are not included in *records* stats.
-		Uploaded matches and their links may be deleted or overwritten at some point. 
-		Matches uploaded will typically be added to the main database at a later date.
-
-		All uploads from the same date are shared within the same series.
-		The program will attempt to check for duplicate files, otherwise and reuploads of matches will not overwrite the old match.
-		Demos of the same match from multiple pov's will not be flagged as duplicate files.	
-		File names are not preserved when uploading. 
-
-		There is a daily limit to number of uploads to manage storage space, so don't mass-upload demos.
-		Contact xhiggy if you'd like to add a large amount of demos to the site.
-		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.).
-		Demo parsing may temporarily disable match viewing while demo is parsing (~10 seconds).
-
 		""")
 		# If you would like a hero to count towards your global stats that isn't currently being tracked, fill out the form inputs in the sidebar.
+
 
 	st.warning('Note this app was last significantly worked on in 2021 and may produce errors with recent demo files. \
 		It does not include any data for new powersets released since and may confuse new instances of powers if they share animations or effects with other powers.',
@@ -123,10 +108,10 @@ def main():
 
 					ss['app_choice'] = 'players'
 
-					params = {}
+					params = st.experimental_get_query_params()
 					params['s'] = sid
 					params['m'] = mid
-					st.query_params.from_dict(params)
+					st.experimental_set_query_params(**params) 
 
 
 				with st.spinner('checking for duplicates of file'):
@@ -161,3 +146,21 @@ def main():
 
 			else:
 				st.error('Uploads over limit for the day. Try again later.')
+	with st.expander("upload notes", expanded=False):
+		st.markdown("""
+		Uploads are not visible from the sidebar navigator and are only accessible from the link generated from parsing here (so remember the link).
+		Uploaded matches are not included in *records* stats.
+		Uploaded matches and their links may be deleted or overwritten at some point. 
+		Matches uploaded will typically be added to the main database at a later date.
+
+		All uploads from the same date are shared within the same series.
+		The program will attempt to check for duplicate files, otherwise and reuploads of matches will not overwrite the old match.
+		Demos of the same match from multiple pov's will not be flagged as duplicate files.	
+		File names are not preserved when uploading. 
+
+		There is a daily limit to number of uploads to manage storage space, so don't mass-upload demos.
+		Contact xhiggy if you'd like to add a large amount of demos to the site.
+		Invalid demos will likely result in an error or incorrect parsed data (team sizes too small, more than 2 teams, etc.).
+		Demo parsing may temporarily disable match viewing while demo is parsing (~10 seconds).
+
+		""")

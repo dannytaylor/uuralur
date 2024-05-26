@@ -19,7 +19,8 @@ def main():
 		""")
 	st.write("""
 		Everything in these stats should be taken with a grain of salt as not all context can be or has been captured. 
-		Looking at these stats plus vods from a couple different povs could give you the full picture, but hopefully this can save people some time for broad information.
+		Looking at these stats plus vods from a couple different povs could give you the full picture, but hopefully this can save people some time for broad information. 
+		Some limitations with the table formatting and framework used means everything is formatted for desktop computers only, 1280px wide minimum; sorry mobile viewers and small screens.
 		""")
 
 	st.subheader('General')
@@ -35,7 +36,9 @@ def main():
 		""")
 	st.markdown("""
 		[old demoparse report](https://datastudio.google.com/u/1/reporting/dad5a39e-179a-49b4-ad64-a4f8ce89694e/page/hoC2B)  
-		[old demoparse git repo](https://github.com/pvp-bot/demoparse)
+		[old demoparse git repo](https://github.com/pvp-bot/demoparse)  
+		[city of data](https://cod.uberguy.net./)  
+		[this repo](https://github.com/dannytaylor/uuralur)  
 		""")
 	st.write("""
 		Power data has been downloaded from CoD with some adjustments to work for this program. Some timing data may be wrong for weird edge-case powers.
@@ -135,7 +138,7 @@ def main():
 		""")
 	
 	
-	st.subheader('.')
+	st.subheader(':)')
 
 	# st.subheader('Definitions')
 	# st.write("*Phase hit* - when a heal/attack is **cast** shortly after a phase power **finishes** activating.")
