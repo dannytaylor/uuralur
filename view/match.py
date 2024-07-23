@@ -201,8 +201,8 @@ def main(con):
 		sum_gb.configure_columns(['deaths'],cellStyle=render.deaths_bg,headerTooltip="# deaths")
 		sum_gb.configure_columns(['targets'],cellStyle=render.targets_bg,headerTooltip="# of times spike targeted")
 		sum_gb.configure_columns(['surv'],cellStyle=render.surv_bg,headerTooltip="spike survival rate")
-		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage")
-		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg,headerTooltip="on heal percentage")
+		sum_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage (adjusted)")
+		sum_gb.configure_columns(['onheal'],cellStyle=render.onheal_bg,headerTooltip="on heal percentage (adjusted)")
 
 		sum_gb.configure_columns(['at'],width=28,cellRenderer=render.icon,headerTooltip="archetype")
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
@@ -710,6 +710,12 @@ def main(con):
 		# split to only heroes with attack chains
 		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
 
+
+		# #atks per spike, non-adjusted
+		hdf['on_target_raw']  = hdf['timing'].map(lambda x: len(x)) 
+		hdf['ontgt_atks']  = hdf['atks'] - hdf['offtgt']
+		hdf['aps'] = hdf['ontgt_atks']/hdf['on_target_raw']
+
 		ontgt = {}
 		for i in [0,1]:
 			ontgt[i] = hdf[hdf['team']==i]['on_target'].sum()/m_spikes[i]
@@ -778,32 +784,34 @@ def main(con):
 				yaxis={'range': [-2 ,5]},
 				)
 			st.plotly_chart(at_fig,use_container_width=True, config={'displayModeBar': False})
-
 			
 			# slice DF to new df for offence
-			hero_write = hdf[['team','hero','targets','deaths','otp','on_target','avg atk','med atk','var atk','atks','offtgt','first_attacks']+opacities]
+			hero_write = hdf[['team','hero','targets','deaths','otp','avg atk','med atk','var atk','aps','atks','offtgt','first_attacks']+opacities]
 			hero_write = hero_write.rename(columns={"targets":'tgtd',"on_target": "on tgt","offtgt": "offtgt atk", "avg atk": "avg","med atk": "med","var atk": "var","first_attacks":'first'})
 			hero_write = hero_write.sort_values(by='team')
 			# hero_write['team'] = hero_write['team'].map(team_emoji_map)
+
+			
 
 			# aggrid options for offence table
 			of_gb = GridOptionsBuilder.from_dataframe(hero_write)
 			of_gb.configure_default_column(filterable=False,width=32,suppressMovable=True)
 			of_gb.configure_grid_options(autoHeight=True,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
-			of_gb.configure_columns(['avg','med','var'],type='customNumericFormat',precision=2,width=36)
+			of_gb.configure_columns(['avg','med','var','aps'],type='customNumericFormat',precision=2,width=36)
 			of_gb.configure_columns(['on tgt','atks','offtgt atk','first','tgtd'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60,pinned='left')
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
 			of_gb.configure_columns(['deaths','team','var']+opacities,hide=True)
 
 			of_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
-			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage")
+			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage (adjusted)")
 			of_gb.configure_columns(['ontgt'],cellStyle=render.ontgt_bg,headerTooltip="total # times on spike target")
 			
-			of_gb.configure_columns(['avg'],headerTooltip="average timing of first attack on spike, measured from spike start")
-			of_gb.configure_columns(['med'],headerTooltip="median timing of first attack on spike, measured from spike start")
-			of_gb.configure_columns(['atks'],headerTooltip="total # attack powers thrown")
-			of_gb.configure_columns(['offtgt atk'],headerTooltip="# attacks thrown not counted on a spike")
+			of_gb.configure_columns(['avg'],headerName='avg(t)',headerTooltip="mean timing of first attack on spike, measured from spike start")
+			of_gb.configure_columns(['med'],headerName='med(t)',headerTooltip="median timing of first attack on spike, measured from spike start")
+			of_gb.configure_columns(['aps'],headerTooltip="# attacks per spike")
+			of_gb.configure_columns(['atks'],headerName='#atks',headerTooltip="total # attack powers thrown")
+			of_gb.configure_columns(['offtgt atk'],headerName='#offtgt',headerTooltip="# attacks thrown not counted on a spike")
 			of_gb.configure_columns(['first'],headerTooltip="# of times hero is first attack on a spike")
 
 			of_gb.configure_selection('multiple', pre_selected_rows=None)
@@ -903,7 +911,7 @@ def main(con):
 			# format center total to OTP or blank
 			if len(hero_sel) == 1:
 				hero = hero_sel[0]
-				at_df.loc[at_df['id'] == 'Total', 'label'] = '<b>' + str(int(hero_df.loc[hero,'on_target'])) + ' (' + hero_df.loc[hero,'otp'] + ')</b>'
+				at_df.loc[at_df['id'] == 'Total', 'label'] = '<b>' + str(int(hdf.loc[hero,'on_target_raw'])) + ' (' + hero_df.loc[hero,'otp'] + '*)</b>'
 			else:
 				at_df.loc[at_df['id'] == 'Total', 'label'] = ''
 
@@ -1675,4 +1683,10 @@ def main(con):
 		)
 	# END SERIES
 	
+	# START PERFORMANCE
+	elif ss.view['match'] == 'performance':
+		pass
+
+	# END PERFORMANCE
+
 # end match viewer
