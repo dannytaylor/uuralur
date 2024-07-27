@@ -220,7 +220,7 @@ def view_info(title, info=None):
 
 def main():
 	mp = MultiPage()
-	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series'] , view_match, info='')
+	mp.add_app('match', ['summary','spikes','offence','defence','support','logs','series','performance'] , view_match, info='')
 	mp.add_app('players',[], view_players, info='')
 	mp.add_app('records',[], view_records, info='')
 	mp.add_app('upload',[], view_upload, info='')

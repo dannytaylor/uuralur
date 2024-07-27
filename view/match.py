@@ -32,6 +32,13 @@ def main(con):
 	# match info, relevant to all views
 	hero_df,actions_df,sdf,m_score,m_spikes,m_attacks,t_spikes,t_kills,t_dmg,ht_mean,ht_med = init_match(ss.sid,ss.mid)
 	
+	# #atks per spike, non-adjusted
+	# should move this to init_match later, need re-caching
+	hero_df['on_target_raw']  	= hero_df['timing'].map(lambda x: len(x)) 
+	hero_df['ontgt_atks']  		= hero_df['atks'] - hero_df['offtgt']
+	hero_df['aps'] 				= hero_df['ontgt_atks']/hero_df['on_target_raw']
+
+
 	hero_df = hero_df.copy()
 	actions_df = actions_df.copy()
 	sdf = sdf.copy()
@@ -709,12 +716,6 @@ def main(con):
 
 		# split to only heroes with attack chains
 		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
-
-
-		# #atks per spike, non-adjusted
-		hdf['on_target_raw']  = hdf['timing'].map(lambda x: len(x)) 
-		hdf['ontgt_atks']  = hdf['atks'] - hdf['offtgt']
-		hdf['aps'] = hdf['ontgt_atks']/hdf['on_target_raw']
 
 		ontgt = {}
 		for i in [0,1]:
@@ -1507,7 +1508,7 @@ def main(con):
 
 		with st.sidebar.expander('🔧 data table settings',expanded=False):
 			name_toggle    = st.radio('group by',['player name','hero name'],horizontal=True)
-			data_aggr      = st.radio('show data by',['total for series','avg/match'],help='applies applicable data',horizontal=True)
+			data_aggr      = st.radio('show data by',['total for series','avg/match'],index=1,help='applies applicable data',horizontal=True)
 			support_toggle = st.radio('role',['all','offence','support'],horizontal=True)
 
 		with c1:
@@ -1549,10 +1550,10 @@ def main(con):
 
 		# st.write('data columns')
 		available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
-		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attacks']
+		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attack median']
 		target_data = ['otp','on heal%','on_target','on_heal']
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
-		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens']
+		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens','aps']
 		dmg_data    = ['dmg/spike (est)']
 		record_data = ['win','loss','tie']
 		available_data += target_data + timing_data + count_data + dmg_data + record_data
@@ -1570,7 +1571,6 @@ def main(con):
 			mh_df['hero'] = mh_df['player_name']
 		table_title += " (" + data_aggr + ")"
 
-
 		# initial toggle filters
 		if support_toggle == 'support':
 			mh_df = mh_df[mh_df['support']==1]
@@ -1587,9 +1587,22 @@ def main(con):
 		mh_df['heal_timing']  = mh_df['heal_timing'].map(lambda x: (ast.literal_eval(x)))
 		mh_df['phase_timing'] = mh_df['phase_timing'].map(lambda x: (ast.literal_eval(x)))
 		mh_df['jaunt_timing'] = mh_df['jaunt_timing'].map(lambda x: (ast.literal_eval(x)))
+		mh_df['attack_chains'] = mh_df['attack_chains'].map(lambda x: (ast.literal_eval(x)))
+
+		def unwrap_atk_chains(x):
+			if len(x) == 0: return 0
+			tot = 0
+			for k,v in x.items():
+				l = ast.literal_eval(k)
+				tot += len(l)*v
+			return tot
 
 		# on targets
 		mh_df['on_target'] = mh_df['attack_timing'].map(lambda x: len(x) - sum(config['otp_penalty'] for t in x if t > config['otp_threshold']))
+		mh_df['on_target_raw'] 		= mh_df['attack_timing'].map(lambda x: len(x))
+		mh_df['ontgt_atks'] = mh_df['attack_chains'].map(lambda x: unwrap_atk_chains(x))
+		mh_df['offtgt_atks'] = mh_df['ontgt_atks'] - mh_df['attacks']
+		mh_df['aps'] 		= mh_df['ontgt_atks']/mh_df['on_target_raw']
 		mh_df['on_heal'] = mh_df['heal_timing'].map(lambda     x: len(x) - sum(config['ohp_penalty'] for t in x if t > config['ohp_threshold']))
 		mh_df['on_target_possible'] = mh_df.apply(lambda x: nspike_dict[x['team']][x['match_id']] if (x['support'] != 1 or support_toggle != 'all') else 0, axis=1)
 		mh_df['on_heal_possible'] = mh_df.apply(lambda x: nspike_dict[abs(1-x['team'])][x['match_id']]-x['targets'] if (x['support'] == 1 or support_toggle != 'all') else 0, axis=1)
@@ -1629,8 +1642,6 @@ def main(con):
 		mh_write['otp'] = mh_write['otp'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
 		mh_write['on heal%'] = mh_write['on heal%'].map("{:.0%}".format).map(lambda x: '' if (x == '0%' or x == 'nan%' or x == 'inf%') else x)
 
-
-
 		# get data by mean or total
 		sum_or_avg = ['deaths','targets','damage_taken','attacks','heals','on_target','on_heal']
 		sum_or_avg += count_data + record_data
@@ -1642,6 +1653,12 @@ def main(con):
 		mh_write['dmg/spike (est)'] = 0.8*mh_write['damage_taken']/mh_write['targets']
 		mh_write['damage_taken'] = mh_write['damage_taken'].map(lambda x: x/1000).map("{:0.1f}K".format)
 		
+		# per spike
+		# mh_write['ontgt_atks']  		= mh_write['attacks'] - mh_write['offtgt']
+		#mh_write['ontgt_heal']  		= mh_write['heals'] - mh_write['offtgt']
+		# mh_df['on_heal_raw'] = mh_df['heal_timing'].map(lambda     x: len(x))
+		#mh_write['hps'] 				= mh_write['ontgt_atks']/mh_write['on_target_raw']
+
 		# calc overall stats
 		mh_write['surv'] = 1-mh_write['deaths']/mh_write['targets'] 
 		mh_write['surv'] = mh_write['surv'].map("{:.0%}".format)
@@ -1667,6 +1684,7 @@ def main(con):
 		if data_aggr == 'avg/match':
 			mh_gb.configure_columns(['deaths','targets']+count_data+dmg_data,type='customNumericFormat',precision=1)
 			mh_gb.configure_columns(record_data,type='customNumericFormat',precision=2)
+		mh_gb.configure_columns('aps',type='customNumericFormat',precision=2)
 
 		st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><br>""".format(table_title),True)
 		mh_ag = AgGrid(
@@ -1685,7 +1703,50 @@ def main(con):
 	
 	# START PERFORMANCE
 	elif ss.view['match'] == 'performance':
-		pass
+		perf_df = hero_df.copy()
+
+		# offence
+		# split by 
+		#	participation: otp and aps
+		#	efficacy: 'timing': median, mean, variance
+		# adjusted by:
+		#	targets, deaths
+
+		perf_df['adj_target'] = perf_df['targets'].map(lambda x: 1+min(x,10)*0.05)
+		perf_df['adj_death']  = perf_df['deaths'].map(lambda x: 1+min(x,10)*0.05)
+
+
+		perf_df['tmed_score'] = perf_df['med atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.5**2)))
+		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
+		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 0.8)/(math.sqrt(0.2))))/2)
+		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.2)/(math.sqrt(0.4))))  /2)
+		weight = [0.5,0.25,0.25]
+		# timing as level of efficacy
+		perf_df['timing_score'] = ((weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
+
+		perf_df['otp_float_raw']  	= perf_df['on_target_raw'] / perf_df['max_targets']
+		perf_df['otp_score'] = perf_df['otp_float_raw'].map(lambda x: (1+math.sin(math.pi*(x-0.5)))/2)
+		perf_df['atk_score'] = perf_df['aps'].map(lambda x: (1 + math.erf((x - 1.6)/(math.sqrt(0.1))))/2)
+		# participation
+		weight = [0.67,0.33,0]
+		perf_df['part_score'] = ((weight[0]*perf_df['otp_score'] + weight[1]*perf_df['atk_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
+
+		weight = [0.5,0.5,0]
+		# perf_df['offence_score'] = ow[0]*perf_df['otp_score'] + ow[1]*perf_df['timing_score'] + ow[2]*perf_df['atk_score'] - (death_penalty/100)*perf_df['deaths'] 
+		perf_df['offence_score'] = (weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])#*(perf_df['deaths'])
+
+		perf_df = perf_df[['offence_score','targets','otp_float_raw','med atk','avg atk','var atk','aps']]
+
+		st.write(perf_df)
+
+
+		# performance stats
+		# offence
+		# otp, tmean, tmedian, 
+		# per stat: (mid - manual or max/min), (curve - gaussian, linear, reverse linear, other?), (size - gaus=3,linear=min), weighting
+		# defence
+		# death, tmean jaunt, tmean hibe,
+		# support
 
 	# END PERFORMANCE
 
