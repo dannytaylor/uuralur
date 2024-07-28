@@ -177,26 +177,12 @@ def set_width(width: str):
 
 def css_rules():
 
-	if st.session_state.mobile:
-		maxwidth = "100%"
-		minwidth = "100%"
-	else:
-		maxwidth = "1280px"
-		minwidth = maxwidth
-
 	css_str = f"""
 		<style>
 		@import url('https://fonts.googleapis.com/css2?family=Radio+Canada+Big'); 
 
 		html, body, [class*="css"] {{
 		    font-family: "Radio Canada Big", sans-serif;
-		}}
-
-		.appview-container .main .block-container{{ 
-			max-width: {maxwidth}; 
-			min-width: {minwidth};
-			min-height: {minwidth};
-			padding: 3rem 1rem 1rem;
 		}}
 
 		ag-row-level-0 

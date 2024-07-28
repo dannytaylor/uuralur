@@ -66,7 +66,7 @@ def main(con):
 	actions_df['team'] = actions_df['actor'].map(hero_team_map)
 
 	# MATCH HEADSER
-	c1,c2 = st.columns([8,2])
+	c1,c2 = st.columns([3,1])
 
 	sid_date = "20" + ss.sid[0:2] + "/" + ss.sid[2:4] + "/" + ss.sid[4:6]
 	# header_str = sid_date +" > Match "+str(ss.mid) + " (" + ss.map +")"
@@ -81,16 +81,16 @@ def main(con):
 	header_str += " - ".join(sid_str)
 
 	with c1:
-		st.markdown("""<p class="fontheader"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
+		st.markdown("""<p class="font20"" style="display:inline; color:#4d4d4d";>{}</p>""".format(header_str),True)
 		
 		st.write(' ') #spacing hack
 		# st.write(' ')
 	with c2:
 		score_str = """<p style="text-align: left;">"""
-		if not st.session_state.mobile: score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format('score: ')
-		score_str += """<span class="fontheader" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
-		score_str += """<span class="fontheader" style="color:#4d4d4d";>{}</span>""".format(' - ')
-		score_str += """<span class="fontheader" style="color:tomato";>{}</span>""".format(str(m_score[1]))
+		if not st.session_state.mobile: score_str += """<span class="font20" style="color:#4d4d4d";>{}</span>""".format('score: ')
+		score_str += """<span class="font20" style="color:dodgerblue";>{}</span>""".format(str(m_score[0]))
+		score_str += """<span class="font20" style="color:#4d4d4d";>{}</span>""".format(' - ')
+		score_str += """<span class="font20" style="color:tomato";>{}</span>""".format(str(m_score[1]))
 		score_str += """</p>"""
 		st.markdown(score_str,True)
 
@@ -105,7 +105,7 @@ def main(con):
 
 		hdf = hero_df.copy()
 
-		c1,c2,c3,c4,c5,c7,c8 = st.columns([1,1,1,1,1,3,2])
+		c1,c2,c3,c7 = st.columns([1,1,1,3])
 
 		# summary header
 		for t in [0,1]:
@@ -117,9 +117,9 @@ def main(con):
 			c1.markdown(teamstring,True)
 			c2.metric("Score",m_score[t],m_score[t]-m_score[t2], label_visibility=vis)
 			c3.metric("Spikes Called",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
-			c4.metric("Attacks Thrown",m_attacks[t],m_attacks[t]-m_attacks[t2], label_visibility=vis)
+			# c4.metric("Attacks Thrown",m_attacks[t],m_attacks[t]-m_attacks[t2], label_visibility=vis)
 			# c6.metric("Avg Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse')
-			c5.metric("Dmg Taken",millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse", label_visibility=vis)
+			# c5.metric("Dmg Taken",millify(t_dmg[t],precision=1),millify((t_dmg[t]-t_dmg[t2]), precision=1),delta_color="inverse", label_visibility=vis)
 
 
 		score_fig = go.Figure()
@@ -177,7 +177,7 @@ def main(con):
 			bargap=0.50,
 		)
 		c7.plotly_chart(score_fig,use_container_width=True,config={'displayModeBar': False})
-		c8.plotly_chart(spike_fig,use_container_width=True,config={'displayModeBar': False})
+		# c8.plotly_chart(spike_fig,use_container_width=True,config={'displayModeBar': False})
 
 
 		hdf['atk tm'] = hdf['avg atk'].map("{:0.2f}".format)
@@ -214,6 +214,7 @@ def main(con):
 
 		sum_gb.configure_columns(['at'],width=28,cellRenderer=render.icon,headerTooltip="archetype")
 		sum_gb.configure_columns(['team','support']+opacities,hide=True)
+		sum_gb.configure_columns(['surv','otp','onheal','atks','heals'],hide=True)
 
 		sum_ag = AgGrid(
 			hdf,
@@ -262,6 +263,9 @@ def main(con):
 		sup_df['late'] 		  = n_late
 		sup_df['cms'] 		  = n_cms
 		sup_df['topups'] 	  = n_topups
+
+
+		sup_df['misfires'] 	  = sup_df['phase hits'] + sup_df['late'] + sup_df['phase hits']
 
 		sup_timing_fig = go.Figure()
 
@@ -369,13 +373,14 @@ def main(con):
 					)
 			))
 
-		perf_df = sup_df.copy()
+		# perf_df = sup_df.copy()
+		sup_table = st.container()
 
 		if sup_df.empty:
 			st.write('no support heroes determined')
 		else:
-			c1,c2,c3,c4 = st.columns(4)
-			row_height = 440
+			c1,c2 = st.columns(2)
+			row_height = 360
 			if ss.mobile: 
 				row_height = 240
 			h_margins = dict(t=32, l=16, r=16, b=0)
@@ -403,6 +408,8 @@ def main(con):
 				st.plotly_chart(sup_heal_fig,use_container_width=True, config={'displayModeBar': False})
 
 
+			c3,c4 = st.columns(2)
+
 			with c3:
 				sup_eff_fig.update_layout(
 					title_text='hit efficacy (rough est.)',
@@ -426,7 +433,7 @@ def main(con):
 				st.plotly_chart(sup_extras_fig,use_container_width=True, config={'displayModeBar': False})
 
 
-			sup_write = sup_df[['hero','at','set2','team','support','targets','on heal%','on heal','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals","topups"]+opacities].copy()
+			sup_write = sup_df[['hero','at','set2','team','support','targets','on heal%','on heal','avg heal','med heal','var heal','alpha_heals',"phase hits","fat fingers","late","cms","heals","topups","misfires"]+opacities].copy()
 			sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"med","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs","topups":"top ups","on heal%":"on %"})
 			# sup_write = sup_write.rename(columns={"targets":"tgtd","avg heal":"avg","med heal":"median","var heal":"variance","alpha_heals":"alpha","fat fingers":"ffs"})
 
@@ -453,19 +460,23 @@ def main(con):
 			sup_gb.configure_columns(['top ups'],headerTooltip="# heals not associated with a spike")
 			sup_gb.configure_columns(['heals'],headerTooltip="total healing powers cast")
 			sup_gb.configure_columns(['cms'],headerTooltip="clear mind or equivalent powers")
+			sup_gb.configure_columns(['misfires'],headerTooltip="heal cast either late on a dead or phased target, or a fat finger heal")
+
+			sup_gb.configure_columns(['phase hits','avg','on heal','at','tgtd','late','top ups'],hide=True)
 
 			sup_gb.configure_grid_options(headerHeight=64,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 			
-			sup_ag = AgGrid(
-				sup_write,
-				allow_unsafe_jscode=True,
-				custom_css=render.grid_css,
-				gridOptions=sup_gb.build(),
-				fit_columns_on_grid_load= not ss.mobile,
-				height = len(sup_df)*48+100,
-				theme=table_theme,
-				enable_enterprise_modules=False
-			)
+			with sup_table:
+				sup_ag = AgGrid(
+					sup_write,
+					allow_unsafe_jscode=True,
+					custom_css=render.grid_css,
+					gridOptions=sup_gb.build(),
+					fit_columns_on_grid_load= not ss.mobile,
+					height = len(sup_df)*48+100,
+					theme=table_theme,
+					enable_enterprise_modules=False
+				)
 
 		# SUPPORT PERFORMANCE
 		# perf_df['ohp_raw'] = perf_df['heal_timing'].map(lambda x: sum(x))/perf_df['on heal divisor']
@@ -478,9 +489,9 @@ def main(con):
 
 	# START DEFENCE
 	if ss.view['match'] == 'defence':
-		c1,c2,c3,c4,c5 = st.columns([1,1,1,1,6])
+		c1,c2,c3,c4 = st.columns([1,1,1,1])
 
-		hp_loss_st = c5.empty()
+
 
 
 		def flag_heals(df):
@@ -593,6 +604,8 @@ def main(con):
 		def_gb.configure_columns(['avg phase'],headerTooltip="average time to activate phase power measured from spike start. Number of applicable spikes in brackets")
 		def_gb.configure_columns(['avg jaunt'],headerTooltip="average time to activate jaunt power measured from spike start. Number of applicable spikes in brackets")
 		def_gb.configure_columns(['heals taken'],headerTooltip="number of heal powers received")
+
+		def_gb.configure_columns(['deaths','surv','dmg /death','targets'],hide=True)
 
 
 		def_gb.configure_grid_options(headerHeight=64,tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
@@ -714,13 +727,13 @@ def main(con):
 			green_range = [0,20]
 		hpl_fig.update_xaxes(title_text="time (m)", row=1, col=2)
 		hpl_fig.update_yaxes(visible=True, fixedrange=True,range=green_range, showgrid=True, title='greens used',row=1, col=2)
-		hp_loss_st.plotly_chart(hpl_fig, use_container_width=True,config={'displayModeBar': False})
+		st.plotly_chart(hpl_fig, use_container_width=True,config={'displayModeBar': False})
 	# END DEFENCE 
 
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
-		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
+		c1,c2,c3,c4,c5,c6 = st.columns([1,1,1,1,1,1])
 
 		# split to only heroes with attack chains
 		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
@@ -746,8 +759,7 @@ def main(con):
 
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
-		c1,c2 = st.columns([2,1])
-		with c1:
+		with st.container():
 			# box plot for attack timing
 			at_fig = make_subplots(rows=1,cols=2,column_widths=[0.7, 0.3],horizontal_spacing=0.05, shared_yaxes=True)
 			total_timing = {0:[],1:[]}
@@ -844,7 +856,7 @@ def main(con):
 				hero_sel = []
 			# hero_sel = hero_df.index
 
-		with c2:
+		with st.container():
 
 			# ATTACK CHAINS
 			# hero_sel_st = st.sidebar.expander("⚔️ atk chain heroes",expanded=False)
@@ -925,6 +937,9 @@ def main(con):
 			else:
 				at_df.loc[at_df['id'] == 'Total', 'label'] = ''
 
+
+
+			
 			ac_fig  = go.Figure(go.Sunburst(
 				ids=at_df['id'],
 				labels=at_df['label'],
@@ -939,8 +954,11 @@ def main(con):
 				margin = dict(t=0, l=0, r=0, b=0),
 				height=300 if not ss.mobile else 240,
 				)
-			st.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
-			st.caption('attack chains (select hero to view individually)')
+
+			c1,c2 = st.columns(2)
+			with c2:
+				c2.plotly_chart(ac_fig,use_container_width=True,config={'displayModeBar': False})
+				c2.caption('attack chains (select hero to view individually)')
 
 			## debugging table
 			# at_df = at_df[['id','parent','count']]
@@ -963,18 +981,18 @@ def main(con):
 			at_gb.configure_columns('chain',headerName='attack chain',width=320)
 			# at_gb.configure_grid_options(headerHeight=0)
 
-
-			sl_ag = AgGrid(
-				at_write,
-				allow_unsafe_jscode=True,
-				custom_css=render.grid_css,
-				gridOptions=at_gb.build(),
-				# fit_columns_on_grid_load= not ss.mobile,
-				fit_columns_on_grid_load= False,
-				height = 636 if not ss.mobile else 320,
-				theme=table_theme,
-				enable_enterprise_modules=False
-			)
+			with c1:
+				sl_ag = AgGrid(
+					at_write,
+					allow_unsafe_jscode=True,
+					custom_css=render.grid_css,
+					gridOptions=at_gb.build(),
+					# fit_columns_on_grid_load= not ss.mobile,
+					fit_columns_on_grid_load= False,
+					height = 360 if not ss.mobile else 320,
+					theme=table_theme,
+					enable_enterprise_modules=False
+				)
 
 
 		# OFFENCE - SPIKE PERFORMANCE
@@ -1127,30 +1145,32 @@ def main(con):
 		
 		c1,c2,c3,c4,c6,c7 = st.columns([1,1,1,1,1,5])
 
-		for t in [0,1]:
-			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
-			c1.markdown(teamstring,True)
+		# for t in [0,1]:
+		# 	teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
+		# 	c1.markdown(teamstring,True)
 	
 
-		for t in [0,1]:
-			t2 = abs(t-1)
-			vis = "visible"
-			if t2 == 0:
-				vis  = 'hidden'
+		# for t in [0,1]:
+		# 	t2 = abs(t-1)
+		# 	vis = "visible"
+		# 	if t2 == 0:
+		# 		vis  = 'hidden'
 
-			c2.metric("Spikes",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
-			c3.metric("Mean Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse', label_visibility=vis)
-			c4.metric("Median Timing",round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse', label_visibility=vis)
+		# 	c2.metric("Spikes",m_spikes[t],m_spikes[t]-m_spikes[t2], label_visibility=vis)
+		# 	c3.metric("Mean Timing",round(ht_mean[t],2),round(ht_mean[t]-ht_mean[t2],3),delta_color='inverse', label_visibility=vis)
+		# 	c4.metric("Median Timing",round(ht_med[t],2),round(ht_med[t]-ht_med[t2],3),delta_color='inverse', label_visibility=vis)
 
-			a1 = round(t_spikes[t]['attacks'].mean(),2)
-			a0 = round(t_spikes[t2]['attacks'].mean(),2)
-			# c5.metric("Avg Attacks",a0,round(a0-a1,2), label_visibility=vis)
-			a1 = round(t_spikes[t]['attackers'].mean(),2)
-			a0 = round(t_spikes[t2]['attackers'].mean(),2)
-			c6.metric("Avg Attackers",a0,round(a0-a1,2), label_visibility=vis)
+		# 	a1 = round(t_spikes[t]['attacks'].mean(),2)
+		# 	a0 = round(t_spikes[t2]['attacks'].mean(),2)
+		# 	# c5.metric("Avg Attacks",a0,round(a0-a1,2), label_visibility=vis)
+		# 	a1 = round(t_spikes[t]['attackers'].mean(),2)
+		# 	a0 = round(t_spikes[t2]['attackers'].mean(),2)
+		# 	c6.metric("Avg Attackers",a0,round(a0-a1,2), label_visibility=vis)
 
 		# graph spikes and kills for summary
-		with c7:
+
+		c1,c2 = st.columns(2)
+		with c1:
 			fig = go.Figure()
 			# spike traces
 			lineoffset=50
@@ -1206,11 +1226,8 @@ def main(con):
 			)
 			if not ss.mobile: st.plotly_chart(fig,use_container_width=True,config={'displayModeBar': False})
 
-
-		c1,c2 = st.columns(2)
-
 		# left side
-		with c1:
+		with c2:
 			# st.subheader('spike list')
 			colourmap = {0:'DodgerBlue',1:'Tomato'}
 
@@ -1300,31 +1317,31 @@ def main(con):
 			sf_gb.configure_grid_options(tooltipInteraction=True, enableBrowserTooltips=True,tooltipShowDelay=0,tooltipHideDelay=200)
 
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('spike list'),True)
-			st.caption("spike list")
-			response = AgGrid(
-				sf_write,
-				allow_unsafe_jscode=True,
-				gridOptions=sf_gb.build(),
-				# data_return_mode="FILTERED_AND_SORTED",
-				update_mode=GridUpdateMode.SELECTION_CHANGED,
-				custom_css=render.grid_css,
-				fit_columns_on_grid_load= not ss.mobile,
-				height = 600 if not ss.mobile else 280,
-				theme=table_theme,
-				enable_enterprise_modules=False
-			)
+		st.caption("spike list")
+		response = AgGrid(
+			sf_write,
+			allow_unsafe_jscode=True,
+			gridOptions=sf_gb.build(),
+			# data_return_mode="FILTERED_AND_SORTED",
+			update_mode=GridUpdateMode.SELECTION_CHANGED,
+			custom_css=render.grid_css,
+			fit_columns_on_grid_load= not ss.mobile,
+			height = 360 if not ss.mobile else 280,
+			theme=table_theme,
+			enable_enterprise_modules=False
+		)
 
-			# selected row on grid click
-			row = response['selected_rows']
-			if row:
-				# spike ID == selected
-				spid = row[0]['#']
-			else:
-				spid = 1
+		# selected row on grid click
+		row = response['selected_rows']
+		if row:
+			# spike ID == selected
+			spid = row[0]['#']
+		else:
+			spid = 1
 
 		# right side
 		# spike log
-		with c2:
+		with st.container():
 			# st.subheader('spike log')
 
 			# grab actions with spike id
@@ -1484,7 +1501,6 @@ def main(con):
 			sp_fig.update_yaxes(visible=True, fixedrange=True, showgrid=True, title='hp',range=[0,hp_y_max],row=1, col=1)
 			sp_fig.update_yaxes(visible=False, fixedrange=True, showgrid=False,range=[0,2],title='hit/cast',row=2, col=1)
 
-			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
 
 			sl_gb = GridOptionsBuilder.from_dataframe(sl_write)
 			sl_gb.configure_default_column(filterable=False,suppressMovable=True,width=48)
@@ -1510,129 +1526,129 @@ def main(con):
 				custom_css=render.grid_css,
 				gridOptions=sl_gb.build(),
 				fit_columns_on_grid_load= not ss.mobile,
-				height = 600,
+				height = 360,
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
+			st.plotly_chart(sp_fig, use_container_width=True,config={'displayModeBar': False})
 	# END SPIKES
 
 
 	# START LOGS
 	elif ss.view['match'] == 'logs':
 		
-		c1,c3 = st.columns([4,6])
 		a_df = actions_df.copy()
 		a_df['hit'] = a_df['hit_time'] - a_df['time_ms']
 		a_df['hit'] = a_df['hit']/1000
 
-		with c1:
-			# st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
-			with st.expander('🔍 filters',expanded=False):
-				with st.form('log filters'):
-					# list filters
-					# time bounds
-					t_start,t_end = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=(0.0,10.0), step=0.25, format=None)
-					# t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
-					t_start = min(t_start,t_end)*1000*60
-					t_end = max(t_start,t_end)*1000*60
+		
+		# st.markdown("""<p class="font20"" style="color:#4d4d4d";>{}</p>""".format('filters'),True)
+		with st.expander('🔍 filters',expanded=False):
+			with st.form('log filters'):
+				# list filters
+				# time bounds
+				t_start,t_end = st.slider('timing bounds (m)', min_value=0.0, max_value=10.0, value=(0.0,10.0), step=0.25, format=None)
+				# t_end = st.slider('', min_value=0.0, max_value=10.0, value=10.0, step=0.25, format=None)
+				t_start = min(t_start,t_end)*1000*60
+				t_end = max(t_start,t_end)*1000*60
 
-					# action toggles
-					a_filtertoggle = st.checkbox('show self toggles',value=False)
-					a_spikes = st.checkbox('show spike actions',value=True)
-					a_nonspikes = st.checkbox('show non-spike actions',value=True)
+				# action toggles
+				a_filtertoggle = st.checkbox('show self toggles',value=False)
+				a_spikes = st.checkbox('show spike actions',value=True)
+				a_nonspikes = st.checkbox('show non-spike actions',value=True)
 
-					a_actor_team = st.radio('caster team',['all','blu','red'],horizontal=True)
-					a_target_team = st.radio('target team',['all','blu','red'],horizontal=True)
+				a_actor_team = st.radio('caster team',['all','blu','red'],horizontal=True)
+				a_target_team = st.radio('target team',['all','blu','red'],horizontal=True)
 
-					st.form_submit_button('apply filters')
+				st.form_submit_button('apply filters')
 
-			with st.expander('🧮 counts',expanded=True):
-				counts_heroes = st.multiselect('heroes',hero_list)
-				power_list = a_df['action'].unique().tolist()
-				power_list.sort()
-				counts_powers = st.multiselect('powers',power_list)
+		# apply filters
+		if not a_filtertoggle:
+			a_df = a_df.loc[~((a_df['action_type'] == 'Toggle')&(a_df['action_target_type'] == 'Self'))]
+		if not a_spikes:
+			a_df = a_df.loc[(~a_df['spike_id'].notnull())]
+		if not a_nonspikes:
+			a_df = a_df.loc[(a_df['spike_id'] > 0)]
 
-				col1,col2,col3,col4 = [],[],[],[] # hero icon power count
-				for h in counts_heroes:
-					for p in counts_powers:
-						count = len(a_df[(a_df['actor']==h)&(a_df['action']==p)])
-						if count>0:
-							col1.append(h)
-							image_path = 'powers/' + a_df.loc[a_df['action']==p,'icon'].iloc[0]
-							image = util.image_formatter(image_path)
-							col2.append(image)
-							col3.append(p)
-							col4.append(count)
-				count_df = data = pd.DataFrame({'hero': col1, 'image': col2,'power':col3,'#':col4})
-				if len(count_df)>0:
-					count_gb = GridOptionsBuilder.from_dataframe(count_df)
-					count_gb.configure_columns('image',cellRenderer=render.icon)
-					count_ag = AgGrid(
-						count_df,
-						allow_unsafe_jscode=True,
-						custom_css=render.grid_css,
-						fit_columns_on_grid_load= not ss.mobile,
-						gridOptions=count_gb.build(),
-						theme=table_theme,
-						height = len(count_df)*48+92,
-						enable_enterprise_modules=False
-					)
+		if not a_nonspikes:
+			a_df = a_df.loc[(a_df['spike_id'] > 0)]
+		a_df = a_df.loc[(a_df['time_ms'] >= t_start) & (a_df['time_ms'] <= t_end)]
 
-			# apply filters
-			if not a_filtertoggle:
-				a_df = a_df.loc[~((a_df['action_type'] == 'Toggle')&(a_df['action_target_type'] == 'Self'))]
-			if not a_spikes:
-				a_df = a_df.loc[(~a_df['spike_id'].notnull())]
-			if not a_nonspikes:
-				a_df = a_df.loc[(a_df['spike_id'] > 0)]
 
-			if not a_nonspikes:
-				a_df = a_df.loc[(a_df['spike_id'] > 0)]
-			a_df = a_df.loc[(a_df['time_ms'] >= t_start) & (a_df['time_ms'] <= t_end)]
 
-		with c3:
+		# icons
+		a_df['icon_path'] = 'powers/'+a_df['icon']
+		a_df['image'] = a_df['icon_path'].apply(util.image_formatter)
 
-			# icons
-			a_df['icon_path'] = 'powers/'+a_df['icon']
-			a_df['image'] = a_df['icon_path'].apply(util.image_formatter)
+		# team emojis
+		a_df['team'] = a_df['actor'].map(hero_team_map)
+		a_df['target_team'] = a_df['target'].map(hero_team_map)
 
-			# team emojis
-			a_df['team'] = a_df['actor'].map(hero_team_map)
-			a_df['target_team'] = a_df['target'].map(hero_team_map)
+		if a_actor_team == 'blu':
+			a_df = a_df[a_df['team'] == 0]
+		elif a_actor_team == 'red':
+			a_df = a_df[a_df['team'] == 1]
+		if a_target_team == 'blu':
+			a_df = a_df[a_df['target_team'] == 0]
+		elif a_actor_team == 'red':
+			a_df = a_df[a_df['target_team'] == 1]
 
-			if a_actor_team == 'blu':
-				a_df = a_df[a_df['team'] == 0]
-			elif a_actor_team == 'red':
-				a_df = a_df[a_df['team'] == 1]
-			if a_target_team == 'blu':
-				a_df = a_df[a_df['target_team'] == 0]
-			elif a_actor_team == 'red':
-				a_df = a_df[a_df['target_team'] == 1]
+		actions_write = a_df[['time','team','actor','image','action','target_team','target']]
+		actions_write = actions_write.rename(columns={"time":'cast'})
+		actions_write['target'] = actions_write['target'].fillna('')
 
-			actions_write = a_df[['time','team','actor','image','action','target_team','target']]
-			actions_write = actions_write.rename(columns={"time":'cast'})
-			actions_write['target'] = actions_write['target'].fillna('')
+		al_gb = GridOptionsBuilder.from_dataframe(actions_write)
+		al_gb.configure_default_column(width=84,suppressMovable=True)
+		al_gb.configure_columns(['actor','target','action'],width=84)
+		al_gb.configure_columns(['cast','image'],width=52)
+		al_gb.configure_columns(['team','target_team'],hide=True)
+		al_gb.configure_columns('image',cellRenderer=render.icon)
+		al_gb.configure_columns('actor',cellStyle=render.team_color)
+		al_gb.configure_columns('target',cellStyle=render.target_team_color)
+		al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
 
-			al_gb = GridOptionsBuilder.from_dataframe(actions_write)
-			al_gb.configure_default_column(width=84,suppressMovable=True)
-			al_gb.configure_columns(['actor','target','action'],width=84)
-			al_gb.configure_columns(['cast','image'],width=52)
-			al_gb.configure_columns(['team','target_team'],hide=True)
-			al_gb.configure_columns('image',cellRenderer=render.icon)
-			al_gb.configure_columns('actor',cellStyle=render.team_color)
-			al_gb.configure_columns('target',cellStyle=render.target_team_color)
-			al_gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
+		al_ag = AgGrid(
+			actions_write,
+			allow_unsafe_jscode=True,
+			custom_css=render.grid_css,
+			gridOptions=al_gb.build(),
+			fit_columns_on_grid_load= not ss.mobile,
+			height = 560,
+			theme=table_theme,
+			enable_enterprise_modules=False
+		)
 
-			al_ag = AgGrid(
-				actions_write,
-				allow_unsafe_jscode=True,
-				custom_css=render.grid_css,
-				gridOptions=al_gb.build(),
-				fit_columns_on_grid_load= not ss.mobile,
-				height = 1024,
-				theme=table_theme,
-				enable_enterprise_modules=False
-			)
+		with st.expander('🧮 counts',expanded=True):
+			counts_heroes = st.multiselect('heroes',hero_list)
+			power_list = a_df['action'].unique().tolist()
+			power_list.sort()
+			counts_powers = st.multiselect('powers',power_list)
+
+			col1,col2,col3,col4 = [],[],[],[] # hero icon power count
+			for h in counts_heroes:
+				for p in counts_powers:
+					count = len(a_df[(a_df['actor']==h)&(a_df['action']==p)])
+					if count>0:
+						col1.append(h)
+						image_path = 'powers/' + a_df.loc[a_df['action']==p,'icon'].iloc[0]
+						image = util.image_formatter(image_path)
+						col2.append(image)
+						col3.append(p)
+						col4.append(count)
+			count_df = data = pd.DataFrame({'hero': col1, 'image': col2,'power':col3,'#':col4})
+			if len(count_df)>0:
+				count_gb = GridOptionsBuilder.from_dataframe(count_df)
+				count_gb.configure_columns('image',cellRenderer=render.icon)
+				count_ag = AgGrid(
+					count_df,
+					allow_unsafe_jscode=True,
+					custom_css=render.grid_css,
+					fit_columns_on_grid_load= not ss.mobile,
+					gridOptions=count_gb.build(),
+					theme=table_theme,
+					height = len(count_df)*48+92,
+					enable_enterprise_modules=False
+				)
 	# END LOGS
 
 
@@ -1657,7 +1673,7 @@ def main(con):
 		# m_gb.configure_selection('single', pre_selected_rows=None)
 
 
-		c1,c2 = st.columns([4,6])
+		c1,c2 = st.columns(2)
 
 		with st.sidebar.expander('🔧 data table settings',expanded=False):
 			name_toggle    = st.radio('group by',['player name','hero name'],horizontal=True)
@@ -1703,7 +1719,7 @@ def main(con):
 
 		# st.write('data columns')
 		available_data = ['deaths','targets','surv','damage_taken','attacks','heals']
-		default_sel = ['deaths','targets','surv','otp','on heal%','damage_taken','attack median']
+		default_sel = ['deaths','targets','otp','on heal%','attack median']
 		target_data = ['otp','on heal%','on_target','on_heal']
 		timing_data = ['attack mean','attack median','attack variance','heal mean','heal median','heal variance','phase mean','phase median','jaunt mean','jaunt median']
 		count_data  = ['first_attacks','alpha_heals','phases','jaunts','greens','aps']

@@ -36,7 +36,7 @@ def main(con):
 	st.caption('player summaries')
 	
 	# c2.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p><p></p>""".format('overall stats'),True)
-	c1,c2,c3,c4,c5 = st.columns([2,1,1,1,2])
+	c1,c2,c3,c4 = st.columns([2,1,1,1])
 	# c6 , 1 
 	
 	pname_empty = c1.empty()
@@ -77,13 +77,7 @@ def main(con):
 	c42 = c3.empty()
 	c43 = c4.empty()
 
-	# at breakdown
-	pset_fig_empty = c5.empty()
-	path_options = ['archetype','set 1','set 2']
 
-	# pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
-	# if not pset_path:
-	pset_path = path_options		
 
 	# map pie
 	# c6.write('')
@@ -92,17 +86,18 @@ def main(con):
 
 	c1.markdown("""<p><br></p>""",True) #pfp spacer
 	pfp = c1.empty()
-	match_linker = c5.empty() # c6.
 
-	c1,c0,c2,c00,c3 = st.columns([2,0.1,3.5,0.1,2.3])
+
 
 	player_sel = None
 	hero_sel = None
-	with c1:
 
-		# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp players'),True)
-		st.caption("@players")
-			
+	st.caption("@players")
+	
+
+	c1,c2 = st.columns(2)
+
+	with c1:
 		hero_ag = AgGrid(
 			hero_write,
 			allow_unsafe_jscode=True,
@@ -110,16 +105,27 @@ def main(con):
 			gridOptions=hero_gb.build(),
 			update_mode='SELECTION_CHANGED',
 			fit_columns_on_grid_load= not ss.mobile,
-			height = table_height,
+			height = 360,
 			theme=table_theme,
 			enable_enterprise_modules=False
 		)
 
-		row = hero_ag['selected_rows']
-		if row:
-			player_sel = row[0]['player']
+	# at breakdown
+	pset_fig_empty = c2.empty()
+	path_options = ['archetype','set 1','set 2']
 
-	with c2:
+	match_linker = c2.empty() # c6.
+
+	# pset_path = c5.multiselect('sunburst chart order',path_options,default=path_options,help='defaults to AT>set1>set2 if none selected. "set 1" is the blast set for both corruptors and defenders')
+	# if not pset_path:
+	pset_path = path_options		
+
+	c3,c4 = st.columns([3,2])
+	row = hero_ag['selected_rows']
+	if row:
+		player_sel = row[0]['player']
+
+	with c3:
 		if player_sel:
 			# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp heroes'),True)
 			st.caption("heroes")
@@ -168,7 +174,7 @@ def main(con):
 		c3.markdown("""<div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div>""",True)
 		c3.markdown("""<div style="margin:auto;width:50%;text-align:center;display:inline;color:#999";><p class="font20"" >{}</p></div>""".format('select a player to display filtered matches.'),True)
 
-	with c3:
+	with c4:
 		matches = ss.matches.copy()
 		if player_sel:
 			# st.markdown("""<p class="font20"" >{}</p>""".format('&nbsp matches (YYMMDD)'),True)
