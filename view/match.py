@@ -1024,8 +1024,7 @@ def main(con):
 				subset= ['otp_pct_raw'], cmap='BuGn',vmin=(0.0),vmax=100.0).text_gradient(
 				subset= ['aps'], cmap='BuGn',vmin=(1.0),vmax=2.0).format(precision=2).format(precision=0,subset= ['otp_pct_raw'],)
 
-		with st.container():
-			st.caption("Spike Performance")
+		with st.expander("Spike Performance", expanded=False):
 			c1,c2 = st.columns(2)
 			c1.dataframe(
 				perf_df_write,
