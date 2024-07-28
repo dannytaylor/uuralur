@@ -53,6 +53,7 @@ namefilter  = {
 	'Grave Knight',
 	'Spec Ops',
 	'Force Field Generator',
+	'Barrier Reef',
 }
 
 # ignore NPCs with these costumes
