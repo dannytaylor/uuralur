@@ -7,6 +7,7 @@ import pandas as pd
 import tools.util as util
 import tools.render as render
 import data.pset_icons as pset_icons
+import matplotlib
 from tools.init_match import init_match
 from millify import millify
 
@@ -368,7 +369,7 @@ def main(con):
 					)
 			))
 
-
+		perf_df = sup_df.copy()
 
 		if sup_df.empty:
 			st.write('no support heroes determined')
@@ -465,6 +466,13 @@ def main(con):
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
+
+		# SUPPORT PERFORMANCE
+		# perf_df['ohp_raw'] = perf_df['heal_timing'].map(lambda x: sum(x))/perf_df['on heal divisor']
+		# perf_df['cm_score'] = perf_df['cms'].map(lambda x: min(x,40)/40)
+		# perf_df['upkeep_score'] = perf_df['cm_score'] + extras + topups
+		# perf_df['spike_score']  = (1-(1+erf((perf_df['spike_score']-2.5)/math.sqrt(0.4))/2)) + perf_df['ohp_raw'] + efficacy
+
 	# END SUPPORT
 
 
@@ -712,7 +720,7 @@ def main(con):
 
 	# START OFFENCE
 	if ss.view['match'] == 'offence':
-		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,2])
+		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,3])
 
 		# split to only heroes with attack chains
 		hdf = hero_df[(hero_df['attack_chains'] != "{}")].copy()
@@ -735,11 +743,10 @@ def main(con):
 			c6.metric("Avg On Tgt",round(ontgt[t],1),round(ontgt[t]-ontgt[t2],2), label_visibility=vis)
 
 
-		with c7:
-			hero_sel_st = st.sidebar.expander("⚔️ atk chain heroes",expanded=False)
+
 			# st.markdown("""<p class="font20"" style="display:inline;color:#4d4d4d";>{}</p>""".format('attack chains'),True)
 
-		c1,c2 = st.columns([2.5,1])
+		c1,c2 = st.columns([2,1])
 		with c1:
 			# box plot for attack timing
 			at_fig = make_subplots(rows=1,cols=2,column_widths=[0.7, 0.3],horizontal_spacing=0.05, shared_yaxes=True)
@@ -802,7 +809,7 @@ def main(con):
 			of_gb.configure_columns(['on tgt','atks','offtgt atk','first','tgtd'],filterable=False,type='customNumericFormat',precision=0)
 			of_gb.configure_columns('hero',width=60,pinned='left')
 			of_gb.configure_columns('hero',cellStyle=render.team_color)
-			of_gb.configure_columns(['deaths','team','var']+opacities,hide=True)
+			of_gb.configure_columns(['deaths','team','var','avg']+opacities,hide=True)
 
 			of_gb.configure_columns(['tgtd'],cellStyle=render.targets_bg)
 			of_gb.configure_columns(['otp'],cellStyle=render.otp_bg,headerTooltip="on target percentage (adjusted)")
@@ -840,7 +847,9 @@ def main(con):
 		with c2:
 
 			# ATTACK CHAINS
-			hero_sel = hero_sel_st.multiselect('heroes',hero_df.index,default=hero_sel,help='You can also click/ctrl-click from the table on the right to select heroes.')
+			# hero_sel_st = st.sidebar.expander("⚔️ atk chain heroes",expanded=False)
+			# hero_sel = hero_sel_st.multiselect('heroes',hero_df.index,default=hero_sel,help='You can also click/ctrl-click from the table on the right to select heroes.')
+			hero_sel = hero_sel
 			# default to all heroes if non selected
 			ignore_missed = False
 			if hero_sel == []:
@@ -950,8 +959,8 @@ def main(con):
 			at_gb = GridOptionsBuilder.from_dataframe(at_write)
 			at_gb.configure_default_column(filterable=False,suppressMovable=True)
 			at_gb.configure_columns('icons',cellRenderer=render.icon,width=192,hide=True)
-			at_gb.configure_columns('#',width=32,type='customNumericFormat',precision=0)
-			at_gb.configure_columns('chain',width=256)
+			at_gb.configure_columns('#',width=36,type='customNumericFormat',precision=0)
+			at_gb.configure_columns('chain',headerName='attack chain',width=320)
 			# at_gb.configure_grid_options(headerHeight=0)
 
 
@@ -966,13 +975,158 @@ def main(con):
 				theme=table_theme,
 				enable_enterprise_modules=False
 			)
+
+
+		# OFFENCE - SPIKE PERFORMANCE
+		perf_df = hero_df.copy()
+
+		# offence
+		# split by 
+		#	participation: otp and aps
+		#	efficacy: 'timing': median, mean, variance
+		# adjusted by:
+		#	targets, deaths
+
+		# variable calculations for 
+		perf_df['adj_target'] = perf_df['targets'].map(lambda x: 1+min(x,20)*0.025)
+		perf_df['adj_death']  = perf_df['deaths'].map(lambda x: 1+min(x,10)*0.05)
+
+
+		perf_df['tmed_score'] = perf_df['med atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.5**2)))
+		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
+		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 0.8)/(math.sqrt(0.2))))/2)
+		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.2)/(math.sqrt(0.4))))  /2)
+		weight = [0.5,0.25,0.25]
+		# timing as level of efficacy
+		perf_df['timing_score'] = (weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])
+
+		perf_df['otp_float_raw']  	= perf_df['on_target_raw'] / perf_df['max_targets']
+		perf_df['otp_pct_raw']  	= perf_df['otp_float_raw']*100
+		# perf_df['otp_score'] = perf_df['otp_float_raw'].map(lambda x: 1.2*(1+math.erf((x-0.7)/math.sqrt(0.2)))/2)
+		perf_df['otp_score'] = perf_df['otp_float_raw']
+		perf_df['atk_score'] = perf_df['aps'].map(lambda x: (1 + math.erf((x - 1.6)/(math.sqrt(0.1))))/2)
+		# participation
+		weight = [0.75,0.25,0]
+		perf_df['part_score'] = (weight[0]*perf_df['otp_score'] + weight[1]*perf_df['atk_score'])
+
+		weight = [0.6,0.4,0]
+		# perf_df['offence_score'] = ow[0]*perf_df['otp_score'] + ow[1]*perf_df['timing_score'] + ow[2]*perf_df['atk_score'] - (death_penalty/100)*perf_df['deaths'] 
+		perf_df['offence_score'] = 100*((weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
+
+		perf_df['   ⚪'] = perf_df['team'].map(lambda x: '   🔵' if x == 0 else '   🔴')
+
+		perf_df = perf_df[(perf_df['otp_float_raw'] > 0)]
+		perf_df.index.names = ['hero']
+		perf_df_write = perf_df[['   ⚪','offence_score','targets','deaths','otp_pct_raw','med atk','avg atk','var atk','aps']]
+
+		height = (1+len(perf_df))*36
+		perf_df_write = perf_df_write.style.text_gradient(
+				subset= ['otp_pct_raw'], cmap='BuGn',vmin=(0.0),vmax=100.0).text_gradient(
+				subset= ['aps'], cmap='BuGn',vmin=(1.0),vmax=2.0).format(precision=2).format(precision=0,subset= ['otp_pct_raw'],)
+
+		with st.container():
+			st.caption("Spike Performance")
+			c1,c2 = st.columns(2)
+			c1.dataframe(
+				perf_df_write,
+				key="data",
+				height = height,
+				use_container_width=True,
+				# on_select="rerun",
+				# selection_mode=["single-row"],
+				column_config={
+					"offence_score": st.column_config.ProgressColumn(
+						label='spike performance', min_value=0, max_value=100, format = "%.0f",
+					),
+					"targets":None,
+					"deaths":None,
+					"otp_pct_raw": st.column_config.NumberColumn(
+						"OTP(%)",
+						help="Unadjusted on target %",
+						format="%0f",
+					),
+					"med atk": st.column_config.NumberColumn("M (s)",help='median spike timing',format="%.2f",),
+					"avg atk": st.column_config.NumberColumn("μ (s)",help='mean spike timing',format="%.2f",),
+					"var atk": st.column_config.NumberColumn("σ² (s)",help='spike timing variance',format="%.2f",),
+					"aps": st.column_config.NumberColumn("aps (#)",help='average attacks per spike',format="%.2f",),
+				},
+			)
+
+			score_fig = go.Figure()
+			score_fig.add_trace(go.Scatter(x=perf_df['timing_score'], y=perf_df['part_score'],
+	                    mode='markers+text',
+	                    text=perf_df['hero'],
+						marker_color=perf_df['offence_score'],
+						marker=dict(
+							size=16,
+							color=perf_df['offence_score'], #set color equal to a variable
+							colorscale='PuBuGn', # one of plotly colorscales
+	        				line_width=1,
+							),
+	    				textposition="top center",
+	    				))
+			margin = 24
+			score_fig.update_layout(
+				showlegend=False,
+				height=height,
+				margin={'t': margin,'b':margin,'l':margin,'r':margin},
+				yaxis={'title':'Participation/On Target','range':[min(perf_df['part_score']-0.1),1]},
+				xaxis={'title':'Timing/Effectiveness','visible':True,'range':[min(perf_df['timing_score']-0.1),1]},
+			)
+			c2.plotly_chart(score_fig,use_container_width=True)
+
+
+			stacked_fig = go.Figure()
+			stacked_fig.add_trace(go.Bar(name='OTP', x=perf_df.index, y=perf_df['otp_score']*0.6*0.75),)
+			stacked_fig.add_trace(go.Bar(name='APS', x=perf_df.index, y=perf_df['atk_score']*0.6*0.25),)
+			stacked_fig.add_trace(go.Bar(name='t-median', x=perf_df.index, y=perf_df['tmed_score']*0.4*0.50),)
+			stacked_fig.add_trace(go.Bar(name='t-mean', x=perf_df.index, y=perf_df['tavg_score']*0.4*0.25),)
+			stacked_fig.add_trace(go.Bar(name='t-variance', x=perf_df.index, y=perf_df['tvar_score']*0.4*0.25,marker_color='indianred '))
+
+			stacked_fig.update_layout(
+				barmode='stack',
+				showlegend=False,
+				height=280,
+				margin={'t': margin,'b':margin,'l':margin,'r':margin},
+				yaxis={'title':'Spike Performance (no target/death adj)','range':[0,1]},
+				bargap=0.60,
+			)
+
+			# st.plotly_chart(stacked_fig,use_container_width=True)
+
+		with st.expander('Notes', expanded=False):
+			st.write("This is a generalized example approach to showing offence performance on spikes put together to get away from a more only OTP-focused stat review, but any data can be used to put together your own rating system. If you need some stat that's not given in this app, I can add it in for your provided it's possible to extract from demos.")
+			st.write("This performance score is only for spike offence and doesn't account for things like: non-spike attacks, defensive play (aside from targets and deaths), weighting for different types of attacks (travel time, damage, etc.), score or skill differential between the teams, absolute # of spikes (e.g. on target 10/20 is the same as 40/80), etc.")
+			st.latex("""Effectiveness(timing) = A =
+				0.5 \\cdot exp\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
+				+ 0.25 \\left(exp\\left(-\\frac{\\left(\\ t_{mean}\\right)^{2}}{2\\cdot\\left(0.65\\right)^{2}}\\right)
+				+ 1-\\left(1+\\operatorname{erf}\\left(\\frac{t_{variance}-1.2}{\\sqrt{0.4}}\\right)\\right)/2\\right)
+				""")
+			st.write("Timing is used as an analogue for a heroe's spike effectiveness. A weighted average of median and mean timing (relative to 'ideal' zero), and variance (consistency) is used.")
+			st.write('Most stats have been rated along Gaussian functions for falloff at target values.')
+			st.latex("""Participation(OTP,APS) = B =
+				0.75 \\cdot OTP
+				+ 0.25 \\left(\\frac{\\left(1+\\operatorname{erf}\\left(\\frac{APS-1.6}{\\sqrt{0.1}}\\right)\\right)}{2}\\right)
+				""")
+			st.write('OTP (unadjusted) and mean Attacks Per Spike (APS) is used to measure spike participation. APS curve includes heavy falloff above 2.0.')
+			st.latex("""OffenceScore(A,B,targets,deaths) = 
+				\\left(\\frac{\\left(0.6 \\cdot A + 0.4 \\cdot B \\right)}{1+min(deaths,10)\\cdot 0.05}\\right)^{1+min(targets,20)*0.025}
+				""")
+			st.write("A slight penalty is applied for deaths (maxed at 10); this is an explicit penalty for impacting your team's offence, in addition to the implicit penalty for being taken out of the game for 15-30 seconds.")
+			st.write("A minor tolerance for being targeted adjusts the overall offence score. For example - maintaining an OTP of 70% while being targeted 20 times has a higher game impact than the same OTP while not being targeted. This adjustment falls off at higher scores.")
+			st.write("Specific constants used for this example were determined with the process of 'just vibing it out'.")
+	
+		st.write('')
+
+	# END PERFORMANCE
+
 	# END OFFENCE
 
 
 	# START SPIKES
 	elif ss.view['match'] == 'spikes':
 		
-		c1,c2,c3,c4,c5,c6,c7 = st.columns([1,1,1,1,1,1,4])
+		c1,c2,c3,c4,c6,c7 = st.columns([1,1,1,1,1,5])
 
 		for t in [0,1]:
 			teamstring = """<p class="font40" style="color:{};">{}</p>""".format(team_colour_map[t],team_name_map[t],)
@@ -991,7 +1145,7 @@ def main(con):
 
 			a1 = round(t_spikes[t]['attacks'].mean(),2)
 			a0 = round(t_spikes[t2]['attacks'].mean(),2)
-			c5.metric("Avg Attacks",a0,round(a0-a1,2), label_visibility=vis)
+			# c5.metric("Avg Attacks",a0,round(a0-a1,2), label_visibility=vis)
 			a1 = round(t_spikes[t]['attackers'].mean(),2)
 			a0 = round(t_spikes[t2]['attackers'].mean(),2)
 			c6.metric("Avg Attackers",a0,round(a0-a1,2), label_visibility=vis)
@@ -1700,54 +1854,5 @@ def main(con):
 			enable_enterprise_modules=False
 		)
 	# END SERIES
-	
-	# START PERFORMANCE
-	elif ss.view['match'] == 'performance':
-		perf_df = hero_df.copy()
-
-		# offence
-		# split by 
-		#	participation: otp and aps
-		#	efficacy: 'timing': median, mean, variance
-		# adjusted by:
-		#	targets, deaths
-
-		perf_df['adj_target'] = perf_df['targets'].map(lambda x: 1+min(x,10)*0.05)
-		perf_df['adj_death']  = perf_df['deaths'].map(lambda x: 1+min(x,10)*0.05)
-
-
-		perf_df['tmed_score'] = perf_df['med atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.5**2)))
-		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
-		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 0.8)/(math.sqrt(0.2))))/2)
-		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.2)/(math.sqrt(0.4))))  /2)
-		weight = [0.5,0.25,0.25]
-		# timing as level of efficacy
-		perf_df['timing_score'] = ((weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
-
-		perf_df['otp_float_raw']  	= perf_df['on_target_raw'] / perf_df['max_targets']
-		perf_df['otp_score'] = perf_df['otp_float_raw'].map(lambda x: (1+math.sin(math.pi*(x-0.5)))/2)
-		perf_df['atk_score'] = perf_df['aps'].map(lambda x: (1 + math.erf((x - 1.6)/(math.sqrt(0.1))))/2)
-		# participation
-		weight = [0.67,0.33,0]
-		perf_df['part_score'] = ((weight[0]*perf_df['otp_score'] + weight[1]*perf_df['atk_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
-
-		weight = [0.5,0.5,0]
-		# perf_df['offence_score'] = ow[0]*perf_df['otp_score'] + ow[1]*perf_df['timing_score'] + ow[2]*perf_df['atk_score'] - (death_penalty/100)*perf_df['deaths'] 
-		perf_df['offence_score'] = (weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])#*(perf_df['deaths'])
-
-		perf_df = perf_df[['offence_score','targets','otp_float_raw','med atk','avg atk','var atk','aps']]
-
-		st.write(perf_df)
-
-
-		# performance stats
-		# offence
-		# otp, tmean, tmedian, 
-		# per stat: (mid - manual or max/min), (curve - gaussian, linear, reverse linear, other?), (size - gaus=3,linear=min), weighting
-		# defence
-		# death, tmean jaunt, tmean hibe,
-		# support
-
-	# END PERFORMANCE
 
 # end match viewer
