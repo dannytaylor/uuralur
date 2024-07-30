@@ -1011,7 +1011,8 @@ def main(con):
 
 		weight = [0.60,0.40,0]
 		# perf_df['offence_score'] = ow[0]*perf_df['otp_score'] + ow[1]*perf_df['timing_score'] + ow[2]*perf_df['atk_score'] - (death_penalty/100)*perf_df['deaths'] 
-		perf_df['offence_score'] = 100*(((weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target']))
+		# perf_df['offence_score'] = 100*(((weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target']))
+		perf_df['offence_score'] = 100*((perf_df['part_score']**(2.0-perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target']))
 
 		perf_df['   ⚪'] = perf_df['team'].map(lambda x: '   🔵' if x == 0 else '   🔴')
 
@@ -1095,7 +1096,7 @@ def main(con):
 
 		with st.expander('Notes', expanded=False):
 			st.write("This is a generalized example approach to showing offence performance on spikes put together to get away from a more only OTP-focused stat review, but any data can be used to put together your own rating system. If you need some stat that's not given in this app, I can add it in for your provided it's possible to extract from demos.")
-			st.write("This performance score is only for spike offence and doesn't account for things like: non-spike attacks, defensive play (aside from targets and deaths), weighting for different types of attacks (travel time, damage, etc.), score or skill differential between the teams, absolute # of spikes (e.g. on target 10/20 is the same as 40/80), etc.")
+			st.write("This performance score is only for spike offence and doesn't account for things like: non-spike attacks, defensive play (aside from targets and deaths), weighting for different types of attacks (travel time, damage, intentionally leading attacks, etc.), score or skill differential between the teams, absolute # of spikes (e.g. on target 10/20 is the same as 40/80), etc.")
 			st.latex("""Effectiveness(timing) = A =
 				0.6 \\cdot \\operatorname{exp}\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
 				+ 0.2 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{mean}-1}{\\sqrt{0.25}}\\right)}{2}
@@ -1110,11 +1111,13 @@ def main(con):
 				""")
 			st.write('OTP (unadjusted) and mean Attacks Per Spike (APS) is used to measure spike participation. APS curve maxes out near 2.0.')
 			st.latex("""OffenceScore(A,B,targets,deaths) = 
-				\\left(\\frac{\\left(0.6 \\cdot A + 0.4 \\cdot B \\right)}{1+0.05 \\cdot deaths}\\right)^{\\frac{1}{1+0.025 \\cdot targets}}
+				\\left(\\frac{A^{2-B}}{1+0.05 \\cdot deaths}\\right)^{\\left(1+0.025 \\cdot targets\\right)^{-1}}
 				""")
+			# \\left(\\frac{\\left(0.6 \\cdot A + 0.4 \\cdot B \\right)}{1+0.05 \\cdot deaths}\\right)^{\\frac{1}{1+0.025 \\cdot targets}}
 			st.write("A slight penalty is applied for deaths (maxed at 10); this is an explicit penalty for impacting your team's offence, in addition to the implicit penalty for being taken out of the game for 15-30 seconds.")
-			st.write("A minor tolerance (but not a credit) for #targets adjusts the overall offence score. For example - maintaining an OTP of 70% while being targeted 20 times has a higher game impact than the same OTP while not being targeted. This adjustment falls off at higher scores.")
-			st.write("Specific constants used for this example were determined with the process of 'just vibing it out'.")
+			st.write("A slight tolerance curve for #targets adjusts the overall offence score. For example - maintaining an OTP of 70% while being targeted 20 times has a higher game impact than the same OTP while not being targeted. This adjustment falls off at higher scores.")
+			st.write("Specific constants used for this example were determined with the process of 'just vibing it out'. Again, this is just an example. Seems to work okay for the outcome I'm targeting, but may not work for other things very well.")
+			st.write("Calculation is not set in stone, so scores for any given match will change.")
 	
 		st.write('')
 
