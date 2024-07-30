@@ -995,7 +995,7 @@ def main(con):
 		perf_df['tmed_score'] = perf_df['med atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.5**2)))
 		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
 		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 1)/(math.sqrt(0.25))))  /2)
-		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.4)/(math.sqrt(0.6))))  /2)
+		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: (1-(1+ math.erf((x - 1.4)/(math.sqrt(0.6))))  /2) if x > 0.0 else 0.0)
 		weight = [0.6,0.2,0.2]
 		# timing as level of efficacy
 		perf_df['timing_score'] = (weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])
