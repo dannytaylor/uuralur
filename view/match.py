@@ -988,14 +988,14 @@ def main(con):
 		#	targets, deaths
 
 		# variable calculations for 
-		perf_df['adj_target'] = perf_df['targets'].map(lambda x: 1+min(x,20)*0.025)
-		perf_df['adj_death']  = perf_df['deaths'].map(lambda x: 1+min(x,10)*0.05)
+		perf_df['adj_target'] = perf_df['targets'].map(lambda x: 1+x*0.03)
+		perf_df['adj_death']  = perf_df['deaths'].map(lambda x: 1+x*0.05)
 
 
 		perf_df['tmed_score'] = perf_df['med atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.5**2)))
-		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
-		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 0.8)/(math.sqrt(0.2))))/2)
-		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.2)/(math.sqrt(0.4))))  /2)
+		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
+		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 0.9)/(math.sqrt(0.25))))  /2)
+		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: 1-(1+ math.erf((x - 1.3)/(math.sqrt(0.5))))  /2)
 		weight = [0.5,0.25,0.25]
 		# timing as level of efficacy
 		perf_df['timing_score'] = (weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])
@@ -1011,7 +1011,7 @@ def main(con):
 
 		weight = [0.6,0.4,0]
 		# perf_df['offence_score'] = ow[0]*perf_df['otp_score'] + ow[1]*perf_df['timing_score'] + ow[2]*perf_df['atk_score'] - (death_penalty/100)*perf_df['deaths'] 
-		perf_df['offence_score'] = 100*((weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target'])
+		perf_df['offence_score'] = 100*(((weight[0]*perf_df['part_score'] + weight[1]*perf_df['timing_score'])/perf_df['adj_death'])**(1/perf_df['adj_target']))
 
 		perf_df['   ⚪'] = perf_df['team'].map(lambda x: '   🔵' if x == 0 else '   🔴')
 
@@ -1097,19 +1097,20 @@ def main(con):
 			st.write("This is a generalized example approach to showing offence performance on spikes put together to get away from a more only OTP-focused stat review, but any data can be used to put together your own rating system. If you need some stat that's not given in this app, I can add it in for your provided it's possible to extract from demos.")
 			st.write("This performance score is only for spike offence and doesn't account for things like: non-spike attacks, defensive play (aside from targets and deaths), weighting for different types of attacks (travel time, damage, etc.), score or skill differential between the teams, absolute # of spikes (e.g. on target 10/20 is the same as 40/80), etc.")
 			st.latex("""Effectiveness(timing) = A =
-				0.5 \\cdot exp\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
-				+ 0.25 \\left(exp\\left(-\\frac{\\left(\\ t_{mean}\\right)^{2}}{2\\cdot\\left(0.65\\right)^{2}}\\right)
-				+ 1-\\left(1+\\operatorname{erf}\\left(\\frac{t_{variance}-1.2}{\\sqrt{0.4}}\\right)\\right)/2\\right)
+				0.5 \\cdot \\operatorname{exp}\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
+				+ 0.25 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{mean}-0.9}{\\sqrt{0.25}}\\right)}{2}
+				+ 0.25 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{variance}-1.3}{\\sqrt{0.5}}\\right)}{2}
 				""")
+		
 			st.write("Timing is used as an analogue for a heroe's spike effectiveness. A weighted average of median and mean timing (relative to 'ideal' zero), and variance (consistency) is used.")
-			st.write('Most stats have been rated along Gaussian functions for falloff at target values.')
+			st.write('Most stats have been rated along distribution curves for falloff at target values.')
 			st.latex("""Participation(OTP,APS) = B =
-				0.75 \\cdot OTP
+				0.75 \\cdot OTP1
 				+ 0.25 \\left(\\frac{\\left(1+\\operatorname{erf}\\left(\\frac{APS-1.6}{\\sqrt{0.1}}\\right)\\right)}{2}\\right)
 				""")
 			st.write('OTP (unadjusted) and mean Attacks Per Spike (APS) is used to measure spike participation. APS curve includes heavy falloff above 2.0.')
 			st.latex("""OffenceScore(A,B,targets,deaths) = 
-				\\left(\\frac{\\left(0.6 \\cdot A + 0.4 \\cdot B \\right)}{1+min(deaths,10)\\cdot 0.05}\\right)^{1+min(targets,20)*0.025}
+				\\left(\\frac{\\left(0.6 \\cdot A + 0.4 \\cdot B \\right)}{1+0.05 \\cdot deaths}\\right)^{\\frac{1}{1+0.03 \\cdot targets}}
 				""")
 			st.write("A slight penalty is applied for deaths (maxed at 10); this is an explicit penalty for impacting your team's offence, in addition to the implicit penalty for being taken out of the game for 15-30 seconds.")
 			st.write("A minor tolerance for being targeted adjusts the overall offence score. For example - maintaining an OTP of 70% while being targeted 20 times has a higher game impact than the same OTP while not being targeted. This adjustment falls off at higher scores.")
