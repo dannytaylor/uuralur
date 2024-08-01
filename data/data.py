@@ -54,6 +54,7 @@ namefilter  = {
 	'Spec Ops',
 	'Force Field Generator',
 	'Barrier Reef',
+	'Medic',
 }
 
 # ignore NPCs with these costumes

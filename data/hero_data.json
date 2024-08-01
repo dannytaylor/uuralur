@@ -10534,5 +10534,85 @@
             "Ice Blast",
             "Plant Manipulation"
         ]
+    },
+        "Arsenal Efectivo": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Blacker": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Dark Blast",
+            "Empathy"
+        ]
+    },
+    "Butterscotch Bill": {
+        "archetype": "blaster",
+        "sets": [
+            "Water Blast",
+            "Sonic Manipulation"
+        ]
+    },
+    "Crita's Killers": {
+        "archetype": "mastermind"
+    },
+    "Heal Please": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Heavy Fart?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Water Blast",
+            "Radiation Emission"
+        ]
+    },
+    "J A W S": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Water Blast"
+        ]
+    },
+    "Larrys got a gun": {
+        "archetype": "blaster",
+        "sets": [
+            "Assault Rifle",
+            "Plant Manipulation"
+        ]
+    },
+    "Mc Muffin": {
+        "archetype": "blaster",
+        "sets": [
+            "Fire Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Xtreme Merc": {
+        "archetype": "mastermind",
+        "sets": [
+            "Nature Affinity",
+            "Mercenaries"
+        ]
+    },
+    "Xtreme Smash": {
+        "archetype": "blaster",
+        "sets": [
+            "Seismic Blast",
+            "Devices"
+        ]
+    },
+    "poned steals u gf": {
+        "archetype": "dominator",
+        "sets": [
+            "Fiery Assault",
+            "Earth Control"
+        ]
     }
 }

@@ -39,29 +39,28 @@ def main():
 	# upload_suffix = upload_sf.text_input('url suffix','',max_chars=2,help='alphanumeric only, leave blank for no suffix')
 	# upload_suffix = re.sub(r'\W+', '', upload_suffix)
 
-	# DISABLED
-	# 240119 disabled since it's not being monitored
-	# with st.sidebar.expander('📩 hero/player addition',expanded=True):
-	# 	with st.form('Enter both hero name and preferred global or alias below',clear_on_submit=True):
-	# 		heroname   = st.text_input("Hero Name", value="",help="Must be a valid CoH hero name. If it's a shared account with multiple users playing you may need to contact me to assign matches to the correct user.")
-	# 		playername = st.text_input("Alias or Global", value="",help="Enter your preferred alias to have your stats under. If your heroes are already being tracked under a different alias the hero will be added under that name unless you contact me to change it.")
+	# 240731 reenabled on request
+	with st.sidebar.popover('📩 hero\:player addition'):
+		with st.form('Enter both hero name and preferred global or alias below',clear_on_submit=True):
+			heroname   = st.text_input("Hero Name", value="",help="Must be a valid CoH hero name. If it's a shared account with multiple users playing you may need to contact me to assign matches to the correct user.")
+			playername = st.text_input("Alias or Global", value="",help="Enter your preferred alias to have your stats under. If your other heroes are already being tracked under a different alias use that name otherwise it may not be updated.")
 
-	# 		c0 = st.container()
+			c0 = st.container()
 
-			# submitted = st.form_submit_button("submit")
+			submitted = st.form_submit_button("submit")
+			st.caption("This info is updated manually by me, so changes won't be immediate and may be modified before adding.")
 
-			# st.caption("This is updated manually so it won't be added immediately and may be modified before adding.")
-
-			# if submitted:
-			# 	if heroname == '' or playername == '':
-			# 		c0.warning("Fill in both fields.")
-			# 	else:
-			# 		submit_file = "data/player_names_submitted.txt"
-			# 		if os.path.getsize(submit_file) < 5000000: # quick file size limit to prevent it getting spammed
-			# 			with open(submit_file, "a") as myfile:
-			# 				submission_text = f"{datetime.date.today()} @{playername}:{heroname}\n"
-			# 				print("HERO SUBMISSION: ",submission_text) # print to console for easier reference
-			# 				myfile.write(submission_text)
+			if submitted:
+				if heroname == '' or playername == '':
+					c0.warning("Fill in both fields.")
+				else:
+					submit_file = "data/player_names_submitted.txt"
+					if os.path.getsize(submit_file) < 5000000: # quick file size limit to prevent it getting spammed
+						with open(submit_file, "a") as myfile:
+							submission_text = f"{datetime.date.today()} @{playername}:{heroname}\n"
+							print("HERO SUBMISSION: ",submission_text) # print to console for easier reference
+							myfile.write(submission_text)
+							c0.success(f'{heroname}@{playername} submitted')
 
 	if uploaded_file is not None:
 		upload_sf.empty()
