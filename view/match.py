@@ -996,7 +996,7 @@ def main(con):
 		# perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: math.exp(-((x-0)**2)/(2*0.65**2)))
 		perf_df['tavg_score'] = perf_df['avg atk'].map(lambda x: 1-(1+ math.erf((x - 1)/(math.sqrt(0.25))))  /2)
 		perf_df['tvar_score'] = perf_df['var atk'].map(lambda x: (1-(1+ math.erf((x - 1.4)/(math.sqrt(0.6))))  /2) if x > 0.0 else 0.0)
-		weight = [0.6,0.2,0.2]
+		weight = [0.5,0.25,0.25]
 		# timing as level of efficacy
 		perf_df['timing_score'] = (weight[0]*perf_df['tmed_score'] + weight[1]*perf_df['tavg_score'] + weight[2]*perf_df['tvar_score'])
 
@@ -1098,9 +1098,9 @@ def main(con):
 			st.write("This is a generalized example approach to showing offence performance on spikes put together to get away from a more only OTP-focused stat review, but any data can be used to put together your own rating system. If you need some stat that's not given in this app, I can add it in for your provided it's possible to extract from demos.")
 			st.write("This performance score is only for spike offence and doesn't account for things like: non-spike attacks, defensive play (aside from targets and deaths), weighting for different types of attacks (travel time, damage, intentionally leading attacks, etc.), score or skill differential between the teams, absolute # of spikes (e.g. on target 10/20 is the same as 40/80), etc.")
 			st.latex("""Effectiveness(timing) = A =
-				0.6 \\cdot \\operatorname{exp}\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
-				+ 0.2 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{mean}-1}{\\sqrt{0.25}}\\right)}{2}
-				+ 0.2 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{variance}-1.4}{\\sqrt{0.6}}\\right)}{2}
+				0.5 \\cdot \\operatorname{exp}\\left(-\\frac{\\left(\\ t_{median}\\right)^{2}}{2\\cdot\\left(0.5\\right)^{2}}\\right)
+				+ 0.25 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{mean}-1}{\\sqrt{0.25}}\\right)}{2}
+				+ 0.25 \\cdot \\frac{1+\\operatorname{erf}\\left(\\frac{t_{variance}-1.4}{\\sqrt{0.6}}\\right)}{2}
 				""")
 		
 			st.write("Timing is used as an analogue for a heroe's spike effectiveness. A weighted average of median and mean timing, and variance (consistency) is used. For convenience and consistency with other stats zero is assumed the 'ideal' timing which isn't necessarily the case.")
