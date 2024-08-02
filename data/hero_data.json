@@ -10614,5 +10614,23 @@
             "Fiery Assault",
             "Earth Control"
         ]
+    },
+    "AntediIuvian": {
+        "archetype": "defender/corruptor"
+    },
+    "Love Doc": {
+        "archetype": "defender/corruptor"
+    },
+    "Parallelogram": {
+        "archetype": "defender/corruptor"
+    },
+    "Tu Pump Shakur": {
+        "archetype": "defender/corruptor"
+    },
+    "Wrek'kah": {
+        "archetype": "defender/corruptor"
+    },
+    "wapper": {
+        "archetype": "defender/corruptor"
     }
 }
