@@ -10632,5 +10632,507 @@
     },
     "wapper": {
         "archetype": "defender/corruptor"
+    },
+        ".Teardrops": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Water Blast"
+        ]
+    },
+    "A-10 WARTHOG": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Devices"
+        ]
+    },
+    "A-nus": {
+        "archetype": "controller"
+    },
+    "Aggressive Panic": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "All Natureal": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Arean Boy": {
+        "archetype": "controller",
+        "sets": [
+            "Pain Domination",
+            "Illusion Control"
+        ]
+    },
+    "Armagetin": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Backwood": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Bliz": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Cold Domination",
+            "Ice Blast"
+        ]
+    },
+    "Boreal Fusion": {
+        "archetype": "defender/corruptor"
+    },
+    "Brand New PvPer": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Bug Chaser xoxo": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Seismic Blast"
+        ]
+    },
+    "CHR0N0 TR1GG3R": {
+        "archetype": "blaster",
+        "sets": [
+            "Assault Rifle",
+            "Temporal Manipulation"
+        ]
+    },
+    "Cause's Burner": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Causetic": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Clawdius Rex": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Crey Pistol X": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Crita's KiIlers": {
+        "archetype": "mastermind",
+        "sets": [
+            "Mercenaries",
+            "Electrical Affinity"
+        ]
+    },
+    "CritaKill": {
+        "archetype": "melee",
+        "sets": [
+            "Psionic Melee",
+            "Bio Armor"
+        ]
+    },
+    "Devasto": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Dark Blast",
+            "Poison"
+        ]
+    },
+    "Doja": {
+        "archetype": "melee",
+        "sets": [
+            "Claws",
+            "Ninjitsu"
+        ]
+    },
+    "First Forty8": {
+        "archetype": "dominator",
+        "sets": [
+            "Icy Assault",
+            "Earth Control"
+        ]
+    },
+    "Ghetto Bird": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Golden Moose": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Grim Reapurr": {
+        "archetype": "melee",
+        "sets": [
+            "Psionic Melee",
+            "Bio Armor"
+        ]
+    },
+    "Gucci Water Balloons": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Water Blast"
+        ]
+    },
+    "Hard Patagonias": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Hardmode": {
+        "archetype": "arachnos_soldier"
+    },
+    "Heat Pocket": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Heavy Pumpers": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Hierarchy Perfected": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Hukdon Phonics": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "ICYMONSTER": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Devices"
+        ]
+    },
+    "IceDevasto": {
+        "archetype": "blaster",
+        "sets": [
+            "Atomic Manipulation",
+            "Ice Blast"
+        ]
+    },
+    "Iceburrgers": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Irkutsk": {
+        "archetype": "controller",
+        "sets": [
+            "Cold Domination",
+            "Empathy"
+        ]
+    },
+    "JC Posey": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Ice Blast"
+        ]
+    },
+    "Jinx Proof": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Lazy Locks": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Fire Blast"
+        ]
+    },
+    "Lesotoo": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Los Angeles.": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "Machiavillain": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Dark Blast",
+            "Poison"
+        ]
+    },
+    "Mecha Geedorah": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Memers": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "MrMeaner": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Ms Deadly?": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Natures Shadow": {
+        "archetype": "melee",
+        "sets": [
+            "Kinetic Melee",
+            "Bio Armor"
+        ]
+    },
+    "No Fly List": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "Not Brenda from IT": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Poison",
+            "Energy Blast"
+        ]
+    },
+    "Numb": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Devices"
+        ]
+    },
+    "Paper Towel Pete": {
+        "archetype": "melee",
+        "sets": [
+            "Staff Fighting",
+            "Bio Armor"
+        ]
+    },
+    "Poke In The Knee": {
+        "archetype": "melee",
+        "sets": [
+            "Spines",
+            "Super Reflexes"
+        ]
+    },
+    "Resistance iz Futile": {
+        "archetype": "mastermind",
+        "sets": [
+            "Robotics",
+            "Nature Affinity"
+        ]
+    },
+    "Schizovill": {
+        "archetype": "dominator",
+        "sets": [
+            "Mind Control",
+            "Fiery Assault"
+        ]
+    },
+    "Sessa": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Sorry Charlie": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Electrical Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Spring Negative Dark": {
+        "archetype": "blaster",
+        "sets": [
+            "Dark Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Sunny The Light": {
+        "archetype": "blaster",
+        "sets": [
+            "Atomic Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Torpedo Man.": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Wapher": {
+        "archetype": "blaster",
+        "sets": [
+            "Sonic Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "Washup": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Seismic Blast",
+            "Trick Arrow"
+        ]
+    },
+    "WidePeepoHappy": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Willy Stroker": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Wrek": {
+        "archetype": "blaster",
+        "sets": [
+            "Ice Blast",
+            "Plant Manipulation"
+        ]
+    },
+    "Wrek?": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Nature Affinity",
+            "Fire Blast"
+        ]
+    },
+    "Xtreme Arsenal": {
+        "archetype": "blaster",
+        "sets": [
+            "Assault Rifle",
+            "Devices"
+        ]
+    },
+    "Xtreme Energy": {
+        "archetype": "melee",
+        "sets": [
+            "Ninjitsu",
+            "Energy Melee"
+        ]
+    },
+    "Zeal'": {
+        "archetype": "blaster",
+        "sets": [
+            "Devices",
+            "Fire Blast"
+        ]
+    },
+    "ZuurPruim": {
+        "archetype": "blaster",
+        "sets": [
+            "Sonic Manipulation",
+            "Radiation Blast"
+        ]
+    },
+    "doctor wap": {
+        "archetype": "controller",
+        "sets": [
+            "Illusion Control",
+            "Empathy"
+        ]
+    },
+    "haxrz": {
+        "archetype": "blaster",
+        "sets": [
+            "Plant Manipulation",
+            "Fire Blast"
+        ]
+    },
+    "mommy mallex": {
+        "archetype": "defender/corruptor",
+        "sets": [
+            "Kinetics",
+            "Fire Blast"
+        ]
+    },
+    "nurse wap": {
+        "archetype": "blaster"
+    },
+    "wappy": {
+        "archetype": "controller",
+        "sets": [
+            "Gravity Control",
+            "Empathy"
+        ]
     }
 }
